@@ -2,23 +2,16 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Users, CheckCircle, XCircle, TrendingUp, ShieldCheck, 
-  Settings, MessageSquare, AlertTriangle, UserPlus, FileText, Star, LogOut
+  UserPlus, LogOut
 } from 'lucide-react';
 import { useAuth } from '../components/AuthContext';
 import { authService } from '../lib/authService';
 import { useNavigate } from 'react-router-dom';
-import { professionals } from '../data/mockData';
 import './Dashboard.css';
-
-// Mock Data
-const pendingProfessionals = [
-  { id: 'PRO-109', name: 'Amit Desai', category: 'CA', experience: 5, city: 'Pune', date: 'Oct 18, 2026', status: 'Pending' },
-  { id: 'PRO-110', name: 'Priya Sharma', category: 'CMA', experience: 8, city: 'Delhi', date: 'Oct 17, 2026', status: 'Pending' },
-];
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
-  const [queue, setQueue] = useState(pendingProfessionals);
+  const [queue, setQueue] = useState([]);
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -119,8 +112,10 @@ export default function AdminDashboard() {
                       </tr>
                     )) : (
                       <tr>
-                        <td colSpan="6" style={{ textAlign: 'center', padding: 'var(--space-6)' }}>
-                          <p style={{ color: 'var(--color-gray-500)' }}>No pending approvals.</p>
+                        <td colSpan="6" style={{ textAlign: 'center', padding: 'var(--space-12)' }}>
+                          <div className="empty-state-icon" style={{ background: '#f5f3ff', color: '#8b5cf6', margin: '0 auto var(--space-4)' }}><ShieldCheck size={28} /></div>
+                          <h3>Queue Empty</h3>
+                          <p style={{ color: 'var(--color-gray-500)', maxWidth: '300px', margin: '0 auto' }}>All professional profiles have been reviewed.</p>
                         </td>
                       </tr>
                     )}
@@ -131,20 +126,8 @@ export default function AdminDashboard() {
           </>
         );
 
-      case 'users':
-      case 'analytics':
-      case 'support':
-      case 'featured':
       default:
-        return (
-          <div className="dashboard-section animate-fade-in">
-            <div className="empty-state">
-              <div className="empty-state-icon"><Settings size={28} /></div>
-              <h3>Under Construction</h3>
-              <p>The {activeTab} module will be available in Phase 3.</p>
-            </div>
-          </div>
-        );
+        return null;
     }
   };
 
@@ -171,36 +154,6 @@ export default function AdminDashboard() {
             >
               <TrendingUp size={18} /> Overview
               {queue.length > 0 && <span className="sidebar-badge">{queue.length}</span>}
-            </div>
-            <div 
-              className={`sidebar-nav-item ${activeTab === 'users' ? 'active' : ''}`}
-              onClick={() => setActiveTab('users')}
-            >
-              <Users size={18} /> Manage Users
-            </div>
-            <div 
-              className={`sidebar-nav-item ${activeTab === 'professionals' ? 'active' : ''}`}
-              onClick={() => setActiveTab('professionals')}
-            >
-              <ShieldCheck size={18} /> Professional Directory
-            </div>
-            <div 
-              className={`sidebar-nav-item ${activeTab === 'featured' ? 'active' : ''}`}
-              onClick={() => setActiveTab('featured')}
-            >
-              <Star size={18} /> Featured Listings
-            </div>
-            <div 
-              className={`sidebar-nav-item ${activeTab === 'analytics' ? 'active' : ''}`}
-              onClick={() => setActiveTab('analytics')}
-            >
-              <FileText size={18} /> Platform Analytics
-            </div>
-            <div 
-              className={`sidebar-nav-item ${activeTab === 'support' ? 'active' : ''}`}
-              onClick={() => setActiveTab('support')}
-            >
-              <MessageSquare size={18} /> Support Tickets
             </div>
 
             <div style={{ margin: 'var(--space-4) 0', borderTop: '1px solid var(--color-gray-100)' }} />

@@ -1,10 +1,12 @@
-import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { 
-  Star, MapPin, Check, ShieldCheck, Clock, Calendar as CalendarIcon,
-  MessageCircle, Share2, Award, Briefcase, ChevronRight
+  Star, MapPin, Check, ShieldCheck, Clock, Calendar,
+  MessageCircle, Share2, Award, Briefcase, ChevronRight,
+  Globe, Phone, Shield
 } from 'lucide-react';
-import { professionals, services } from '../data/mockData';
+import { services } from '../data/mockData';
+import { dbService } from '../lib/dbService';
 import BookingModal from '../components/BookingModal';
 import ReviewForm from '../components/ReviewForm';
 import './Profile.css';
@@ -14,8 +16,33 @@ const timeSlots = ['10 AM', '11 AM', '2 PM', '3 PM', '4 PM'];
 export default function Profile() {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState('about');
+  const [professional, setProfessional] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
 
-  const professional = professionals.find(p => p.id === parseInt(id));
+  useEffect(() => {
+    async function load() {
+      try {
+        const data = await dbService.getProfessionalById(id);
+        setProfessional(data);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    load();
+  }, [id]);
+
+  if (isLoading) {
+    return (
+      <main className="profile-page">
+        <div className="container" style={{ padding: 'var(--space-20) 0', textAlign: 'center' }}>
+          <h2>Loading...</h2>
+        </div>
+      </main>
+    );
+  }
 
   if (!professional) {
     return (
@@ -60,9 +87,9 @@ export default function Profile() {
                 <span><Globe size={14} /> {professional.languages.join(', ')}</span>
               </div>
               <div className="profile-actions">
-                <Link to="#" className="btn btn-primary">
+                <button className="btn btn-primary" onClick={() => setIsBookingOpen(true)}>
                   <Calendar size={16} /> Book Consultation
-                </Link>
+                </button>
                 <button className="btn btn-whatsapp">
                   <MessageCircle size={16} /> WhatsApp
                 </button>
@@ -228,7 +255,7 @@ export default function Profile() {
                   {professional.availability}
                 </p>
                 <div className="sidebar-cta-buttons">
-                  <button className="btn btn-primary btn-lg">
+                  <button className="btn btn-primary btn-lg" onClick={() => setIsBookingOpen(true)}>
                     <Calendar size={18} /> Book Now
                   </button>
                   <button className="btn btn-whatsapp">
@@ -240,10 +267,10 @@ export default function Profile() {
               <div className="sidebar-card">
                 <h3>Availability This Week</h3>
                 <div className="availability-grid">
-                  {weekDays.map(d => (
+                  {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => (
                     <div key={d} className="availability-day">{d}</div>
                   ))}
-                  {weekDays.map((d, di) =>
+                  {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d, di) =>
                     timeSlots.slice(0, 1).map((t, ti) => (
                       <div
                         key={`${d}-${t}`}
@@ -262,6 +289,14 @@ export default function Profile() {
           </div>
         </div>
       </section>
+
+      {isBookingOpen && (
+        <BookingModal 
+          isOpen={isBookingOpen} 
+          onClose={() => setIsBookingOpen(false)} 
+          professional={professional} 
+        />
+      )}
     </main>
   );
 }

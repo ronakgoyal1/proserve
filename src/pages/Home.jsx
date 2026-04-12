@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Search, MapPin, ShieldCheck, Star, Users, Clock,
@@ -6,13 +6,27 @@ import {
   ChevronRight, Zap
 } from 'lucide-react';
 import ProfessionalCard from '../components/ProfessionalCard';
-import { professionals, testimonials, cities } from '../data/mockData';
+import { professionals as mockProfessionals, testimonials, cities } from '../data/mockData';
+import { dbService } from '../lib/dbService';
 import './Home.css';
 
 export default function Home() {
   const navigate = useNavigate();
   const [searchService, setSearchService] = useState('');
   const [searchCity, setSearchCity] = useState('');
+  const [featuredPros, setFeaturedPros] = useState([]);
+
+  React.useEffect(() => {
+    async function loadPros() {
+      try {
+        const data = await dbService.getProfessionals();
+        setFeaturedPros(data.filter(p => p.featured));
+      } catch (error) {
+        console.error('Failed to load professionals for home', error);
+      }
+    }
+    loadPros();
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -22,7 +36,7 @@ export default function Home() {
     navigate(`/search?${params.toString()}`);
   };
 
-  const featuredPros = professionals.filter(p => p.featured);
+
 
   return (
     <main id="home-page">
