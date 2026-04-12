@@ -58,30 +58,62 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return; // Prevent duplicate submissions
     if (!validate()) return;
 
     setIsSubmitting(true);
     setErrors({});
     
     try {
+      let finalRole = role;
+      let userObj = null;
+
       if (tab === 'signup') {
         const metadata = { role: role, name: formData.name, onboardingStatus: role === 'professional' ? 'required' : 'complete' };
-        const { user, session: newSession } = await authService.signUp(formData.email, formData.password, metadata);
+        
+        console.log('[Login] Initiating signUp for:', formData.email);
+        const response = await authService.signUp(formData.email, formData.password, metadata);
+        console.log('[Login] signUp response:', response);
+        
+        const { user, session: newSession } = response;
+        userObj = user;
         
         // Supabase edge case: If confirmed email is required, session might be null.
         if (!newSession && authService.hasSupabaseConfig) {
           setSuccess(true);
-          setIsSubmitting(false);
           return;
         }
       } else {
-        await authService.signIn(formData.email, formData.password);
+        console.log('[Login] Initiating signIn for:', formData.email);
+        const response = await authService.signIn(formData.email, formData.password);
+        console.log('[Login] signIn response:', response);
+        
+        userObj = response?.user;
+        finalRole = userObj?.user_metadata?.role;
       }
-      // If successful, Global session will update and trigger the smart redirect block above.
+
+      // Calculate accurate destination based on User Metadata
+      let routeTo = '/dashboard';
+      if (userObj?.email === 'ronakdiscord@gmail.com' || finalRole === 'admin') {
+        routeTo = '/admin';
+      } else if (finalRole === 'professional') {
+        const currentStatus = userObj?.user_metadata?.onboardingStatus;
+        if (currentStatus === 'required' || currentStatus === 'pending') {
+          routeTo = '/onboarding';
+        } else {
+          routeTo = '/pro-dashboard';
+        }
+      }
+
+      // Hard navigation ensures that whether using Supabase global event listeners
+      // or the local mock auth service, the AuthContext will cleanly hydrate on load.
+      window.location.href = routeTo;
+
     } catch (error) {
-      console.error('[Login] Error:', error);
-      setIsSubmitting(false);
+      console.error('[Login] Exact Authentication Error:', error);
       setErrors({ email: error.message || 'Authentication failed. Please check credentials.' });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
