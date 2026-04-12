@@ -27,7 +27,14 @@ export default function ProtectedRoute({ children, allowAdmin = false, requirePr
   }
 
   // Admin routing protection
-  if (allowAdmin && session.user?.email !== 'admin@proserve.in') {
+  // 1. Temporary email-based bypass for direct testing
+  const isTestingAdmin = session.user?.email === 'ronakdiscord@gmail.com';
+  
+  // 2. Scalable Role-Based Authorization
+  // This verifies the role injected into user_metadata from the Supabase auth token
+  const isRoleAdmin = session.user?.user_metadata?.role === 'admin';
+
+  if (allowAdmin && !(isTestingAdmin || isRoleAdmin)) {
     return <Navigate to="/dashboard" replace />;
   }
 
