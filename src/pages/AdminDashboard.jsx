@@ -6,14 +6,30 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../components/AuthContext';
 import { authService } from '../lib/authService';
+import { dbService } from '../lib/dbService';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [queue, setQueue] = useState([]);
+  const [loadingQueue, setLoadingQueue] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    async function loadQueue() {
+      try {
+        const apps = await dbService.getPendingApplications();
+        setQueue(apps);
+      } catch (e) {
+        console.error("Failed to load queue", e);
+      } finally {
+        setLoadingQueue(false);
+      }
+    }
+    loadQueue();
+  }, []);
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -26,9 +42,20 @@ export default function AdminDashboard() {
   const avatarUrl = user?.user_metadata?.avatar_url;
   const initials = fullName ? fullName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2) : 'A';
 
-  const handleAction = (id, action) => {
-    setQueue(queue.filter(p => p.id !== id));
-    // In real app, trigger api and toast
+  const handleAction = async (id, action) => {
+    try {
+      if (action === 'approve') {
+        await dbService.approveApplication(id);
+        
+        // Also update AuthContext mock locally if it's the current user simulating admin locally
+        // (In a real app, Supabase triggers or admin endpoints would do this)
+      } else {
+        await dbService.rejectApplication(id);
+      }
+      setQueue(queue.filter(p => p.id !== id));
+    } catch (e) {
+      console.error("Action failed", e);
+    }
   };
 
   const renderContent = () => {
@@ -98,7 +125,7 @@ export default function AdminDashboard() {
                         <td style={{ fontSize: 'var(--text-xs)', color: 'var(--color-gray-500)' }}>{pro.id}</td>
                         <td style={{ fontWeight: 600 }}>
                           {pro.name} <br/>
-                          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--color-gray-500)', fontWeight: 400 }}>{pro.category}</span>
+                          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--color-gray-500)', fontWeight: 400 }}>{pro.category} - {pro.specialties || 'General'}</span>
                         </td>
                         <td>{pro.experience} Yrs</td>
                         <td>{pro.city}</td>
@@ -114,8 +141,8 @@ export default function AdminDashboard() {
                       <tr>
                         <td colSpan="6" style={{ textAlign: 'center', padding: 'var(--space-12)' }}>
                           <div className="empty-state-icon" style={{ background: '#f5f3ff', color: '#8b5cf6', margin: '0 auto var(--space-4)' }}><ShieldCheck size={28} /></div>
-                          <h3>Queue Empty</h3>
-                          <p style={{ color: 'var(--color-gray-500)', maxWidth: '300px', margin: '0 auto' }}>All professional profiles have been reviewed.</p>
+                          <h3>{loadingQueue ? 'Loading Queue...' : 'Queue Empty'}</h3>
+                          <p style={{ color: 'var(--color-gray-500)', maxWidth: '300px', margin: '0 auto' }}>{loadingQueue ? 'Fetching pending profiles.' : 'All professional profiles have been reviewed.'}</p>
                         </td>
                       </tr>
                     )}

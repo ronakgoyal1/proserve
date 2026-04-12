@@ -22,8 +22,15 @@ export default function ProtectedRoute({ children, allowAdmin = false, requirePr
   // Basic Role Based Logic implementation if User Metadata holds "role"
   // If the app scales, we can enforce `session.user.user_metadata.role` here.
   // We'll trust the route assignments for now as an MVP.
-  if (requirePro && session.user?.user_metadata?.role === 'user') {
-    return <Navigate to="/dashboard" replace />;
+  // Professional routing protection
+  if (requirePro) {
+    if (session.user?.user_metadata?.role !== 'professional') {
+      return <Navigate to="/dashboard" replace />;
+    }
+    const onboardingStatus = session.user?.user_metadata?.onboardingStatus;
+    if (onboardingStatus === 'required' || onboardingStatus === 'pending') {
+      return <Navigate to="/onboarding" replace />;
+    }
   }
 
   // Admin routing protection

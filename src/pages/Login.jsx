@@ -27,10 +27,12 @@ export default function Login() {
   if (session) {
     const userRole = session.user?.user_metadata?.role;
     const userEmail = session.user?.email;
+    const onboardingStatus = session.user?.user_metadata?.onboardingStatus;
 
     if (userEmail === 'ronakdiscord@gmail.com' || userRole === 'admin') {
       return <Navigate to="/admin" replace />;
     } else if (userRole === 'professional') {
+      if (onboardingStatus === 'required') return <Navigate to="/onboarding" replace />;
       return <Navigate to="/pro-dashboard" replace />;
     } else {
       return <Navigate to="/dashboard" replace />;
@@ -63,7 +65,7 @@ export default function Login() {
     
     try {
       if (tab === 'signup') {
-        const metadata = { role: role, name: formData.name };
+        const metadata = { role: role, name: formData.name, onboardingStatus: role === 'professional' ? 'required' : 'complete' };
         const { user, session: newSession } = await authService.signUp(formData.email, formData.password, metadata);
         
         // Supabase edge case: If confirmed email is required, session might be null.

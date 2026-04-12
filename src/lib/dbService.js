@@ -9,6 +9,12 @@ class DbService {
   constructor() {
     this.localLeads = [];
     this.localBookings = [];
+    try {
+      const storedApps = localStorage.getItem('proserve_applications');
+      this.localApplications = storedApps ? JSON.parse(storedApps) : [];
+    } catch {
+      this.localApplications = [];
+    }
   }
 
   // --- Professionals ---
@@ -35,6 +41,78 @@ class DbService {
       return data;
     } else {
       return mockProfessionals.find(p => p.id === parseInt(id)) || mockProfessionals[0];
+    }
+  }
+
+  // --- Professional Applications (Onboarding) ---
+  async submitProfessionalApplication(applicationData) {
+    if (hasSupabaseConfig) {
+      const { data, error } = await supabase.from('professional_applications').insert([{ ...applicationData, status: 'Pending' }]).select();
+      if (error) throw error;
+      return data[0];
+    } else {
+      const newApp = { id: `APP-${Date.now()}`, date: new Date().toLocaleDateString(), status: 'Pending', ...applicationData };
+      this.localApplications.unshift(newApp);
+      localStorage.setItem('proserve_applications', JSON.stringify(this.localApplications));
+      return newApp;
+    }
+  }
+
+  async getPendingApplications() {
+    if (hasSupabaseConfig) {
+      const { data, error } = await supabase.from('professional_applications').select('*').eq('status', 'Pending');
+      if (error) throw error;
+      return data;
+    } else {
+      return this.localApplications.filter(app => app.status === 'Pending');
+    }
+  }
+
+  async approveApplication(appId) {
+    if (hasSupabaseConfig) {
+      // In production, an Edge Function/Trigger would typically copy the verified application to the public `professionals` table.
+      // We simulate approving the app status here.
+      const { data, error } = await supabase.from('professional_applications').update({ status: 'Approved' }).eq('id', appId).select();
+      if (error) throw error;
+      return data[0];
+    } else {
+      const index = this.localApplications.findIndex(a => a.id === appId);
+      if (index === -1) throw new Error("Application not found");
+      this.localApplications[index].status = 'Approved';
+      localStorage.setItem('proserve_applications', JSON.stringify(this.localApplications));
+      
+      // Inject to fake global directory so search works identically!
+      const appData = this.localApplications[index];
+      const newPro = {
+        id: Date.now(),
+        name: appData.name,
+        category: appData.category,
+        city: appData.city,
+        experience: appData.experience,
+        bio: appData.bio,
+        languages: ['English', 'Hindi'],
+        rating: 0,
+        reviews: 0,
+        hourlyRate: 1500,
+        featured: false,
+        image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=256'
+      };
+      mockProfessionals.unshift(newPro);
+      return appData;
+    }
+  }
+
+  async rejectApplication(appId) {
+    if (hasSupabaseConfig) {
+      const { data, error } = await supabase.from('professional_applications').update({ status: 'Rejected' }).eq('id', appId).select();
+      if (error) throw error;
+      return data[0];
+    } else {
+      const index = this.localApplications.findIndex(a => a.id === appId);
+      if (index === -1) throw new Error("Application not found");
+      this.localApplications[index].status = 'Rejected';
+      localStorage.setItem('proserve_applications', JSON.stringify(this.localApplications));
+      return this.localApplications[index];
     }
   }
 

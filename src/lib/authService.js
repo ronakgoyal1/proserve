@@ -54,6 +54,20 @@ class AuthService {
     }
   }
 
+  async updateUserMetadata(metadata) {
+    if (hasSupabaseConfig) {
+      const { data, error } = await supabase.auth.updateUser({ data: metadata });
+      if (error) throw error;
+      return data;
+    } else {
+      if (this.mockUser) {
+        this.mockUser.user_metadata = { ...this.mockUser.user_metadata, ...metadata };
+        localStorage.setItem('proserve_mock_user', JSON.stringify(this.mockUser));
+      }
+      return { user: this.mockUser };
+    }
+  }
+
   async signInWithOAuth(provider) {
     if (hasSupabaseConfig) {
       console.log(`[AuthService] Initiating ${provider} OAuth...`);
