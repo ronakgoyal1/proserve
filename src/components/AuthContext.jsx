@@ -42,6 +42,7 @@ export const AuthProvider = ({ children }) => {
         if (mounted) {
           setSession(newSession);
           setUser(newSession?.user ?? null);
+          setLoading(false);
         }
         
         if (event === 'SIGNED_IN') {

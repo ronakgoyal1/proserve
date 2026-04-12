@@ -6,7 +6,12 @@ import { supabase, hasSupabaseConfig } from './supabase';
  */
 class AuthService {
   constructor() {
-    this.mockUser = null;
+    try {
+      const stored = localStorage.getItem('proserve_mock_user');
+      this.mockUser = stored ? JSON.parse(stored) : null;
+    } catch {
+      this.mockUser = null;
+    }
   }
 
   async signUp(email, password, metadata = {}) {
@@ -21,6 +26,7 @@ class AuthService {
     } else {
       // Mock flow
       this.mockUser = { id: 'mock-123', email, user_metadata: metadata };
+      localStorage.setItem('proserve_mock_user', JSON.stringify(this.mockUser));
       return { user: this.mockUser };
     }
   }
@@ -33,6 +39,7 @@ class AuthService {
     } else {
       // Mock flow
       this.mockUser = { id: 'mock-123', email };
+      localStorage.setItem('proserve_mock_user', JSON.stringify(this.mockUser));
       return { user: this.mockUser };
     }
   }
@@ -43,6 +50,7 @@ class AuthService {
       if (error) throw error;
     } else {
       this.mockUser = null;
+      localStorage.removeItem('proserve_mock_user');
     }
   }
 

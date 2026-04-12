@@ -23,10 +23,18 @@ export default function Login() {
 
   const { session } = useAuth(); // Monitor global session
   
-  // Auto-redirect if session exists (e.g. successful OAuth callback)
+  // Auto-redirect if session exists (e.g. successful OAuth or previous login)
   if (session) {
-    console.log('[Login] Session detected! Auto-redirecting to dashboard...');
-    return <Navigate to="/dashboard" replace />;
+    const userRole = session.user?.user_metadata?.role;
+    const userEmail = session.user?.email;
+
+    if (userEmail === 'ronakdiscord@gmail.com' || userRole === 'admin') {
+      return <Navigate to="/admin" replace />;
+    } else if (userRole === 'professional') {
+      return <Navigate to="/pro-dashboard" replace />;
+    } else {
+      return <Navigate to="/dashboard" replace />;
+    }
   }
 
   const validate = () => {
@@ -46,26 +54,33 @@ export default function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
     setIsSubmitting(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSuccess(true);
-      setTimeout(() => {
-        // Route appropriately based on role
-        if (tab === 'signup' && role === 'professional') {
-          navigate('/pro-dashboard');
-        } else if (tab === 'login' && formData.email === 'admin@proserve.in') {
-          navigate('/admin');
-        } else {
-          navigate('/dashboard');
+    setErrors({});
+    
+    try {
+      if (tab === 'signup') {
+        const metadata = { role: role, name: formData.name };
+        const { user, session: newSession } = await authService.signUp(formData.email, formData.password, metadata);
+        
+        // Supabase edge case: If confirmed email is required, session might be null.
+        if (!newSession && authService.hasSupabaseConfig) {
+          setSuccess(true);
+          setIsSubmitting(false);
+          return;
         }
-      }, 1500);
-    }, 1500);
+      } else {
+        await authService.signIn(formData.email, formData.password);
+      }
+      // If successful, Global session will update and trigger the smart redirect block above.
+    } catch (error) {
+      console.error('[Login] Error:', error);
+      setIsSubmitting(false);
+      setErrors({ email: error.message || 'Authentication failed. Please check credentials.' });
+    }
   };
 
   const handleInputChange = (e) => {
@@ -98,8 +113,8 @@ export default function Login() {
             {success ? (
               <div className="success-header animate-fade-in">
                 <CheckCircle2 size={48} color="var(--color-success)" />
-                <h1>Welcome{tab === 'signup' ? ' to ProServe' : ' Back'}!</h1>
-                <p>Redirecting you to your dashboard...</p>
+                <h1>Check your email!</h1>
+                <p>We've sent a verification link. Please confirm your account before logging in.</p>
               </div>
             ) : (
               <>
