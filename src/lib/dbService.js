@@ -48,7 +48,10 @@ class DbService {
   async submitProfessionalApplication(applicationData) {
     if (hasSupabaseConfig) {
       const { data, error } = await supabase.from('professional_applications').insert([{ ...applicationData, status: 'Pending' }]).select();
-      if (error) throw error;
+      if (error) {
+        if (error.code === '42P01') throw new Error("Database Schema Error: Required table missing. Please execute supabase_setup.sql in your Supabase SQL Editor.");
+        throw error;
+      }
       return data[0];
     } else {
       const newApp = { id: `APP-${Date.now()}`, date: new Date().toLocaleDateString(), status: 'Pending', ...applicationData };
@@ -61,7 +64,10 @@ class DbService {
   async getPendingApplications() {
     if (hasSupabaseConfig) {
       const { data, error } = await supabase.from('professional_applications').select('*').eq('status', 'Pending');
-      if (error) throw error;
+      if (error) {
+        if (error.code === '42P01') throw new Error("Database Schema Error: Required table missing. Please execute supabase_setup.sql in your Supabase SQL Editor.");
+        throw error;
+      }
       return data;
     } else {
       return this.localApplications.filter(app => app.status === 'Pending');
@@ -73,7 +79,10 @@ class DbService {
       // In production, an Edge Function/Trigger would typically copy the verified application to the public `professionals` table.
       // We simulate approving the app status here.
       const { data, error } = await supabase.from('professional_applications').update({ status: 'Approved' }).eq('id', appId).select();
-      if (error) throw error;
+      if (error) {
+        if (error.code === '42P01') throw new Error("Database Schema Error: Required table missing. Please execute supabase_setup.sql in your Supabase SQL Editor.");
+        throw error;
+      }
       return data[0];
     } else {
       const index = this.localApplications.findIndex(a => a.id === appId);
@@ -105,7 +114,10 @@ class DbService {
   async rejectApplication(appId) {
     if (hasSupabaseConfig) {
       const { data, error } = await supabase.from('professional_applications').update({ status: 'Rejected' }).eq('id', appId).select();
-      if (error) throw error;
+      if (error) {
+        if (error.code === '42P01') throw new Error("Database Schema Error: Required table missing. Please execute supabase_setup.sql in your Supabase SQL Editor.");
+        throw error;
+      }
       return data[0];
     } else {
       const index = this.localApplications.findIndex(a => a.id === appId);

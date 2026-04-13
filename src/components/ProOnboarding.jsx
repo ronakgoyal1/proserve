@@ -160,8 +160,12 @@ export default function ProOnboarding() {
             </div>
 
             {/* OTP Flow Block */}
-            <div style={{ background: 'var(--color-gray-50)', border: '1px solid var(--color-gray-200)', borderRadius: 'var(--radius-md)', padding: 'var(--space-4)' }}>
-              <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '14px', fontWeight: 500 }}>Phone Verification</label>
+            <div style={{ background: 'var(--color-blue-50)', border: '1px solid var(--color-blue-200)', borderRadius: 'var(--radius-md)', padding: 'var(--space-4)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-2)'}}>
+                <label style={{ display: 'block', margin: 0, fontSize: '14px', fontWeight: 600, color: 'var(--color-primary)' }}>Phone Verification (Demo Sandbox)</label>
+                <span style={{ fontSize: '12px', background: 'var(--color-primary)', color: 'white', padding: '2px 8px', borderRadius: '12px' }}>Testing Mode</span>
+              </div>
+              <p style={{ fontSize: '13px', color: 'var(--color-gray-600)', marginBottom: 'var(--space-4)', lineHeight: '1.4' }}>Live SMS providers are currently disjointed. Enter any number and use sandbox code <strong>1234</strong> to verify.</p>
               
               <div style={{ display: 'flex', gap: 'var(--space-2)', alignItems: 'center' }}>
                 <div style={{ flex: 1, position: 'relative' }}>
@@ -191,7 +195,7 @@ export default function ProOnboarding() {
               {/* OTP Entry Phase */}
               {(otpState === 'sent' || otpState === 'verifying') && (
                 <div style={{ marginTop: 'var(--space-3)', display: 'flex', gap: 'var(--space-2)' }}>
-                  <input type="text" value={otpCode} onChange={e => setOtpCode(e.target.value)} placeholder="Wait briefly, then enter 4-digit code (Use 1234)" maxLength={4} style={{ flex: 1, padding: '0.75rem', borderRadius: 'var(--radius-md)', border: `1px solid ${otpError ? 'var(--color-danger)' : 'var(--color-primary)'}` }} />
+                  <input type="text" value={otpCode} onChange={e => setOtpCode(e.target.value)} placeholder="Enter sandbox code: 1234" maxLength={4} style={{ flex: 1, padding: '0.75rem', borderRadius: 'var(--radius-md)', border: `1px solid ${otpError ? 'var(--color-danger)' : 'var(--color-primary)'}` }} />
                   <button type="button" onClick={handleVerifyOTP} disabled={otpState === 'verifying'} className="btn btn-primary" style={{ padding: '0.75rem 1rem' }}>
                     {otpState === 'verifying' ? <Loader2 size={16} className="spin" /> : 'Confirm'}
                   </button>
