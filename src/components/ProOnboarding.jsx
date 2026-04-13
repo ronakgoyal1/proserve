@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
-import { CheckCircle2, ChevronRight, Loader2, Clock } from 'lucide-react';
+import { CheckCircle2, ChevronRight, Loader2, Clock, Phone, ShieldCheck, AlertCircle } from 'lucide-react';
 import { dbService } from '../lib/dbService';
 import { authService } from '../lib/authService';
 
@@ -9,9 +9,16 @@ export default function ProOnboarding() {
   const { session } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   
-  // Extract real onboarding status
-  const onboardingStatus = session?.user?.user_metadata?.onboardingStatus;
+  // Extract external status and bridge it loosely to local state to allow instant mutation
+  const initialStatus = session?.user?.user_metadata?.onboardingStatus;
+  const [localStatus, setLocalStatus] = useState(initialStatus);
+
+  // Modular OTP State Management
+  const [otpState, setOtpState] = useState('idle'); // idle | sending | sent | verifying | verified
+  const [otpCode, setOtpCode] = useState('');
+  const [otpError, setOtpError] = useState('');
 
   const [formData, setFormData] = useState({
     name: session?.user?.user_metadata?.full_name || session?.user?.user_metadata?.name || '',
@@ -25,29 +32,79 @@ export default function ProOnboarding() {
     certificationId: ''
   });
 
+  const handleSendOTP = async () => {
+    if (!formData.phone || formData.phone.length < 10) {
+      setOtpError('Enter a valid 10-digit phone number first.');
+      return;
+    }
+    setOtpError('');
+    setOtpState('sending');
+    try {
+      // Modular Stub: Integration ready for Twilio/MessageBird
+      await new Promise(r => setTimeout(r, 800));
+      setOtpState('sent');
+    } catch (e) {
+      setOtpError('Failed to send OTP SMS. Please try again.');
+      setOtpState('idle');
+    }
+  };
+
+  const handleVerifyOTP = async () => {
+    if (!otpCode || otpCode.length < 4) {
+      setOtpError('Enter a valid OTP code.');
+      return;
+    }
+    setOtpError('');
+    setOtpState('verifying');
+    try {
+      // Modular Stub: Ready for Endpoint Validation
+      await new Promise(r => setTimeout(r, 800));
+      if (otpCode === '1234') { // Sandbox key
+        setOtpState('verified');
+      } else {
+        setOtpError("Invalid OTP. Use '1234' for Sandbox testing.");
+        setOtpState('sent');
+      }
+    } catch (e) {
+      setOtpError('Failed to verify OTP. Please try again.');
+      setOtpState('sent');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (otpState !== 'verified') {
+      setError('You must verify your phone number before submitting your application.');
+      return;
+    }
+
     setLoading(true);
+    setError('');
+    
     try {
-      // 1. Submit to the admin queue
+      // Duplicate prevention layer
+      const queue = await dbService.getPendingApplications();
+      if (queue.some(app => app.userId === session?.user?.id)) {
+        setLocalStatus('pending');
+        return;
+      }
+
       await dbService.submitProfessionalApplication({
         userId: session?.user?.id,
         email: session?.user?.email,
         ...formData
       });
-
-      // 2. Update local metadata to lock out the strict pending screen
       await authService.updateUserMetadata({ onboardingStatus: 'pending' });
-      
-      // Reload page to reflect auth constraint immediately
-      window.location.reload();
+      setLocalStatus('pending'); // Instant render bypasses page reload hang
     } catch (err) {
-      console.error(err);
+      console.error('[Onboarding] Submit Error:', err);
+      setError(err.message || 'An error occurred during application saving.');
+    } finally {
       setLoading(false);
     }
   };
 
-  if (onboardingStatus === 'pending') {
+  if (localStatus === 'pending') {
     return (
       <main style={{ minHeight: '80vh', padding: 'var(--space-8) 0', background: 'var(--color-gray-50)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div className="container" style={{ maxWidth: '500px' }}>
@@ -77,8 +134,14 @@ export default function ProOnboarding() {
               <CheckCircle2 size={32} />
             </div>
             <h2>Complete Your Profile</h2>
-            <p style={{ color: 'var(--color-gray-500)' }}>Tell us a bit more about your practice to enter the verification queue.</p>
+            <p style={{ color: 'var(--color-gray-500)' }}>Secure your practitioner identity before accessing the verification queue.</p>
           </div>
+
+          {error && (
+            <div style={{ background: 'var(--color-danger-bg)', color: 'var(--color-danger)', padding: 'var(--space-3)', borderRadius: 'var(--radius-md)', marginBottom: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)', fontSize: '14px' }}>
+              <AlertCircle size={16} /> {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
             
@@ -88,48 +151,88 @@ export default function ProOnboarding() {
                 <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} required />
               </div>
               <div style={{ flex: 1 }}>
-                <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '14px', fontWeight: 500 }}>Phone Number</label>
-                <input type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} required />
-              </div>
-            </div>
-            
-            <div style={{ display: 'flex', gap: 'var(--space-4)' }}>
-              <div style={{ flex: 1 }}>
                 <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '14px', fontWeight: 500 }}>Profession</label>
                 <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} required>
                   <option value="CA">Chartered Accountant (CA)</option>
                   <option value="CMA">Cost Management Accountant (CMA)</option>
                 </select>
               </div>
+            </div>
+
+            {/* OTP Flow Block */}
+            <div style={{ background: 'var(--color-gray-50)', border: '1px solid var(--color-gray-200)', borderRadius: 'var(--radius-md)', padding: 'var(--space-4)' }}>
+              <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '14px', fontWeight: 500 }}>Phone Verification</label>
+              
+              <div style={{ display: 'flex', gap: 'var(--space-2)', alignItems: 'center' }}>
+                <div style={{ flex: 1, position: 'relative' }}>
+                  <Phone size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-gray-400)' }} />
+                  <input type="tel" value={formData.phone} onChange={e => { setFormData({...formData, phone: e.target.value}); if (otpState !== 'idle') setOtpState('idle'); }} disabled={otpState === 'verified' || otpState === 'sending' || otpState === 'verifying'} style={{ width: '100%', padding: '0.75rem 0.75rem 0.75rem 2.5rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)', background: otpState === 'verified' ? 'var(--color-gray-100)' : 'white' }} placeholder="Enter mobile number" required />
+                </div>
+                
+                {otpState === 'idle' && (
+                  <button type="button" onClick={handleSendOTP} className="btn btn-secondary" style={{ padding: '0.75rem 1rem' }}>
+                    Send OTP
+                  </button>
+                )}
+                
+                {otpState === 'sending' && (
+                  <button type="button" disabled className="btn btn-secondary" style={{ padding: '0.75rem 1rem', opacity: 0.7 }}>
+                    <Loader2 size={16} className="spin" /> Sending...
+                  </button>
+                )}
+
+                {otpState === 'verified' && (
+                  <div style={{ padding: '0.75rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-success)', fontWeight: 500, background: 'var(--color-success-bg)', borderRadius: 'var(--radius-md)' }}>
+                    <ShieldCheck size={18} /> Verified
+                  </div>
+                )}
+              </div>
+
+              {/* OTP Entry Phase */}
+              {(otpState === 'sent' || otpState === 'verifying') && (
+                <div style={{ marginTop: 'var(--space-3)', display: 'flex', gap: 'var(--space-2)' }}>
+                  <input type="text" value={otpCode} onChange={e => setOtpCode(e.target.value)} placeholder="Wait briefly, then enter 4-digit code (Use 1234)" maxLength={4} style={{ flex: 1, padding: '0.75rem', borderRadius: 'var(--radius-md)', border: `1px solid ${otpError ? 'var(--color-danger)' : 'var(--color-primary)'}` }} />
+                  <button type="button" onClick={handleVerifyOTP} disabled={otpState === 'verifying'} className="btn btn-primary" style={{ padding: '0.75rem 1rem' }}>
+                    {otpState === 'verifying' ? <Loader2 size={16} className="spin" /> : 'Confirm'}
+                  </button>
+                  <button type="button" onClick={handleSendOTP} className="btn btn-ghost" style={{ padding: '0.75rem 1rem' }}>
+                    Resend
+                  </button>
+                </div>
+              )}
+
+              {otpError && <p style={{ color: 'var(--color-danger)', fontSize: '13px', marginTop: 'var(--space-2)', marginBottom: 0 }}>{otpError}</p>}
+            </div>
+
+            <div style={{ display: 'flex', gap: 'var(--space-4)' }}>
               <div style={{ flex: 1 }}>
-                <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '14px', fontWeight: 500 }}>Experience (Years)</label>
+                <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '14px', fontWeight: 500 }}>Experience <span style={{fontWeight: 'normal', color: 'var(--color-gray-500)'}}>(Years)</span></label>
                 <input type="number" min="0" value={formData.experience} onChange={e => setFormData({...formData, experience: e.target.value})} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} required />
+              </div>
+              <div style={{ flex: 1 }}>
+                <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '14px', fontWeight: 500 }}>Base City</label>
+                <input type="text" value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} required />
               </div>
             </div>
 
             <div style={{ display: 'flex', gap: 'var(--space-4)' }}>
               <div style={{ flex: 1 }}>
-                <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '14px', fontWeight: 500 }}>Base City</label>
-                <input type="text" value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} required />
+                <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '14px', fontWeight: 500 }}>Key Specialties</label>
+                <input type="text" value={formData.specialties} onChange={e => setFormData({...formData, specialties: e.target.value})} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} placeholder="e.g. Audit, GST, Startup Tax" required />
               </div>
               <div style={{ flex: 1 }}>
-                <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '14px', fontWeight: 500 }}>Certification ID <span style={{color: 'var(--color-gray-400)', fontWeight: 'normal'}}>(Optional)</span></label>
-                <input type="text" value={formData.certificationId} onChange={e => setFormData({...formData, certificationId: e.target.value})} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} placeholder="e.g. ICAI Mem. No" />
+                <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '14px', fontWeight: 500 }}>Certification ID</label>
+                <input type="text" value={formData.certificationId} onChange={e => setFormData({...formData, certificationId: e.target.value})} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} placeholder="Optional for now" />
               </div>
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '14px', fontWeight: 500 }}>Key Specialties <span style={{color: 'var(--color-gray-400)', fontWeight: 'normal'}}>(Comma separated)</span></label>
-              <input type="text" value={formData.specialties} onChange={e => setFormData({...formData, specialties: e.target.value})} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} placeholder="e.g. GST Registration, Startup Tax" required />
-            </div>
-
-            <div>
-              <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '14px', fontWeight: 500 }}>Short Bio</label>
-              <textarea rows="3" value={formData.bio} onChange={e => setFormData({...formData, bio: e.target.value})} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)', resize: 'vertical' }} placeholder="Introduce yourself to potential clients..." required />
+              <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '14px', fontWeight: 500 }}>Short Practitioner Bio</label>
+              <textarea rows="3" value={formData.bio} onChange={e => setFormData({...formData, bio: e.target.value})} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)', resize: 'vertical' }} placeholder="What drives you? Introduce yourself to leads bridging your expertise..." required />
             </div>
             
-            <button type="submit" className="btn btn-primary" style={{ marginTop: 'var(--space-6)', width: '100%', padding: '1rem', fontSize: '16px' }} disabled={loading}>
-              {loading ? <><Loader2 size={18} className="spin" /> Submitting Application...</> : <>Submit Application <ChevronRight size={18} /></>}
+            <button type="submit" className="btn btn-primary" style={{ marginTop: 'var(--space-6)', width: '100%', padding: '1rem', fontSize: '16px' }} disabled={loading || otpState !== 'verified'}>
+              {loading ? <><Loader2 size={18} className="spin" /> Sending to Verification Queues...</> : <>Submit Application <ChevronRight size={18} /></>}
             </button>
           </form>
         </div>

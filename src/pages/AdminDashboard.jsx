@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Users, CheckCircle, XCircle, TrendingUp, ShieldCheck, 
@@ -17,7 +17,7 @@ export default function AdminDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function loadQueue() {
       try {
         const apps = await dbService.getPendingApplications();
@@ -33,8 +33,12 @@ export default function AdminDashboard() {
 
   const handleLogout = async (e) => {
     e.preventDefault();
-    await authService.signOut();
-    navigate('/login');
+    try {
+      await authService.signOut();
+      navigate('/login');
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
   };
 
   const fullName = user?.user_metadata?.full_name || user?.user_metadata?.name || 'Admin Node';
