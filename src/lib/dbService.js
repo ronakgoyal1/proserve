@@ -74,6 +74,26 @@ class DbService {
     }
   }
 
+  async getMyApplicationStatus(userId) {
+    if (hasSupabaseConfig) {
+      const { data, error } = await supabase
+        .from('professional_applications')
+        .select('status')
+        .eq('user_id', userId)
+        .single();
+        
+      if (error && error.code !== 'PGRST116') {
+        // Suppress missing rows (PGRST116 = JSON object requested, multiple (or no) rows returned) organically
+        throw error;
+      }
+      return data?.status || null;
+    } else {
+      // In local mode, find strictly by userId matching session format
+      const app = this.localApplications.find(a => a.userId === userId);
+      return app?.status || null;
+    }
+  }
+
   async approveApplication(appId) {
     if (hasSupabaseConfig) {
       // In production, an Edge Function/Trigger would typically copy the verified application to the public `professionals` table.

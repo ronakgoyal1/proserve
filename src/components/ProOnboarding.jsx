@@ -104,6 +104,35 @@ export default function ProOnboarding() {
     }
   };
 
+  useEffect(() => {
+    let intervalId;
+    async function checkApproval() {
+      if (localStatus === 'pending' && session?.user?.id) {
+        try {
+          const actualStatus = await dbService.getMyApplicationStatus(session.user.id);
+          if (actualStatus === 'Approved') {
+            await authService.updateUserMetadata({ onboardingStatus: 'approved' });
+            setLocalStatus('approved');
+            navigate('/pro-dashboard');
+          } else if (actualStatus === 'Rejected') {
+            setLocalStatus('rejected');
+          }
+        } catch (e) {
+          console.error("Failed to fetch application status", e);
+        }
+      }
+    }
+    
+    // Initial check
+    checkApproval();
+    
+    // Poll every 10s while parked on pending screen for MVP
+    if (localStatus === 'pending') {
+      intervalId = setInterval(checkApproval, 10000);
+    }
+    return () => clearInterval(intervalId);
+  }, [localStatus, session, navigate]);
+
   if (localStatus === 'pending') {
     return (
       <main style={{ minHeight: '80vh', padding: 'var(--space-8) 0', background: 'var(--color-gray-50)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -118,6 +147,27 @@ export default function ProOnboarding() {
             </p>
             <p style={{ color: 'var(--color-gray-500)', marginTop: 'var(--space-4)' }}>
               We will notify you via email once your dashboard is unlocked.
+            </p>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  if (localStatus === 'rejected') {
+    return (
+      <main style={{ minHeight: '80vh', padding: 'var(--space-8) 0', background: 'var(--color-gray-50)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="container" style={{ maxWidth: '500px' }}>
+          <div style={{ background: 'white', padding: 'var(--space-8)', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-md)', textAlign: 'center' }}>
+            <div style={{ display: 'inline-flex', padding: 'var(--space-4)', background: 'var(--color-danger-bg)', color: 'var(--color-danger)', borderRadius: '50%', marginBottom: 'var(--space-4)' }}>
+              <AlertCircle size={40} />
+            </div>
+            <h2>Application Rejected</h2>
+            <p style={{ color: 'var(--color-gray-500)', marginTop: 'var(--space-4)', lineHeight: '1.6' }}>
+              We regret to inform you that your professional application was not approved by our verification team. 
+            </p>
+            <p style={{ color: 'var(--color-gray-500)', marginTop: 'var(--space-4)' }}>
+              If you believe this is a mistake, please reach out to our network team.
             </p>
           </div>
         </div>
