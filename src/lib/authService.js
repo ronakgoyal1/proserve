@@ -45,9 +45,10 @@ class AuthService {
   }
 
   async signOut() {
+    localStorage.removeItem('proserve_dev_mock_session');
     if (hasSupabaseConfig) {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      // Just catch error so local logout still persists if Supabase fails
+      const { error } = await supabase.auth.signOut().catch(()=>({}));
     } else {
       this.mockUser = null;
       localStorage.removeItem('proserve_mock_user');
@@ -55,6 +56,16 @@ class AuthService {
   }
 
   async updateUserMetadata(metadata) {
+    try {
+      const devMock = localStorage.getItem('proserve_dev_mock_session');
+      if (devMock) {
+        const parsed = JSON.parse(devMock);
+        parsed.user.user_metadata = { ...parsed.user.user_metadata, ...metadata };
+        localStorage.setItem('proserve_dev_mock_session', JSON.stringify(parsed));
+        return { user: parsed.user };
+      }
+    } catch {}
+
     if (hasSupabaseConfig) {
       const { data, error } = await supabase.auth.updateUser({ data: metadata });
       if (error) throw error;
@@ -92,6 +103,15 @@ class AuthService {
   }
 
   async getCurrentSession() {
+    try {
+      const devMock = localStorage.getItem('proserve_dev_mock_session');
+      if (devMock) {
+        const parsed = JSON.parse(devMock);
+        // Normalize mock session format
+        return { user: parsed.user };
+      }
+    } catch {}
+
     if (hasSupabaseConfig) {
       const { data, error } = await supabase.auth.getSession();
       if (error) throw error;
@@ -99,6 +119,25 @@ class AuthService {
     } else {
       return this.mockUser ? { user: this.mockUser } : null;
     }
+  }
+
+  async devSignIn(role) {
+    const mockId = `DEV-${Date.now()}`;
+    const email = `test_${role}@proserve.local`;
+    const name = `Test ${role.charAt(0).toUpperCase() + role.slice(1)}`;
+    const mockUser = {
+      id: mockId,
+      email: email,
+      user_metadata: {
+        role: role,
+        name: name,
+        full_name: name,
+        onboardingStatus: role === 'professional' ? 'required' : 'complete'
+      }
+    };
+    const sessionData = { user: mockUser };
+    localStorage.setItem('proserve_dev_mock_session', JSON.stringify(sessionData));
+    return sessionData;
   }
 }
 

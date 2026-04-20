@@ -153,6 +153,23 @@ export default function Login() {
     }
   };
 
+  const handleDevLogin = async (devRole) => {
+    setIsSubmitting(true);
+    setErrors({});
+    try {
+      await authService.devSignIn(devRole);
+      let routeTo = '/dashboard';
+      if (devRole === 'admin') routeTo = '/admin';
+      else if (devRole === 'professional') routeTo = '/onboarding';
+      
+      window.location.href = routeTo;
+    } catch (err) {
+      console.error('[Login] Dev login failed:', err);
+      setErrors({ email: err.message });
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <main className="login-page" id="login-page">
       <div className="login-container">
@@ -313,6 +330,20 @@ export default function Login() {
                   : <>Already have an account? <a href="#" onClick={(e) => { e.preventDefault(); setTab('login'); setErrors({}); }}>Log in</a></>
                 }
               </div>
+
+              {/* Dev Only Testing Block */}
+              {import.meta.env.DEV && (
+                <div style={{ marginTop: 'var(--space-6)', paddingTop: 'var(--space-4)', borderTop: '1px dashed var(--color-gray-200)', textAlign: 'center' }}>
+                  <p style={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-primary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 'var(--space-3)' }}>
+                    Test Environment Bypass
+                  </p>
+                  <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDevLogin('user')} disabled={isSubmitting}>Test User</button>
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDevLogin('professional')} disabled={isSubmitting}>Test Expert</button>
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDevLogin('admin')} disabled={isSubmitting}>Test Admin</button>
+                  </div>
+                </div>
+              )}
             </>
           )}
         </div>

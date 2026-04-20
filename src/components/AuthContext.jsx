@@ -40,6 +40,11 @@ export const AuthProvider = ({ children }) => {
       // Listen for auth state changes (handles the OAuth redirect callback automatically)
       const { data } = supabase.auth.onAuthStateChange((event, newSession) => {
         if (mounted) {
+          // If we have a dev mock session in local storage, ignore nulling out from Supabase
+          if (!newSession && localStorage.getItem('proserve_dev_mock_session')) {
+             setLoading(false);
+             return;
+          }
           setSession(newSession);
           setUser(newSession?.user ?? null);
           setLoading(false);
