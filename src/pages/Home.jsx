@@ -46,22 +46,21 @@ export default function Home() {
           <div className="hero-content animate-fade-in-up">
             <div className="hero-badge">
               <span className="dot" />
-              500+ Verified Experts Across India
+              ProServe verified network 2026
             </div>
 
             <h1>
-              Find Verified <span className="highlight">CA & CMA</span> Experts
-              for Tax, Compliance & Finance
+              India's Premier Network of <br/><span className="highlight">Verified CA & CMA Experts</span>
             </h1>
 
             <p>
-              Connect with India's top Chartered Accountants and Cost & Management
-              Accountants. Book consultations, get expert advice, and stay compliant.
+              Elevate your business with trusted financial guidance. Discover elite, 
+              background-checked professionals for Tax, Audit, and Compliance.
             </p>
 
-            <form className="hero-search" onSubmit={handleSearch} id="hero-search">
+            <form className="hero-search" onSubmit={handleSearch}>
               <div className="hero-search-input">
-                <Search size={18} />
+                <Search size={20} />
                 <input
                   type="text"
                   placeholder="What service do you need?"
@@ -71,7 +70,7 @@ export default function Home() {
               </div>
               <div className="hero-search-divider" />
               <div className="hero-search-input">
-                <MapPin size={18} />
+                <MapPin size={20} />
                 <input
                   type="text"
                   placeholder="City"
@@ -83,29 +82,57 @@ export default function Home() {
                   {cities.map(c => <option key={c} value={c} />)}
                 </datalist>
               </div>
-              <button type="submit" className="btn btn-primary">
-                <Search size={16} />
-                Search
+              <button type="submit" className="btn">
+                Find Expert
               </button>
             </form>
 
-            <div className="hero-trust">
-              <div className="hero-trust-item">
-                <ShieldCheck size={16} />
-                <strong>100%</strong> Verified Experts
+            <div className="hero-ctas">
+              <Link to="/search" className="btn-hero-primary">Browse Experts</Link>
+              <Link to="/login?tab=signup&role=professional" className="btn-hero-secondary">Apply as Professional</Link>
+            </div>
+
+            <div className="hero-social-proof">
+              <div className="avatars-overlap">
+                <img src="https://ui-avatars.com/api/?name=Anita+R&background=C5A059&color=fff" alt="User 1" />
+                <img src="https://ui-avatars.com/api/?name=David+M&background=182C4D&color=fff" alt="User 2" />
+                <img src="https://ui-avatars.com/api/?name=Sanjay+K&background=0A192F&color=fff" alt="User 3" />
               </div>
-              <div className="hero-trust-item">
-                <Star size={16} />
-                <strong>4.8</strong> Average Rating
-              </div>
-              <div className="hero-trust-item">
-                <Users size={16} />
-                <strong>10,000+</strong> Happy Clients
+              <div className="social-proof-text">
+                <strong>10,000+ Businesses</strong>
+                trust ProServe experts
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Feature Cards overlap */}
+      <div className="hero-features-wrapper">
+        <div className="hero-features-grid">
+          <div className="hero-feature-card animate-fade-in-up delay-1">
+            <div className="feature-icon-wrapper"><ShieldCheck size={24} /></div>
+            <div className="feature-content">
+              <h4>Verified Profiles</h4>
+              <p>100% background and credential checked experts.</p>
+            </div>
+          </div>
+          <div className="hero-feature-card animate-fade-in-up delay-2">
+            <div className="feature-icon-wrapper"><Zap size={24} /></div>
+            <div className="feature-content">
+              <h4>AI Matching</h4>
+              <p>Smart algorithms to find the perfect professional for your needs.</p>
+            </div>
+          </div>
+          <div className="hero-feature-card animate-fade-in-up delay-3">
+            <div className="feature-icon-wrapper"><Clock size={24} /></div>
+            <div className="feature-content">
+              <h4>Instant Booking</h4>
+              <p>Secure available time slots effortlessly in seconds.</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Categories */}
       <section className="section" id="categories">
