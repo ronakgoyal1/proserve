@@ -97,9 +97,23 @@ export default function Login() {
       if (userObj?.email === 'ronakdiscord@gmail.com' || finalRole === 'admin') {
         routeTo = '/admin';
       } else if (finalRole === 'professional') {
-        const currentStatus = userObj?.user_metadata?.onboardingStatus;
+        let currentStatus = userObj?.user_metadata?.onboardingStatus;
         if (currentStatus === 'required' || currentStatus === 'pending') {
-          routeTo = '/onboarding';
+          // Double check database source of truth explicitly to clear stale cached flags instantly
+          try {
+            const { dbService } = await import('../lib/dbService');
+            const realStatus = await dbService.getMyApplicationStatus(userObj.id);
+            if (realStatus === 'Approved') {
+               currentStatus = 'approved';
+               await authService.updateUserMetadata({ onboardingStatus: 'approved' });
+            }
+          } catch(e) { console.error("Cached check failed", e); }
+          
+          if (currentStatus === 'required' || currentStatus === 'pending') {
+            routeTo = '/onboarding';
+          } else {
+            routeTo = '/pro-dashboard';
+          }
         } else {
           routeTo = '/pro-dashboard';
         }

@@ -1,12 +1,12 @@
 :root {
-  /* Colors */
-  --color-primary: #1a56db;
-  --color-primary-dark: #1e40af;
-  --color-primary-light: #3b82f6;
-  --color-primary-bg: #eff6ff;
-  --color-primary-bg-hover: #dbeafe;
-  --color-accent: #0f172a;
-  --color-accent-light: #1e293b;
+  /* Premium Trust Growth: Colors */
+  --color-primary: #0A192F; /* Midnight Blue */
+  --color-primary-dark: #060F1D;
+  --color-primary-light: #182C4D;
+  --color-primary-bg: #F4F7FB;
+  --color-primary-bg-hover: #E2E8F0;
+  --color-accent: #C5A059; /* Premium Gold */
+  --color-accent-light: #DBC086;
   --color-white: #ffffff;
   --color-gray-50: #f8fafc;
   --color-gray-100: #f1f5f9;
@@ -27,7 +27,7 @@
 
   /* Typography */
   --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-display: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  --font-display: 'Outfit', 'Inter', sans-serif;
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
@@ -53,12 +53,16 @@
   --space-24: 6rem;
 
   /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-card-hover: 0 10px 40px rgba(26, 86, 219, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-sm: 0 2px 4px rgba(10, 25, 47, 0.04);
+  --shadow-md: 0 4px 12px rgba(10, 25, 47, 0.08);
+  --shadow-lg: 0 10px 24px rgba(10, 25, 47, 0.12);
+  --shadow-xl: 0 20px 40px rgba(10, 25, 47, 0.16);
+  --shadow-card: 0 2px 8px rgba(10, 25, 47, 0.06);
+  --shadow-card-hover: 0 16px 40px rgba(197, 160, 89, 0.12), 0 8px 16px rgba(10, 25, 47, 0.08);
+
+  /* Gradients */
+  --bg-gradient-premium: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+  --text-gradient-gold: linear-gradient(90deg, #DBC086 0%, #C5A059 100%);
 
   /* Border Radius */
   --radius-sm: 6px;
@@ -265,6 +269,18 @@ input, select, textarea {
 .badge-warning {
   background: var(--color-warning-bg);
   color: var(--color-warning);
+}
+
+.badge-gold {
+  background: rgba(197, 160, 89, 0.15);
+  color: var(--color-accent-dark);
+  border: 1px solid rgba(197, 160, 89, 0.3);
+}
+
+.badge-premium {
+  background: var(--color-primary);
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
 }
 
 /* Stars */

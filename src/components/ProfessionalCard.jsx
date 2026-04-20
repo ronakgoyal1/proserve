@@ -16,13 +16,16 @@ export default function ProfessionalCard({ professional }) {
         <div className="pro-card-info">
           <h3 className="pro-card-name">
             {name}
+          </h3>
+          
+          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
+            <span className="badge badge-primary">{category}</span>
             {verified && (
-              <span className="pro-card-verified" title="Verified Professional">
-                <Check size={12} strokeWidth={3} />
+              <span className="badge badge-gold" title="Identity & Credentials Verified">
+                <Check size={12} strokeWidth={3} /> Verified Expert
               </span>
             )}
-          </h3>
-          <span className="badge badge-primary" style={{ marginBottom: '4px' }}>{category}</span>
+          </div>
           <div className="pro-card-meta">
             <span className="pro-card-rating">
               <Star size={13} fill="currentColor" />

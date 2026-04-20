@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
-import { CheckCircle2, ChevronRight, Loader2, Clock, Phone, ShieldCheck, AlertCircle } from 'lucide-react';
+import { CheckCircle2, ChevronRight, Loader2, Clock, Phone, ShieldCheck, AlertCircle, RefreshCw } from 'lucide-react';
 import { dbService } from '../lib/dbService';
 import { authService } from '../lib/authService';
 
@@ -148,6 +148,13 @@ export default function ProOnboarding() {
             <p style={{ color: 'var(--color-gray-500)', marginTop: 'var(--space-4)' }}>
               We will notify you via email once your dashboard is unlocked.
             </p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="btn btn-outline" 
+              style={{ marginTop: 'var(--space-6)', display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)' }}
+            >
+              <RefreshCw size={16} /> Check Status Again
+            </button>
           </div>
         </div>
       </main>

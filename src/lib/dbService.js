@@ -78,19 +78,23 @@ class DbService {
     if (hasSupabaseConfig) {
       const { data, error } = await supabase
         .from('professional_applications')
-        .select('status')
+        .select('status, created_at')
         .eq('user_id', userId)
-        .single();
+        .order('created_at', { ascending: false });
         
-      if (error && error.code !== 'PGRST116') {
-        // Suppress missing rows (PGRST116 = JSON object requested, multiple (or no) rows returned) organically
-        throw error;
-      }
-      return data?.status || null;
+      if (error) throw error;
+      if (!data || data.length === 0) return null;
+      
+      const hasApproved = data.some(app => app.status === 'Approved');
+      if (hasApproved) return 'Approved';
+      
+      return data[0].status;
     } else {
-      // In local mode, find strictly by userId matching session format
-      const app = this.localApplications.find(a => a.userId === userId);
-      return app?.status || null;
+      const apps = this.localApplications.filter(a => a.userId === userId);
+      if (!apps || apps.length === 0) return null;
+      const hasApproved = apps.some(app => app.status === 'Approved');
+      if (hasApproved) return 'Approved';
+      return apps[0].status;
     }
   }
 

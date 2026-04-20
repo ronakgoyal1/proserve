@@ -69,12 +69,26 @@ export default function Profile() {
             <div className="profile-avatar">{professional.initials}</div>
             <div className="profile-info">
               <div className="profile-name-row">
-                <h1>{professional.name}</h1>
+                <h1 style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                  {professional.name}
+                  {professional.verified && (
+                    <span className="badge badge-gold" style={{ fontSize: '12px' }}>
+                      <Shield size={14} /> Verified Professional
+                    </span>
+                  )}
+                </h1>
+              </div>
+              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
                 <span className="badge badge-primary">{professional.category}</span>
                 {professional.verified && (
-                  <span className="profile-verified">
-                    <Shield size={12} /> Verified
-                  </span>
+                  <>
+                    <span className="badge badge-success">
+                      <ShieldCheck size={12} /> Documents Verified
+                    </span>
+                    <span className="badge" style={{ background: 'var(--color-gray-100)', color: 'var(--color-gray-600)'}}>
+                      Verified Oct 2025
+                    </span>
+                  </>
                 )}
               </div>
               <div className="profile-meta">
