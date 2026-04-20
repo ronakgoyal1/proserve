@@ -198,8 +198,8 @@
 
 .package-card {
   border: 1px solid var(--color-gray-200);
-  border-radius: var(--radius-lg);
-  padding: var(--space-5);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
   transition: all var(--transition-base);
   display: flex;
   flex-direction: column;
@@ -279,9 +279,9 @@
 }
 
 .profile-review {
-  padding: var(--space-5);
+  padding: var(--space-6);
   border: 1px solid var(--color-gray-200);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
 }
 
 .review-header {
