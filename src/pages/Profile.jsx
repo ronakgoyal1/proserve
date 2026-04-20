@@ -261,8 +261,8 @@ export default function Profile() {
             <aside className="profile-sidebar">
               <div className="sidebar-card">
                 <h3>Book a Consultation</h3>
-                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-gray-500)', marginBottom: 'var(--space-4)' }}>
-                  Starting at <strong style={{ color: 'var(--color-gray-900)', fontSize: 'var(--text-xl)' }}>₹{professional.startingPrice.toLocaleString()}</strong>
+                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-gray-400)', marginBottom: 'var(--space-4)' }}>
+                  Starting at <strong style={{ color: 'var(--color-white)', fontSize: 'var(--text-xl)' }}>₹{professional.startingPrice.toLocaleString()}</strong>
                 </p>
                 <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-success)', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: 'var(--space-4)' }}>
                   <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--color-success)', display: 'inline-block' }} />

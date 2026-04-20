@@ -245,12 +245,12 @@ export default function SearchPage() {
             <div className="search-top-input" style={{ maxWidth: 200 }}>
               <MapPin size={18} />
               <select
-                style={{ width: '100%', background: 'none', border: 'none', color: 'var(--color-gray-700)', cursor: 'pointer' }}
+                style={{ width: '100%', background: 'none', border: 'none', color: 'var(--color-white)', cursor: 'pointer' }}
                 value={cityFilter}
                 onChange={(e) => setCityFilter(e.target.value)}
               >
-                <option value="">All Cities</option>
-                {cities.map(c => <option key={c} value={c}>{c}</option>)}
+                <option value="" style={{ color: 'var(--color-gray-900)' }}>All Cities</option>
+                {cities.map(c => <option key={c} value={c} style={{ color: 'var(--color-gray-900)' }}>{c}</option>)}
               </select>
             </div>
             <button className="btn btn-primary">

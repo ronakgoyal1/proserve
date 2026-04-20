@@ -441,6 +441,21 @@
   margin: 0 auto;
 }
 
+/* Utility Backgrounds for Mixed Theme */
+.bg-dark {
+  background: var(--color-primary-dark);
+}
+
+.dark-card {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.dark-card:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(197, 160, 89, 0.3) !important;
+}
+
 /* Why Choose */
 .why-grid {
   display: grid;
@@ -615,6 +630,69 @@
 .cta-card .btn:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
+}
+
+.testimonial-card.dark-card blockquote {
+  color: var(--color-gray-300);
+}
+
+/* FAQ Section */
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+.faq-item {
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.faq-item:hover {
+  border-color: var(--color-accent);
+}
+
+.faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5) var(--space-6);
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--color-gray-900);
+}
+
+.faq-icon {
+  color: var(--color-gray-400);
+  transition: transform var(--transition-base);
+}
+
+.faq-item.open .faq-icon {
+  transform: rotate(180deg);
+  color: var(--color-accent);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, padding 0.3s ease;
+  background: var(--color-gray-50);
+}
+
+.faq-item.open .faq-answer {
+  max-height: 200px;
+  padding: 0 var(--space-6) var(--space-5);
+}
+
+.faq-answer p {
+  color: var(--color-gray-600);
+  font-size: var(--text-sm);
+  line-height: 1.6;
 }
 
 /* Responsive */

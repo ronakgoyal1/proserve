@@ -4,16 +4,16 @@
 }
 
 .search-hero {
-  background: var(--color-gray-50);
-  padding: var(--space-8) 0;
-  border-bottom: 1px solid var(--color-gray-200);
+  background: var(--color-primary-dark);
+  padding: var(--space-10) 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .search-hero h1 {
   font-family: var(--font-display);
   font-size: var(--text-2xl);
   font-weight: 700;
-  color: var(--color-gray-900);
+  color: var(--color-white);
   margin-bottom: var(--space-4);
 }
 
@@ -29,25 +29,29 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-4);
-  background: var(--color-white);
-  border: 1px solid var(--color-gray-200);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-md);
   transition: border-color var(--transition-fast);
 }
 
 .search-top-input:focus-within {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.15);
+}
+
+.search-top-input input, .search-top-input select {
+  font-size: var(--text-base);
 }
 
 .search-top-input input {
   flex: 1;
   background: none;
-  color: var(--color-gray-800);
+  color: var(--color-white);
 }
 
 .search-top-input input::placeholder {
-  color: var(--color-gray-400);
+  color: var(--color-gray-500);
 }
 
 .search-top-input svg {
@@ -69,6 +73,10 @@
   align-self: start;
   max-height: calc(100vh - 72px - var(--space-8));
   overflow-y: auto;
+  background: var(--color-primary-dark);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  color: var(--color-gray-300);
 }
 
 .filter-section {
@@ -78,7 +86,7 @@
 .filter-section h3 {
   font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--color-gray-800);
+  color: var(--color-white);
   margin-bottom: var(--space-3);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -98,25 +106,25 @@
   border-radius: var(--radius-sm);
   cursor: pointer;
   font-size: var(--text-sm);
-  color: var(--color-gray-600);
+  color: var(--color-gray-400);
   transition: all var(--transition-fast);
 }
 
 .filter-option:hover {
-  background: var(--color-gray-100);
-  color: var(--color-gray-800);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-white);
 }
 
 .filter-option.active {
-  background: var(--color-primary-bg);
-  color: var(--color-primary);
+  background: rgba(197, 160, 89, 0.1);
+  color: var(--color-accent-light);
   font-weight: 500;
 }
 
 .filter-checkbox {
   width: 18px;
   height: 18px;
-  border: 2px solid var(--color-gray-300);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -126,25 +134,25 @@
 }
 
 .filter-option.active .filter-checkbox {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: white;
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-primary-dark);
 }
 
 .filter-select {
   width: 100%;
   padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--color-gray-200);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-sm);
-  background: var(--color-white);
-  color: var(--color-gray-700);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-white);
   font-size: var(--text-sm);
   cursor: pointer;
 }
 
 .filter-select:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.1);
 }
 
 .filter-range {
@@ -295,7 +303,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: var(--color-white);
+    background: var(--color-primary-dark);
     z-index: 998;
     padding: var(--space-6);
     padding-top: var(--space-16);

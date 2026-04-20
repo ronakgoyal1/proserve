@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   Search, MapPin, ShieldCheck, Star, Users, Clock,
   CreditCard, ArrowRight, BadgeCheck, Calculator, FileText,
-  ChevronRight, Zap
+  ChevronRight, Zap, ChevronDown
 } from 'lucide-react';
 import ProfessionalCard from '../components/ProfessionalCard';
 import { professionals as mockProfessionals, testimonials, cities } from '../data/mockData';
@@ -36,7 +36,14 @@ export default function Home() {
     navigate(`/search?${params.toString()}`);
   };
 
+  const [openFaq, setOpenFaq] = useState(null);
+  const toggleFaq = (index) => setOpenFaq(openFaq === index ? null : index);
 
+  const faqs = [
+    { q: "How are professionals verified on ProServe?", a: "Every professional undergoes a rigorous 3-step verification process validating their identity, firm registration, and active ICAI/ICMA credentials." },
+    { q: "Is the initial consultation completely free?", a: "Professionals set their own rates. However, you can freely chat or message them through our platform to discuss your requirements before committing to a paid booking." },
+    { q: "How do payments and bookings work?", a: "Once you select an expert, you can book a specific time slot directly on their calendar. Payment flows depend on the package but are protected by our satisfaction guarantee." }
+  ];
 
   return (
     <main id="home-page">
@@ -211,20 +218,20 @@ export default function Home() {
       </section>
 
       {/* Why Choose */}
-      <section className="section" id="why-choose">
+      <section className="section bg-dark text-white" id="why-choose">
         <div className="container">
           <div className="section-header">
-            <h2>Why Choose ProServe?</h2>
-            <p>Built for trust, transparency, and convenience</p>
+            <h2 style={{color: 'var(--color-white)'}}>Why Choose ProServe?</h2>
+            <p style={{color: 'var(--color-gray-400)'}}>Built for trust, transparency, and high-end convenience</p>
           </div>
 
           <div className="why-grid">
-            <div className="why-card animate-fade-in-up delay-1">
+            <div className="why-card dark-card animate-fade-in-up delay-1">
               <div className="why-card-icon">
                 <ShieldCheck size={24} />
               </div>
-              <h3>Verified Experts</h3>
-              <p>Every professional is verified with valid credentials and background checks.</p>
+              <h3 style={{color: 'var(--color-white)'}}>Verified Experts</h3>
+              <p style={{color: 'var(--color-gray-400)'}}>Every professional is verified with valid credentials and checks.</p>
             </div>
 
             <div className="why-card animate-fade-in-up delay-2">
@@ -243,12 +250,12 @@ export default function Home() {
               <p>Book consultations instantly. Get matched with an expert in minutes.</p>
             </div>
 
-            <div className="why-card animate-fade-in-up delay-4">
+            <div className="why-card dark-card animate-fade-in-up delay-4">
               <div className="why-card-icon">
                 <Star size={24} />
               </div>
-              <h3>Rated & Reviewed</h3>
-              <p>Read genuine reviews from real clients before making a choice.</p>
+              <h3 style={{color: 'var(--color-white)'}}>Rated & Reviewed</h3>
+              <p style={{color: 'var(--color-gray-400)'}}>Read genuine reviews from real clients before making a choice.</p>
             </div>
           </div>
         </div>
@@ -277,16 +284,16 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      <section className="section" id="testimonials">
+      <section className="section bg-dark text-white" id="testimonials">
         <div className="container">
           <div className="section-header">
-            <h2>What Our Clients Say</h2>
-            <p>Trusted by 10,000+ individuals and businesses across India</p>
+            <h2 style={{color: 'var(--color-white)'}}>What Our Clients Say</h2>
+            <p style={{color: 'var(--color-gray-400)'}}>Trusted by 10,000+ individuals and businesses across India</p>
           </div>
 
           <div className="testimonials-grid">
             {testimonials.map(t => (
-              <div key={t.id} className="testimonial-card animate-fade-in-up">
+              <div key={t.id} className="testimonial-card dark-card animate-fade-in-up">
                 <div className="testimonial-stars">
                   {Array.from({ length: t.rating }, (_, i) => (
                     <Star key={i} size={16} fill="currentColor" />
@@ -298,8 +305,8 @@ export default function Home() {
                     {t.name.split(' ').map(n => n[0]).join('')}
                   </div>
                   <div className="testimonial-author-info">
-                    <h4>{t.name}</h4>
-                    <p>{t.role}</p>
+                    <h4 style={{color: 'var(--color-white)'}}>{t.name}</h4>
+                    <p style={{color: 'var(--color-gray-400)'}}>{t.role}</p>
                   </div>
                 </div>
               </div>
@@ -308,33 +315,44 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="section cta-section" id="cta-section">
-        <div className="container">
-          <div className="cta-grid">
-            <div className="cta-card cta-card-user">
-              <h3>Need Expert Help?</h3>
-              <p>
-                Find the right CA or CMA professional for your tax, compliance,
-                or financial needs. Get started in minutes.
-              </p>
-              <Link to="/search" className="btn btn-lg">
-                Find an Expert <ChevronRight size={18} />
-              </Link>
-            </div>
-
-            <div className="cta-card cta-card-pro">
-              <h3>Are You a Professional?</h3>
-              <p>
-                Join ProServe and get discovered by thousands of potential clients.
-                Grow your practice online.
-              </p>
-              <Link to="/login?tab=signup&role=professional" className="btn btn-lg">
-                Join as Expert <ChevronRight size={18} />
-              </Link>
-            </div>
+      {/* FAQ Section */}
+      <section className="section" id="faq">
+        <div className="container" style={{ maxWidth: '800px' }}>
+          <div className="section-header">
+            <h2>Frequently Asked Questions</h2>
+            <p>Everything you need to know about navigating ProServe.</p>
+          </div>
+          <div className="faq-list">
+            {faqs.map((faq, index) => (
+              <div key={index} className={`faq-item ${openFaq === index ? 'open' : ''}`} onClick={() => toggleFaq(index)}>
+                <div className="faq-question">
+                  <h4>{faq.q}</h4>
+                  <ChevronDown size={20} className="faq-icon" />
+                </div>
+                <div className="faq-answer">
+                  <p>{faq.a}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
+      </section>
+
+      {/* Final Massive CTA */}
+      <section className="section bg-dark text-center" id="final-cta" style={{ padding: 'var(--space-20) 0', position: 'relative', overflow: 'hidden' }}>
+        <div className="container" style={{ position: 'relative', zIndex: 10 }}>
+          <h2 style={{ color: 'white', fontFamily: 'var(--font-display)', fontSize: 'var(--text-4xl)', marginBottom: 'var(--space-4)' }}>
+            Ready to secure your financial future?
+          </h2>
+          <p style={{ color: 'var(--color-gray-300)', fontSize: 'var(--text-lg)', marginBottom: 'var(--space-8)', maxWidth: '600px', margin: '0 auto var(--space-8)' }}>
+            Join thousands of smart businesses who trust our verified CA and CMA network to handle compliance seamlessly.
+          </p>
+          <div style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link to="/search" className="btn-hero-primary" style={{ padding: '1rem 2rem', fontSize: '1rem' }}>Find an Expert Now</Link>
+            <Link to="/login?tab=signup&role=professional" className="btn-hero-secondary" style={{ padding: '1rem 2rem', fontSize: '1rem' }}>Apply as Professional</Link>
+          </div>
+        </div>
+        <div style={{ position: 'absolute', top: '-50%', right: '-10%', width: '60vw', height: '60vw', background: 'radial-gradient(circle, rgba(197, 160, 89, 0.1) 0%, transparent 60%)', borderRadius: '50%', pointerEvents: 'none' }} />
       </section>
     </main>
   );

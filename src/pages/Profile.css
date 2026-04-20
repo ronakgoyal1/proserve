@@ -5,9 +5,9 @@
 
 /* Profile Header */
 .profile-header {
-  background: linear-gradient(135deg, var(--color-primary-bg) 0%, var(--color-white) 100%);
+  background: var(--color-primary-dark);
   padding: var(--space-10) 0;
-  border-bottom: 1px solid var(--color-gray-200);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .profile-header-inner {
@@ -48,7 +48,7 @@
   font-family: var(--font-display);
   font-size: var(--text-2xl);
   font-weight: 800;
-  color: var(--color-gray-900);
+  color: var(--color-white);
 }
 
 .profile-verified {
@@ -76,12 +76,12 @@
   align-items: center;
   gap: 4px;
   font-size: var(--text-sm);
-  color: var(--color-gray-500);
+  color: var(--color-gray-400);
 }
 
 .profile-meta .rating-text {
   font-weight: 600;
-  color: var(--color-gray-800);
+  color: var(--color-white);
 }
 
 .profile-actions {
@@ -335,17 +335,20 @@
 }
 
 .sidebar-card {
-  border: 1px solid var(--color-gray-200);
+  background: var(--color-primary-dark);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-xl);
   padding: var(--space-6);
   margin-bottom: var(--space-4);
+  color: var(--color-gray-300);
+  box-shadow: var(--shadow-lg);
 }
 
 .sidebar-card h3 {
   font-family: var(--font-display);
   font-size: var(--text-base);
   font-weight: 700;
-  color: var(--color-gray-900);
+  color: var(--color-white);
   margin-bottom: var(--space-4);
 }
 
@@ -359,7 +362,7 @@
 .availability-day {
   text-align: center;
   font-size: 11px;
-  color: var(--color-gray-500);
+  color: var(--color-gray-400);
   padding: var(--space-1) 0;
 }
 
@@ -384,8 +387,8 @@
 }
 
 .availability-slot.unavailable {
-  background: var(--color-gray-100);
-  color: var(--color-gray-400);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-gray-500);
 }
 
 .sidebar-cta-buttons {

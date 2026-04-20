@@ -142,7 +142,7 @@ export default function UserDashboard() {
               <Calendar size={18} /> My Bookings
             </div>
 
-            <div style={{ margin: 'var(--space-4) 0', borderTop: '1px solid var(--color-gray-100)' }} />
+            <div style={{ margin: 'var(--space-4) 0', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }} />
 
             <a href="#" className="sidebar-nav-item" style={{ color: 'var(--color-danger)' }} onClick={handleLogout}>
               <LogOut size={18} /> Log Out
