@@ -34,7 +34,7 @@ export default function SearchPage() {
   const [ratingFilter, setRatingFilter] = useState(0);
   const [experienceFilter, setExperienceFilter] = useState('');
   const [languageFilters, setLanguageFilters] = useState([]);
-  const [sortBy, setSortBy] = useState('rating');
+  const [sortBy, setSortBy] = useState('relevance');
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   // Data fetching state
@@ -110,6 +110,17 @@ export default function SearchPage() {
     }
 
     results.sort((a, b) => {
+      if (sortBy === 'relevance') {
+        const getScore = (pro) => {
+          let score = 0;
+          if (pro.verification?.status === 'verified') score += 50;
+          if (pro.featured) score += 10;
+          score += pro.rating * 5;
+          score += Math.min(pro.reviews * 0.1, 10);
+          return score;
+        };
+        return getScore(b) - getScore(a);
+      }
       if (sortBy === 'rating') return b.rating - a.rating;
       if (sortBy === 'price-low') return a.startingPrice - b.startingPrice;
       if (sortBy === 'price-high') return b.startingPrice - a.startingPrice;
@@ -324,6 +335,7 @@ export default function SearchPage() {
                 <ArrowUpDown size={14} />
                 <span>Sort by:</span>
                 <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                  <option value="relevance">Top Match</option>
                   <option value="rating">Top Rated</option>
                   <option value="price-low">Price: Low to High</option>
                   <option value="price-high">Price: High to Low</option>

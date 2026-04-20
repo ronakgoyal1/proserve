@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Check, Calendar, Loader2 } from 'lucide-react';
+import { X, Check, Calendar, Loader2, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { dbService } from '../lib/dbService';
@@ -151,6 +151,18 @@ export default function BookingModal({ isOpen, onClose, professional }) {
                   ))}
                 </div>
                 {error && <div style={{ color: 'var(--color-error)', marginTop: '1rem', fontSize: '14px' }}>{error}</div>}
+                
+                {professional?.verification?.status !== 'verified' && (
+                  <div style={{ marginTop: 'var(--space-4)', padding: 'var(--space-3)', background: 'var(--color-warning-bg)', border: '1px solid var(--color-warning)', borderRadius: 'var(--radius-md)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', color: 'var(--color-warning)', marginBottom: 4, fontWeight: 600 }}>
+                      <AlertCircle size={16} /> Verification Pending
+                    </div>
+                    <p style={{ fontSize: '12px', color: 'var(--color-gray-700)', margin: 0, lineHeight: 1.4 }}>
+                      This professional has not completed our strict verification process yet. 
+                      Proceed with caution as ProServe cannot guarantee their credentials at this time.
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div style={{ display: 'flex', gap: '12px' }}>

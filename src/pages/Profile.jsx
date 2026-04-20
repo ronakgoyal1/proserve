@@ -71,7 +71,7 @@ export default function Profile() {
               <div className="profile-name-row">
                 <h1 style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                   {professional.name}
-                  {professional.verified && (
+                  {professional.verification?.status === 'verified' && (
                     <span className="badge badge-gold" style={{ fontSize: '12px' }}>
                       <Shield size={14} /> Verified Professional
                     </span>
@@ -80,15 +80,19 @@ export default function Profile() {
               </div>
               <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
                 <span className="badge badge-primary">{professional.category}</span>
-                {professional.verified && (
+                {professional.verification?.status === 'verified' ? (
                   <>
                     <span className="badge badge-success">
                       <ShieldCheck size={12} /> Documents Verified
                     </span>
                     <span className="badge" style={{ background: 'var(--color-gray-100)', color: 'var(--color-gray-600)'}}>
-                      Verified Oct 2025
+                      Verified {professional.verification.date}
                     </span>
                   </>
+                ) : (
+                  <span className="badge" style={{ background: 'var(--color-warning-bg)', color: 'var(--color-warning)'}}>
+                    Verification Pending
+                  </span>
                 )}
               </div>
               <div className="profile-meta">
@@ -259,6 +263,35 @@ export default function Profile() {
 
             {/* Sidebar */}
             <aside className="profile-sidebar">
+              {professional.verification?.status === 'verified' ? (
+              <div className="sidebar-card" style={{ borderColor: 'var(--color-primary)', background: 'linear-gradient(180deg, rgba(26, 86, 219, 0.05) 0%, var(--color-primary-dark) 100%)' }}>
+                <h3 style={{ color: 'var(--color-primary-light)' }}><ShieldCheck size={18} style={{ verticalAlign: 'middle', marginRight: 8, marginTop: -2 }}/> Trust & Verification</h3>
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginTop: 'var(--space-4)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', color: 'var(--color-gray-300)', fontSize: '13px', fontWeight: 500 }}>
+                    <div style={{ padding: 4, background: 'var(--color-success-bg)', color: 'var(--color-success)', borderRadius: '50%' }}><Check size={12} strokeWidth={3} /></div>
+                    Identity Verified
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', color: 'var(--color-gray-300)', fontSize: '13px', fontWeight: 500 }}>
+                    <div style={{ padding: 4, background: 'var(--color-success-bg)', color: 'var(--color-success)', borderRadius: '50%' }}><Check size={12} strokeWidth={3} /></div>
+                    Credentials Verified
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', color: 'var(--color-gray-300)', fontSize: '13px', fontWeight: 500 }}>
+                    <div style={{ padding: 4, background: 'var(--color-success-bg)', color: 'var(--color-success)', borderRadius: '50%' }}><Check size={12} strokeWidth={3} /></div>
+                    Documents Verified
+                  </div>
+                </div>
+                <div style={{ marginTop: 'var(--space-4)', paddingTop: 'var(--space-4)', borderTop: '1px solid rgba(255,255,255,0.05)', fontSize: '12px', color: 'var(--color-gray-400)', textAlign: 'center' }}>
+                  Verified since {professional.verification?.date}
+                </div>
+              </div>
+              ) : (
+              <div className="sidebar-card" style={{ borderColor: 'var(--color-warning)' }}>
+                 <h3 style={{ color: 'var(--color-warning)' }}>Verification Pending</h3>
+                 <p style={{ fontSize: '12px', color: 'var(--color-gray-400)', marginTop: '8px', lineHeight: 1.5 }}>This professional's credentials are currently unverified or under review by our trust team.</p>
+              </div>
+              )}
+
               <div className="sidebar-card">
                 <h3>Book a Consultation</h3>
                 <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-gray-400)', marginBottom: 'var(--space-4)' }}>

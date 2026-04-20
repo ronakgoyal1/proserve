@@ -128,6 +128,7 @@ class DbService {
         reviews: 0,
         hourlyRate: 1500,
         featured: false,
+        verification: { status: 'unverified', date: null, checks: { identity: false, documents: false, credentials: false } },
         image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=256'
       };
       mockProfessionals.unshift(newPro);

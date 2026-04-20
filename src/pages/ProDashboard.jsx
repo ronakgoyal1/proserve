@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  BarChart3, UserCheck, User, Star, DollarSign, Search, Check, LogOut
+  BarChart3, UserCheck, User, Star, DollarSign, Search, Check, LogOut, ShieldCheck, UploadCloud, X, Loader2
 } from 'lucide-react';
 import { useAuth } from '../components/AuthContext';
 import { authService } from '../lib/authService';
@@ -17,6 +17,24 @@ export default function ProDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  const [verificationStatus, setVerificationStatus] = useState(user?.user_metadata?.verificationStatus || 'unverified');
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+
+  const handleVerifySubmit = async (e) => {
+    e.preventDefault();
+    setIsVerifying(true);
+    try {
+      await authService.updateUserMetadata({ verificationStatus: 'pending' });
+      setVerificationStatus('pending');
+      setShowVerifyModal(false);
+    } catch(err) {
+      console.error(err);
+    } finally {
+      setIsVerifying(false);
+    }
+  };
 
   useEffect(() => {
     async function load() {
@@ -49,6 +67,30 @@ export default function ProDashboard() {
       case 'overview':
         return (
           <>
+            {verificationStatus === 'unverified' && (
+              <div className="dashboard-section animate-fade-in" style={{ background: 'var(--color-primary-bg)', borderColor: 'var(--color-primary)', marginBottom: 'var(--space-6)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-6)', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
+                <div>
+                  <h3 style={{ color: 'var(--color-primary)' }}>Level up your profile</h3>
+                  <p style={{ color: 'var(--color-primary-dark)', marginTop: 4 }}>Verified professionals get 3x more bookings. Upload your credentials to receive the verified badge.</p>
+                </div>
+                <button className="btn btn-primary" onClick={() => setShowVerifyModal(true)}>Submit Documents</button>
+              </div>
+            )}
+            
+            {verificationStatus === 'pending' && (
+              <div className="dashboard-section animate-fade-in" style={{ background: 'var(--color-warning-bg)', borderColor: 'var(--color-warning)', marginBottom: 'var(--space-6)', padding: 'var(--space-6)' }}>
+                <h3 style={{ color: 'var(--color-warning)', display: 'flex', alignItems: 'center', gap: 8 }}><ShieldCheck size={20} /> Verification Under Review</h3>
+                <p style={{ color: 'var(--color-gray-700)', marginTop: 4 }}>Our trust team is reviewing your documents. You'll be notified within 24-48 hours once completed.</p>
+              </div>
+            )}
+
+            {verificationStatus === 'verified' && (
+              <div className="dashboard-section animate-fade-in" style={{ background: 'var(--color-success-bg)', borderColor: 'var(--color-success)', marginBottom: 'var(--space-6)', padding: 'var(--space-6)' }}>
+                <h3 style={{ color: 'var(--color-success)', display: 'flex', alignItems: 'center', gap: 8 }}><ShieldCheck size={20} /> Verified Professional</h3>
+                <p style={{ color: 'var(--color-gray-700)', marginTop: 4 }}>Your account is verified. You now rank higher in search results and have the trust badge on your profile.</p>
+              </div>
+            )}
+
             <div className="dashboard-stats">
               <div className="stat-card">
                 <div className="stat-icon" style={{ background: 'var(--color-primary-bg)', color: 'var(--color-primary)' }}>
@@ -236,6 +278,44 @@ export default function ProDashboard() {
           {renderContent()}
         </section>
       </div>
+
+      {/* Verify Now Modal */}
+      {showVerifyModal && (
+        <div className="modal-overlay animate-fade-in" onClick={() => setShowVerifyModal(false)}>
+          <div className="modal-content animate-slide-up" onClick={e => e.stopPropagation()} style={{ maxWidth: '500px' }}>
+            <div className="modal-header">
+              <h3>Get Verified</h3>
+              <button className="modal-close" onClick={() => setShowVerifyModal(false)}><X size={24} /></button>
+            </div>
+            <div className="modal-body" style={{ padding: 'var(--space-6)' }}>
+              <p style={{ color: 'var(--color-gray-600)', marginBottom: 'var(--space-6)' }}>
+                Submit your identity and professional credentials to receive the 'Verified' badge on ProServe. This builds fast trust with prospective clients.
+              </p>
+              <form onSubmit={handleVerifySubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+                  <label style={{ fontSize: '14px', fontWeight: 600 }}>Government ID (Aadhar/PAN)</label>
+                  <label style={{ border: '2px dashed var(--color-gray-300)', padding: 'var(--space-6)', borderRadius: 'var(--radius-md)', textAlign: 'center', cursor: 'pointer', background: 'var(--color-gray-50)' }}>
+                    <UploadCloud size={32} style={{ color: 'var(--color-gray-400)', margin: '0 auto var(--space-2)' }} />
+                    <span style={{ fontSize: '13px', color: 'var(--color-primary)', fontWeight: 500 }}>Browse Files</span>
+                    <input type="file" style={{ display: 'none' }} required />
+                  </label>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+                  <label style={{ fontSize: '14px', fontWeight: 600 }}>Professional Certificate (ICAI/ICMAI)</label>
+                  <label style={{ border: '2px dashed var(--color-gray-300)', padding: 'var(--space-6)', borderRadius: 'var(--radius-md)', textAlign: 'center', cursor: 'pointer', background: 'var(--color-gray-50)' }}>
+                    <UploadCloud size={32} style={{ color: 'var(--color-gray-400)', margin: '0 auto var(--space-2)' }} />
+                    <span style={{ fontSize: '13px', color: 'var(--color-primary)', fontWeight: 500 }}>Browse Files</span>
+                    <input type="file" style={{ display: 'none' }} required />
+                  </label>
+                </div>
+                <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: 'var(--space-4)', padding: 'var(--space-3)' }} disabled={isVerifying}>
+                  {isVerifying ? <><Loader2 size={16} className="spin"/> Submitting...</> : 'Submit for Review'}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

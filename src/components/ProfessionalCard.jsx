@@ -5,7 +5,7 @@ import './ProfessionalCard.css';
 export default function ProfessionalCard({ professional }) {
   const {
     id, name, category, initials, rating, reviews,
-    experience, city, startingPrice, verified, featured,
+    experience, city, startingPrice, verification, featured,
     availability, services
   } = professional;
 
@@ -18,11 +18,21 @@ export default function ProfessionalCard({ professional }) {
             {name}
           </h3>
           
-          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
             <span className="badge badge-primary">{category}</span>
-            {verified && (
-              <span className="badge badge-gold" title="Identity & Credentials Verified">
+            {verification?.status === 'verified' && (
+              <span className="badge badge-gold" title={`Identity & Credentials Verified since ${verification.date}`}>
                 <Check size={12} strokeWidth={3} /> Verified Expert
+              </span>
+            )}
+            {verification?.status === 'pending' && (
+              <span className="badge" style={{ background: 'var(--color-warning-bg)', color: 'var(--color-warning)' }} title="Verification in progress">
+                Verification Pending
+              </span>
+            )}
+            {verification?.status === 'unverified' && (
+              <span className="badge" style={{ background: 'var(--color-gray-100)', color: 'var(--color-gray-500)' }}>
+                Unverified
               </span>
             )}
           </div>
