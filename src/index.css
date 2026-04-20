@@ -28,15 +28,16 @@
   /* Typography */
   --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Outfit', 'Inter', sans-serif;
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 1.875rem;
-  --text-4xl: 2.25rem;
-  --text-5xl: 3rem;
+  --text-xs: 0.75rem;     /* 12px */
+  --text-sm: 0.875rem;    /* 14px */
+  --text-base: 1rem;      /* 16px */
+  --text-lg: 1.125rem;    /* 18px */
+  --text-xl: 1.25rem;     /* 20px */
+  --text-2xl: 1.5rem;     /* 24px */
+  --text-3xl: 2rem;       /* 32px */
+  --text-4xl: 2.5rem;     /* 40px */
+  --text-5xl: 3.5rem;     /* 56px */
+  --text-6xl: 4.5rem;     /* 72px */
 
   /* Spacing */
   --space-1: 0.25rem;
@@ -135,7 +136,7 @@ input, select, textarea {
 /* Container */
 .container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 var(--space-6);
 }
@@ -148,11 +149,11 @@ input, select, textarea {
 
 /* Section */
 .section {
-  padding: var(--space-20) 0;
+  padding: var(--space-24) 0;
 }
 
 .section-sm {
-  padding: var(--space-12) 0;
+  padding: var(--space-16) 0;
 }
 
 .section-header {
@@ -162,10 +163,11 @@ input, select, textarea {
 
 .section-header h2 {
   font-family: var(--font-display);
-  font-size: var(--text-3xl);
-  font-weight: 700;
+  font-size: var(--text-4xl);
+  font-weight: 800;
   color: var(--color-gray-900);
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-4);
+  line-height: 1.2;
 }
 
 .section-header p {
@@ -173,6 +175,27 @@ input, select, textarea {
   color: var(--color-gray-500);
   max-width: 560px;
   margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+  .section {
+    padding: var(--space-20) 0;
+  }
+  .section-header h2 {
+    font-size: var(--text-3xl);
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: var(--space-16) 0;
+  }
+  .section-sm {
+    padding: var(--space-12) 0;
+  }
+  .section-header h2 {
+    font-size: var(--text-2xl);
+  }
 }
 
 /* Buttons */
@@ -290,7 +313,35 @@ input, select, textarea {
   color: var(--color-star);
 }
 
-/* Card base */
+/* Premium Card Framework */
+.card-premium {
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  transition: all var(--transition-base);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card-premium:hover {
+  box-shadow: var(--shadow-card-hover);
+  border-color: rgba(197, 160, 89, 0.4);
+  transform: translateY(-4px);
+}
+
+.card-premium.dark-card {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.card-premium.dark-card:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(197, 160, 89, 0.3) !important;
+}
+
+/* Card base (Legacy fallback) */
 .card {
   background: var(--color-white);
   border: 1px solid var(--color-gray-200);

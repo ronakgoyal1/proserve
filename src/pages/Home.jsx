@@ -117,21 +117,21 @@ export default function Home() {
       {/* Feature Cards overlap */}
       <div className="hero-features-wrapper">
         <div className="hero-features-grid">
-          <div className="hero-feature-card animate-fade-in-up delay-1">
+          <div className="card-premium hero-feature-card animate-fade-in-up delay-1">
             <div className="feature-icon-wrapper"><ShieldCheck size={24} /></div>
             <div className="feature-content">
               <h4>Verified Profiles</h4>
               <p>100% background and credential checked experts.</p>
             </div>
           </div>
-          <div className="hero-feature-card animate-fade-in-up delay-2">
+          <div className="card-premium hero-feature-card animate-fade-in-up delay-2">
             <div className="feature-icon-wrapper"><Zap size={24} /></div>
             <div className="feature-content">
               <h4>AI Matching</h4>
               <p>Smart algorithms to find the perfect professional for your needs.</p>
             </div>
           </div>
-          <div className="hero-feature-card animate-fade-in-up delay-3">
+          <div className="card-premium hero-feature-card animate-fade-in-up delay-3">
             <div className="feature-icon-wrapper"><Clock size={24} /></div>
             <div className="feature-content">
               <h4>Instant Booking</h4>
@@ -150,9 +150,9 @@ export default function Home() {
           </div>
 
           <div className="categories-grid">
-            <Link to="/search?category=CA" className="category-card animate-fade-in-up delay-1">
+            <div className="card-premium category-card" onClick={() => navigate('/search?category=CA')}>
               <div className="category-card-icon">
-                <FileText size={28} />
+                <Calculator size={32} />
               </div>
               <h3>Chartered Accountant (CA)</h3>
               <p>Tax filing, GST, audits, company registration & more</p>
@@ -162,11 +162,11 @@ export default function Home() {
                 <span>Audit</span>
                 <span>Tax Planning</span>
               </div>
-            </Link>
+            </div>
 
-            <Link to="/search?category=CMA" className="category-card animate-fade-in-up delay-2">
+            <div className="card-premium category-card" onClick={() => navigate('/search?category=CMA')}>
               <div className="category-card-icon">
-                <Calculator size={28} />
+                <Calculator size={32} />
               </div>
               <h3>Cost & Management Accountant</h3>
               <p>Cost analysis, budgeting, MIS reporting & financial strategy</p>
@@ -176,7 +176,7 @@ export default function Home() {
                 <span>MIS</span>
                 <span>Costing</span>
               </div>
-            </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -226,7 +226,7 @@ export default function Home() {
           </div>
 
           <div className="why-grid">
-            <div className="why-card dark-card animate-fade-in-up delay-1">
+            <div className="card-premium dark-card why-card animate-fade-in-up delay-1">
               <div className="why-card-icon">
                 <ShieldCheck size={24} />
               </div>
@@ -234,7 +234,7 @@ export default function Home() {
               <p style={{color: 'var(--color-gray-400)'}}>Every professional is verified with valid credentials and checks.</p>
             </div>
 
-            <div className="why-card animate-fade-in-up delay-2">
+            <div className="card-premium dark-card why-card animate-fade-in-up delay-2">
               <div className="why-card-icon">
                 <CreditCard size={24} />
               </div>
@@ -242,7 +242,7 @@ export default function Home() {
               <p>Compare packages and prices upfront. No hidden fees, ever.</p>
             </div>
 
-            <div className="why-card animate-fade-in-up delay-3">
+            <div className="card-premium dark-card why-card animate-fade-in-up delay-3">
               <div className="why-card-icon">
                 <Clock size={24} />
               </div>
@@ -250,7 +250,7 @@ export default function Home() {
               <p>Book consultations instantly. Get matched with an expert in minutes.</p>
             </div>
 
-            <div className="why-card dark-card animate-fade-in-up delay-4">
+            <div className="card-premium dark-card why-card animate-fade-in-up delay-4">
               <div className="why-card-icon">
                 <Star size={24} />
               </div>
@@ -293,7 +293,7 @@ export default function Home() {
 
           <div className="testimonials-grid">
             {testimonials.map(t => (
-              <div key={t.id} className="testimonial-card dark-card animate-fade-in-up">
+              <div key={t.id} className="card-premium dark-card testimonial-card animate-fade-in-up">
                 <div className="testimonial-stars">
                   {Array.from({ length: t.rating }, (_, i) => (
                     <Star key={i} size={16} fill="currentColor" />

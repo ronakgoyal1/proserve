@@ -1,5 +1,5 @@
 .dashboard-page {
-  padding-top: calc(72px + var(--space-6));
+  padding-top: calc(80px + var(--space-6));
   padding-bottom: var(--space-16);
   min-height: 100vh;
   background: var(--color-gray-50);
@@ -19,7 +19,7 @@
   padding: var(--space-4);
   align-self: start;
   position: sticky;
-  top: calc(72px + var(--space-6));
+  top: calc(80px + var(--space-6));
   color: var(--color-white);
 }
 

@@ -1,5 +1,5 @@
 .profile-page {
-  padding-top: 72px;
+  padding-top: 80px;
   min-height: 100vh;
 }
 
@@ -330,7 +330,7 @@
 /* Sidebar */
 .profile-sidebar {
   position: sticky;
-  top: calc(72px + var(--space-4));
+  top: calc(80px + var(--space-4));
   align-self: start;
 }
 

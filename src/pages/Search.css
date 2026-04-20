@@ -1,5 +1,5 @@
 .search-page {
-  padding-top: calc(72px + var(--space-8));
+  padding-top: calc(80px + var(--space-8));
   min-height: 100vh;
 }
 
@@ -69,9 +69,9 @@
 /* Sidebar */
 .search-sidebar {
   position: sticky;
-  top: calc(72px + var(--space-4));
+  top: calc(80px + var(--space-4));
   align-self: start;
-  max-height: calc(100vh - 72px - var(--space-8));
+  max-height: calc(100vh - 80px - var(--space-8));
   overflow-y: auto;
   background: var(--color-primary-dark);
   border-radius: var(--radius-xl);

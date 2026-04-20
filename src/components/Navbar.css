@@ -9,7 +9,7 @@
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   transition: all var(--transition-base);
-  height: 72px;
+  height: 80px;
 }
 
 .navbar.scrolled {
@@ -22,7 +22,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 72px;
+  height: 80px;
 }
 
 .navbar-logo {
@@ -37,8 +37,8 @@
 }
 
 .navbar-logo .logo-icon {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   background: var(--bg-gradient-premium);
   border-radius: var(--radius-md);
   display: flex;
@@ -59,7 +59,7 @@
 }
 
 .navbar-links a {
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
   font-weight: 500;
   color: var(--color-gray-300);
   transition: color var(--transition-fast);
