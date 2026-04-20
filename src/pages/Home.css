@@ -220,21 +220,16 @@
   display: block;
 }
 
-/* Feature Cards Overlap */
+/* Feature Cards Grid (Moved below hero cleanly) */
 .hero-features-wrapper {
-  margin-top: -80px;
-  position: relative;
-  z-index: 20;
-  padding: 0 var(--space-6);
-  margin-bottom: var(--space-12);
+  padding: var(--space-6) 0 var(--space-12);
+  background: var(--color-primary-dark);
 }
 
 .hero-features-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-6);
-  max-width: 1000px;
-  margin: 0 auto;
+  gap: var(--space-8);
 }
 
 .hero-feature-card {
@@ -279,9 +274,7 @@
 .categories-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-6);
-  max-width: 700px;
-  margin: 0 auto;
+  gap: var(--space-8);
 }
 
 .category-card {
@@ -449,8 +442,8 @@
 /* Why Choose */
 .why-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-6);
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-8);
 }
 
 .why-card {
@@ -515,7 +508,7 @@
 .testimonials-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-6);
+  gap: var(--space-8);
 }
 
 .testimonial-card {
@@ -644,9 +637,11 @@
   cursor: pointer;
 }
 
-.faq-item:hover {
-  border-color: var(--color-accent);
+.faq-item.dark-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
 }
+.faq-item.dark-card:hover { border-color: var(--color-accent); }
 
 .faq-question {
   display: flex;
@@ -656,6 +651,10 @@
   font-family: var(--font-display);
   font-weight: 600;
   color: var(--color-gray-900);
+}
+
+.faq-item.dark-card .faq-question {
+  color: var(--color-white);
 }
 
 .faq-icon {
@@ -675,6 +674,10 @@
   background: var(--color-gray-50);
 }
 
+.faq-item.dark-card .faq-answer {
+  background: transparent;
+}
+
 .faq-item.open .faq-answer {
   max-height: 200px;
   padding: 0 var(--space-6) var(--space-5);
@@ -684,6 +687,10 @@
   color: var(--color-gray-600);
   font-size: var(--text-sm);
   line-height: 1.6;
+}
+
+.faq-item.dark-card .faq-answer p {
+  color: var(--color-gray-400);
 }
 
 /* Responsive */
