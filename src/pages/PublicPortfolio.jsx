@@ -1,8 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { dbService } from '../lib/dbService';
-import { Loader2, ShieldCheck, CheckCircle2, Award, Briefcase, Calendar, MessageSquare, ArrowRight, Mail, Phone, Linkedin, Twitter, Quote, Check, MapPin } from 'lucide-react';
+import { Loader2, ShieldCheck, CheckCircle2, Award, Briefcase, Calendar, MessageSquare, ArrowRight, Mail, Phone, Quote, Check, MapPin, AlertCircle, Globe } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
+
+// Robust Error Boundary to intercept any render exceptions natively and prevent a white-screen crash.
+class PortfolioErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null, errorInfo: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("PublicPortfolio Exception Caught:", error, errorInfo);
+    this.setState({ errorInfo });
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', alignItems: 'center', justifyContent: 'center', background: 'var(--color-gray-900)', color: 'white', padding: '2rem', textAlign: 'center' }}>
+          <AlertCircle size={64} style={{ color: 'var(--color-danger)', marginBottom: '1rem' }} />
+          <h1 style={{ marginBottom: '1rem' }}>Display Error</h1>
+          <p style={{ color: 'var(--color-gray-400)', maxWidth: '600px', marginBottom: '2rem' }}>We encountered an invalid layout shape while rendering this portfolio. This usually happens if the portfolio content is malformed or missing key parameters.</p>
+          <div style={{ background: 'rgba(255,0,0,0.1)', border: '1px solid var(--color-danger)', padding: '1rem', borderRadius: '8px', textAlign: 'left', maxWidth: '800px', overflowX: 'auto', color: 'var(--color-danger)' }}>
+            <pre style={{ margin: 0, fontSize: '12px' }}>{this.state.error && this.state.error.toString()}</pre>
+          </div>
+          <button onClick={() => window.location.href = '/'} className="btn btn-primary" style={{ marginTop: '2rem' }}>Return Home</button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 export default function PublicPortfolio() {
   const { slug } = useParams();
@@ -58,16 +92,34 @@ export default function PublicPortfolio() {
     );
   }
 
-  const content = portfolio?.content || {};
+  return (
+    <PortfolioErrorBoundary>
+      <PortfolioRenderer portfolio={portfolio} expertId={expertId} />
+    </PortfolioErrorBoundary>
+  );
+}
+
+// Split the renderer safely to allow ErrorBoundary isolation
+function PortfolioRenderer({ portfolio, expertId }) {
+  const navigate = useNavigate();
+  // Safe Fallback Extractors - Deep structure defense
+  const content = (portfolio && typeof portfolio.content === 'object') ? portfolio.content : {};
+  // Handle case where content was double-stringified in DB
+  const parsedContent = typeof content === 'string' ? JSON.parse(content) : content;
+  const safeName = parsedContent.name || 'ProServe Professional';
+  const safeProfession = parsedContent.profession || 'Specialized Consultant';
+  const safeBio = parsedContent.bio || `A dedicated professional bringing structured expertise to help businesses scale securely.`;
+  const safeExperience = parsedContent.experience || '5+';
+  const safeCity = parsedContent.city || 'India';
+  const safeServices = Array.isArray(parsedContent.services) ? parsedContent.services : ['General Consultation'];
+  const safeAchievements = Array.isArray(parsedContent.achievements) ? parsedContent.achievements : ['Consistently exceeded client expectations and compliance targets.'];
+  const safeLanguages = Array.isArray(parsedContent.languages) ? parsedContent.languages : ['English'];
+  const safeFaqs = Array.isArray(parsedContent.faqs) ? parsedContent.faqs : [];
   
-  // Safe Fallback Extractors
-  const safeName = content.name || 'ProServe Expert';
-  const safeProfession = content.profession || 'Consultant';
-  const safeBio = content.bio || 'A dedicated professional bringing structured expertise to help businesses scale securely.';
-  const safeServices = Array.isArray(content.services) ? content.services : [];
-  const safeAchievements = Array.isArray(content.achievements) ? content.achievements : [];
-  const safeLanguages = Array.isArray(content.languages) ? content.languages : [];
-  
+  const safeContactEmail = parsedContent.contactEmail || '';
+  const safeContactPhone = parsedContent.contactPhone || '';
+  const safeSocials = (parsedContent.socials && typeof parsedContent.socials === 'object') ? parsedContent.socials : {};
+
   return (
     <div style={{ background: '#fcfcfc', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       
@@ -99,10 +151,10 @@ export default function PublicPortfolio() {
           
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-4)', justifyContent: 'center', marginBottom: 'var(--space-10)' }}>
              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-gray-200)' }}>
-               <Briefcase size={18} style={{ color: 'var(--color-accent)' }} /> <span>{content.experience} Years Exp.</span>
+               <Briefcase size={18} style={{ color: 'var(--color-accent)' }} /> <span>{safeExperience} Years Exp.</span>
              </div>
              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-gray-200)' }}>
-               <MapPin size={18} style={{ color: 'var(--color-accent)' }} /> <span>{content.city} &amp; Remote</span>
+               <MapPin size={18} style={{ color: 'var(--color-accent)' }} /> <span>{safeCity} &amp; Remote</span>
              </div>
              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-gray-200)' }}>
                <MessageSquare size={18} style={{ color: 'var(--color-accent)' }} /> <span>{safeLanguages.join(', ') || 'English'}</span>
@@ -201,7 +253,7 @@ export default function PublicPortfolio() {
                    "Absolutely phenomenal service. Very quick to understand the core requirements and produced an audit report matching strict compliance parameters without errors."
                  </p>
                  <div style={{ color: 'var(--color-gray-400)', fontSize: 'var(--text-sm)', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase' }}>
-                   — Startup Founder, {content.city !== 'Any' ? content.city : 'India'}
+                   — Startup Founder, {safeCity !== 'Any' ? safeCity : 'India'}
                  </div>
                </div>
              ))}
@@ -210,12 +262,12 @@ export default function PublicPortfolio() {
       </section>
 
       {/* 6. FAQ */}
-      {content.faqs && content.faqs.length > 0 && (
+      {safeFaqs && safeFaqs.length > 0 && (
         <section className="container" style={{ padding: 'var(--space-16) 0' }}>
            <div style={{ maxWidth: '800px', margin: '0 auto' }}>
               <h2 style={{ textAlign: 'center', fontSize: 'var(--text-3xl)', color: 'var(--color-primary)', marginBottom: 'var(--space-10)' }}>Frequently Asked Questions</h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-                 {content.faqs.map((faq, idx) => (
+                 {safeFaqs.map((faq, idx) => (
                    <div key={idx} style={{ background: 'white', padding: 'var(--space-6)', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-sm)', borderLeft: '4px solid var(--color-accent)' }}>
                      <h4 style={{ fontSize: 'var(--text-lg)', fontWeight: 600, color: 'var(--color-gray-900)', marginBottom: 'var(--space-2)' }}>{faq.q}</h4>
                      <p style={{ color: 'var(--color-gray-600)', margin: 0, lineHeight: 1.6 }}>{faq.a}</p>
@@ -244,19 +296,19 @@ export default function PublicPortfolio() {
         <div className="container" style={{ padding: 'var(--space-8) 0', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 'var(--space-6)' }}>
            
            <div style={{ display: 'flex', gap: 'var(--space-6)' }}>
-              {content.contactEmail && (
-                <a href={`mailto:${content.contactEmail}`} style={{ color: 'var(--color-gray-400)', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+              {safeContactEmail && (
+                <a href={`mailto:${safeContactEmail}`} style={{ color: 'var(--color-gray-400)', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
                   <Mail size={18} /> Email
                 </a>
               )}
-              {content.contactPhone && (
-                <a href={`tel:${content.contactPhone}`} style={{ color: 'var(--color-gray-400)', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+              {safeContactPhone && (
+                <a href={`tel:${safeContactPhone}`} style={{ color: 'var(--color-gray-400)', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
                   <Phone size={18} /> Direct Line
                 </a>
               )}
-              {content.socials?.linkedin && (
-                <a href={content.socials.linkedin.startsWith('http') ? content.socials.linkedin : `https://${content.socials.linkedin}`} target="_blank" rel="noreferrer" style={{ color: 'var(--color-gray-400)', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
-                  <Linkedin size={18} /> LinkedIn
+              {safeSocials.linkedin && (
+                <a href={safeSocials.linkedin.startsWith('http') ? safeSocials.linkedin : `https://${safeSocials.linkedin}`} target="_blank" rel="noreferrer" style={{ color: 'var(--color-gray-400)', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+                  <Globe size={18} /> LinkedIn
                 </a>
               )}
            </div>

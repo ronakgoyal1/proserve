@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../components/AuthContext';
 import { dbService } from '../lib/dbService';
-import { Loader2, Sparkles, Wand2, Copy, CheckCircle2, Globe, FileText, Share2, LayoutTemplate } from 'lucide-react';
+import { generateAIPortfolioPayload } from '../lib/mockAIEngine';
+import { Loader2, Sparkles, Wand2, Copy, CheckCircle2, Globe, FileText, Share2, LayoutTemplate, Zap } from 'lucide-react';
 
 export default function AiPortfolio() {
   const { session } = useAuth();
@@ -20,6 +21,7 @@ export default function AiPortfolio() {
     experience: '5',
     city: '',
     services: 'Tax Filing, Audit, Advisory',
+    targetClients: 'Startups, SMEs',
     bio: '',
     achievements: 'Handled 500+ clients',
     languages: 'English, Hindi',
@@ -44,6 +46,7 @@ export default function AiPortfolio() {
              experience: c.experience || prev.experience,
              city: c.city || prev.city,
              services: c.services?.join(', ') || prev.services,
+             targetClients: c.targetClients || prev.targetClients,
              bio: c.bio || prev.bio,
              achievements: c.achievements?.join(', ') || prev.achievements,
              languages: c.languages?.join(', ') || prev.languages,
@@ -87,32 +90,10 @@ export default function AiPortfolio() {
     try {
       const slug = await generateUniqueSlug(formData.name);
       
-      // MOCK AI Generation Process
-      await new Promise(r => setTimeout(r, 2000));
+      // AI Generation Process
+      await new Promise(r => setTimeout(r, 2200));
       
-      // Structure the portfolio JSON content
-      const content = {
-        name: formData.name,
-        profession: formData.profession,
-        experience: formData.experience,
-        city: formData.city,
-        services: formData.services.split(',').map(s => s.trim()).filter(Boolean),
-        bio: formData.bio || `A dedicated ${formData.profession} based in ${formData.city}, bringing ${formData.experience} years of structured financial expertise to help businesses and individuals scale securely.`,
-        achievements: formData.achievements.split(',').map(s => s.trim()).filter(Boolean),
-        languages: formData.languages.split(',').map(s => s.trim()).filter(Boolean),
-        contactEmail: formData.contactEmail,
-        contactPhone: formData.contactPhone,
-        socials: {
-          linkedin: formData.linkedin,
-          twitter: formData.twitter
-        },
-        // AI Injected fields
-        heroTitle: `${formData.profession} & Financial Strategist`,
-        faqs: [
-          { q: 'How do you charge?', a: 'Based on the complexity of the assignment. Book a basic consultation to get an estimate.' },
-          { q: 'Do you work remotely?', a: 'Yes, I support clients PAN India via digital infrastructure.' }
-        ]
-      };
+      const content = generateAIPortfolioPayload(formData);
 
       const result = await dbService.savePortfolio(session.user.id, slug, content);
       setActivePortfolio(result);
@@ -209,9 +190,15 @@ export default function AiPortfolio() {
               </div>
             </div>
 
-            <div>
-              <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>Services Offered (Comma separated)</label>
-              <textarea required rows="2" value={formData.services} onChange={e => setFormData({...formData, services: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)', resize: 'vertical' }} />
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-5)' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>Services Offered (Comma separated)</label>
+                <textarea required rows="2" value={formData.services} onChange={e => setFormData({...formData, services: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)', resize: 'vertical' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: 'var(--color-primary)' }}><Zap size={14} style={{ display: 'inline', color: 'var(--color-accent)' }}/> Target Clients</label>
+                <textarea required rows="2" value={formData.targetClients} onChange={e => setFormData({...formData, targetClients: e.target.value})} placeholder="e.g. Startups, E-commerce, HNI" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-accent)', resize: 'vertical' }} />
+              </div>
             </div>
 
             <div>
