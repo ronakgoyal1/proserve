@@ -12,6 +12,11 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { session } = useAuth();
 
+  // Hide the global marketplace navbar on explicitly standalone profile pages
+  if (location.pathname.startsWith('/portfolio')) {
+    return null;
+  }
+
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);

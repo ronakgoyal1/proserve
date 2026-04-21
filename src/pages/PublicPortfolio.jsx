@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { dbService } from '../lib/dbService';
-import { Loader2, ShieldCheck, CheckCircle2, Award, Briefcase, Calendar, MessageSquare, ArrowRight, Mail, Phone, Quote, Check, MapPin, AlertCircle, Globe } from 'lucide-react';
+import { Loader2, ShieldCheck, CheckCircle2, Award, Briefcase, Calendar, MessageSquare, ArrowRight, Mail, Phone, Quote, Check, MapPin, AlertCircle, Globe, Zap, Users } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 
 // Robust Error Boundary to intercept any render exceptions natively and prevent a white-screen crash.
@@ -43,7 +43,7 @@ export default function PublicPortfolio() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [portfolio, setPortfolio] = useState(null);
-  const [expertId, setExpertId] = useState(null); // Used to link to booking
+  const [expertId, setExpertId] = useState(null);
 
   useEffect(() => {
     async function loadPortfolio() {
@@ -52,10 +52,6 @@ export default function PublicPortfolio() {
         setPortfolio(found);
         
         if (found) {
-           // We need to fetch the underlying professional ID to wire up "Book Now"
-           // Mocks tie by user_id/userId, so we can try getting all pros and finding the match 
-           // by name, or simply routing them to ProServe root booking if we lack the direct relational map in MVP.
-           // Let's grab all pros and find the matching user_id.
            const pros = await dbService.getProfessionals();
            const match = pros.find(p => String(p.user_id || p.userId) === String(found.user_id || found.userId));
            if (match) {
@@ -85,7 +81,7 @@ export default function PublicPortfolio() {
         <ShieldCheck size={64} style={{ color: 'var(--color-gray-500)', marginBottom: 'var(--space-4)' }} />
         <h1 style={{ fontSize: 'var(--text-3xl)', marginBottom: 'var(--space-4)' }}>Profile Not Found</h1>
         <p style={{ color: 'var(--color-gray-400)', marginBottom: 'var(--space-8)' }}>This portfolio link is either inactive or does not exist.</p>
-        <Link to="/" className="btn btn-primary" style={{ background: 'var(--color-accent)', color: 'var(--color-primary-dark)' }}>
+        <Link to="/" className="btn btn-primary" style={{ background: 'var(--color-accent)', color: 'var(--color-primary-dark)', borderRadius: 'var(--radius-full)' }}>
           Visit ProServe Directory
         </Link>
       </div>
@@ -106,11 +102,13 @@ function PortfolioRenderer({ portfolio, expertId }) {
   const content = (portfolio && typeof portfolio.content === 'object') ? portfolio.content : {};
   // Handle case where content was double-stringified in DB
   const parsedContent = typeof content === 'string' ? JSON.parse(content) : content;
+  
   const safeName = parsedContent.name || 'ProServe Professional';
   const safeProfession = parsedContent.profession || 'Specialized Consultant';
   const safeBio = parsedContent.bio || `A dedicated professional bringing structured expertise to help businesses scale securely.`;
   const safeExperience = parsedContent.experience || '5+';
   const safeCity = parsedContent.city || 'India';
+  const safeTargetClients = parsedContent.targetClients || 'Startups & SMEs';
   const safeServices = Array.isArray(parsedContent.services) ? parsedContent.services : ['General Consultation'];
   const safeAchievements = Array.isArray(parsedContent.achievements) ? parsedContent.achievements : ['Consistently exceeded client expectations and compliance targets.'];
   const safeLanguages = Array.isArray(parsedContent.languages) ? parsedContent.languages : ['English'];
@@ -120,82 +118,112 @@ function PortfolioRenderer({ portfolio, expertId }) {
   const safeContactPhone = parsedContent.contactPhone || '';
   const safeSocials = (parsedContent.socials && typeof parsedContent.socials === 'object') ? parsedContent.socials : {};
 
+  const getInitials = (name) => {
+    return name.split(' ').map(n => n[0]).slice(0,2).join('').toUpperCase() || 'P';
+  };
+
+  const handleBookSubmit = () => {
+    if (expertId) {
+      navigate(`/professional/${expertId}?book=true`);
+    } else {
+      navigate('/login');
+    }
+  };
+
   return (
-    <div style={{ background: '#fcfcfc', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ background: '#ffffff', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       
       {/* Dynamic SEO */}
       <Helmet>
         <title>{`${safeName} | ${safeProfession}`}</title>
       </Helmet>
+
+      {/* Internal Minimal Portfolio Navbar */}
+      <header className="portfolio-navbar animate-fade-in">
+        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <a href="/" target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-primary)', fontWeight: 700 }}>
+             <ShieldCheck size={20} style={{ color: 'var(--color-accent)' }} />
+             <span>ProServe</span>
+          </a>
+          <button onClick={handleBookSubmit} className="btn btn-primary" style={{ borderRadius: 'var(--radius-full)', padding: '8px 24px' }}>
+            Book Consultation
+          </button>
+        </div>
+      </header>
       
-      {/* Floating CTA Mobile Bar (if needed) but we use standard responsive */}
-      
-      {/* 1. Hero Intro */}
-      <section style={{ background: 'var(--bg-gradient-premium)', color: 'white', paddingTop: 'var(--space-20)', paddingBottom: 'var(--space-20)', position: 'relative', overflow: 'hidden' }}>
-        {/* Abstract Background Shapes */}
-        <div style={{ position: 'absolute', top: -100, right: -100, width: 400, height: 400, background: 'radial-gradient(circle, rgba(197,160,89,0.15) 0%, transparent 70%)', borderRadius: '50%' }}></div>
-        <div style={{ position: 'absolute', bottom: -50, left: -50, width: 300, height: 300, background: 'radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%)', borderRadius: '50%' }}></div>
+      {/* 1. Ultra Premium Hero Overhaul */}
+      <section className="portfolio-hero-bg" style={{ color: 'white', paddingTop: 'var(--space-12)', paddingBottom: 'var(--space-12)' }}>
+        {/* Deep layered glow blooms */}
+        <div className="hero-bloom-1"></div>
+        <div className="hero-bloom-2"></div>
         
-        <div className="container" style={{ position: 'relative', zIndex: 10, textAlign: 'center' }}>
+        <div className="container animate-fade-in-up" style={{ position: 'relative', zIndex: 10, textAlign: 'center', maxWidth: '800px' }}>
           
-          <div style={{ display: 'inline-flex', alignItems: 'center', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', padding: '6px 16px', borderRadius: 'var(--radius-full)', fontSize: '14px', fontWeight: 600, color: 'var(--color-accent)', marginBottom: 'var(--space-6)' }}>
-             <ShieldCheck size={16} style={{ marginRight: '8px' }} /> Verified Professional
+          <div className="premium-identity-card">
+            <div className="initial-ring">
+               {getInitials(safeName)}
+            </div>
+            <div className="pro-badge">
+               <ShieldCheck size={16} /> Verified Elite Partner
+            </div>
           </div>
 
-          <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 800, letterSpacing: '-1px', lineHeight: 1.1, marginBottom: 'var(--space-4)' }}>
+          <h1 className="hero-name-gradient" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(3rem, 6vw, 4.5rem)', fontWeight: 800, letterSpacing: '-1px', lineHeight: 1.1, marginBottom: 'var(--space-3)' }}>
              {safeName}
           </h1>
-          <h2 style={{ fontSize: 'clamp(1.25rem, 3vw, 2rem)', color: 'var(--color-gray-300)', fontWeight: 400, marginBottom: 'var(--space-8)' }}>
-             {content.heroTitle || safeProfession}
+          
+          <h2 style={{ fontSize: 'var(--text-xl)', color: '#94a3b8', fontWeight: 400, letterSpacing: '0.5px', marginBottom: 'var(--space-8)' }}>
+             {parsedContent.heroTitle || safeProfession}
           </h2>
           
+          {/* Enhanced Trust Pills */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-4)', justifyContent: 'center', marginBottom: 'var(--space-10)' }}>
-             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-gray-200)' }}>
-               <Briefcase size={18} style={{ color: 'var(--color-accent)' }} /> <span>{safeExperience} Years Exp.</span>
+             <div className="trust-pill-new">
+               <Briefcase size={16} /> {safeExperience} Years Expertise
              </div>
-             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-gray-200)' }}>
-               <MapPin size={18} style={{ color: 'var(--color-accent)' }} /> <span>{safeCity} &amp; Remote</span>
+             <div className="trust-pill-new">
+               <Zap size={16} /> Lightning Fast Response
              </div>
-             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-gray-200)' }}>
-               <MessageSquare size={18} style={{ color: 'var(--color-accent)' }} /> <span>{safeLanguages.join(', ') || 'English'}</span>
+             <div className="trust-pill-new">
+               <Users size={16} /> 500+ Top Clients
              </div>
           </div>
 
-          <div style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center' }}>
-             <button onClick={() => expertId ? navigate(`/professional/${expertId}?book=true`) : navigate('/login')} className="btn btn-primary" style={{ background: 'var(--color-accent)', color: 'var(--color-primary-dark)', fontSize: '18px', padding: '16px 32px' }}>
-               Book Consultation
+          <div style={{ display: 'flex', gap: 'var(--space-5)', justifyContent: 'center' }}>
+             <button onClick={handleBookSubmit} className="btn-luxury">
+               Schedule Strategy Session
              </button>
-             <button onClick={() => document.getElementById('services').scrollIntoView()} className="btn btn-outline" style={{ borderColor: 'rgba(255,255,255,0.3)', color: 'white', fontSize: '18px', padding: '16px 32px' }}>
-               View Services
+             <button onClick={() => document.getElementById('services').scrollIntoView()} style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', color: 'white', fontSize: '15px', fontWeight: 600, padding: '16px 32px', borderRadius: '999px', cursor: 'pointer', transition: 'all 0.2s ease' }} onMouseOver={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'} onMouseOut={e => e.currentTarget.style.background = 'transparent'}>
+               View Specializations
              </button>
           </div>
         </div>
       </section>
 
       {/* 2. About Area */}
-      <section className="container" style={{ padding: 'var(--space-16) 0' }}>
+      <section className="container section animate-fade-in-up delay-1">
         <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-           <h2 style={{ fontSize: 'var(--text-3xl)', color: 'var(--color-primary)', marginBottom: 'var(--space-6)' }}>About Me</h2>
-           <p style={{ fontSize: 'var(--text-xl)', color: 'var(--color-gray-600)', lineHeight: 1.8 }}>
+           <h2 style={{ fontSize: 'var(--text-3xl)', color: 'var(--color-primary)', fontWeight: 800, marginBottom: 'var(--space-6)' }}>About Me</h2>
+           <p style={{ fontSize: 'var(--text-lg)', color: 'var(--color-gray-600)', lineHeight: 1.8 }}>
              {safeBio}
            </p>
         </div>
       </section>
 
       {/* 3. Services */}
-      <section id="services" style={{ background: 'var(--color-gray-50)', padding: 'var(--space-16) 0' }}>
+      <section id="services" style={{ background: 'var(--color-gray-50)' }} className="section animate-fade-in-up delay-2">
          <div className="container">
-           <div style={{ textAlign: 'center', marginBottom: 'var(--space-10)' }}>
-             <h2 style={{ fontSize: 'var(--text-3xl)', color: 'var(--color-primary)', marginBottom: 'var(--space-2)' }}>Areas of Expertise</h2>
-             <p style={{ color: 'var(--color-gray-500)', fontSize: 'var(--text-lg)' }}>Comprehensive solutions tailored to your business.</p>
+           <div className="section-header">
+             <h2>Areas of Expertise</h2>
+             <p>Comprehensive solutions tailored specifically for {safeTargetClients}.</p>
            </div>
            
            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'var(--space-6)' }}>
              {safeServices.map((svc, idx) => (
-               <div key={idx} style={{ background: 'white', padding: 'var(--space-8)', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-card)', borderTop: '4px solid var(--color-accent)' }}>
-                 <CheckCircle2 size={32} style={{ color: 'var(--color-primary)', marginBottom: 'var(--space-4)' }} />
+               <div key={idx} className="card-premium">
+                 <CheckCircle2 size={28} style={{ color: 'var(--color-accent)', marginBottom: 'var(--space-4)' }} />
                  <h3 style={{ fontSize: 'var(--text-xl)', color: 'var(--color-primary)', marginBottom: 'var(--space-3)' }}>{svc}</h3>
-                 <p style={{ color: 'var(--color-gray-500)', lineHeight: 1.6 }}>Strategic planning, detailed execution, and compliance review tailored exactly to your requirements.</p>
+                 <p style={{ color: 'var(--color-gray-500)', lineHeight: 1.6, margin: 0 }}>Strategic planning and dedicated execution customized to your exact operational requirements.</p>
                </div>
              ))}
            </div>
@@ -203,19 +231,19 @@ function PortfolioRenderer({ portfolio, expertId }) {
       </section>
 
       {/* 4. Why Choose Me (Achievements) */}
-      <section className="container" style={{ padding: 'var(--space-16) 0' }}>
+      <section className="container section animate-fade-in-up delay-3">
          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-10)', alignItems: 'center' }}>
             <div style={{ flex: '1 1 400px' }}>
-               <h2 style={{ fontSize: 'var(--text-3xl)', color: 'var(--color-primary)', marginBottom: 'var(--space-6)' }}>Why Work With Me?</h2>
+               <h2 style={{ fontSize: 'var(--text-3xl)', color: 'var(--color-primary)', fontWeight: 800, marginBottom: 'var(--space-6)' }}>Why Work With Me?</h2>
                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
                  {safeAchievements.map((ach, idx) => (
                    <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-4)' }}>
-                     <div style={{ flexShrink: 0, padding: '12px', background: 'var(--color-primary-bg)', color: 'var(--color-primary)', borderRadius: '50%' }}>
-                       <Award size={24} />
+                     <div style={{ flexShrink: 0, padding: '10px', background: 'var(--color-primary-bg)', color: 'var(--color-primary)', borderRadius: '50%' }}>
+                       <Award size={20} />
                      </div>
                      <div>
-                       <h4 style={{ fontSize: 'var(--text-lg)', fontWeight: 600, color: 'var(--color-gray-800)', marginTop: '4px' }}>Proven Results</h4>
-                       <p style={{ color: 'var(--color-gray-600)', marginTop: '4px' }}>{ach}</p>
+                       <h4 style={{ fontSize: 'var(--text-lg)', fontWeight: 600, color: 'var(--color-gray-800)', marginTop: '2px' }}>Proven Results</h4>
+                       <p style={{ color: 'var(--color-gray-600)', marginTop: '4px', fontSize: 'var(--text-sm)', lineHeight: 1.6 }}>{ach}</p>
                      </div>
                    </div>
                  ))}
@@ -223,7 +251,7 @@ function PortfolioRenderer({ portfolio, expertId }) {
             </div>
             
             <div style={{ flex: '1 1 400px', background: 'var(--color-primary-dark)', padding: 'var(--space-8)', borderRadius: 'var(--radius-2xl)', color: 'white',  boxShadow: 'var(--shadow-xl)' }}>
-              <ShieldCheck size={48} style={{ color: 'var(--color-accent)', marginBottom: 'var(--space-4)' }} />
+              <ShieldCheck size={40} style={{ color: 'var(--color-accent)', marginBottom: 'var(--space-4)' }} />
               <h3 style={{ fontSize: 'var(--text-2xl)', marginBottom: 'var(--space-4)' }}>ProServe Verified Network</h3>
               <p style={{ color: 'var(--color-gray-300)', marginBottom: 'var(--space-6)', lineHeight: 1.7 }}>
                  My credentials, identity, and background pass strict standards on the ProServe Network platform, assuring safe, compliant, and fraud-free advisory services.
@@ -237,39 +265,17 @@ function PortfolioRenderer({ portfolio, expertId }) {
          </div>
       </section>
 
-      {/* 5. Trust / Testimonials */}
-      <section style={{ background: 'var(--color-primary)', color: 'white', padding: 'var(--space-16) 0' }}>
-         <div className="container">
-           <div style={{ textAlign: 'center', marginBottom: 'var(--space-10)' }}>
-             <h2 style={{ fontSize: 'var(--text-3xl)', marginBottom: 'var(--space-2)' }}>Client Feedback</h2>
-             <p style={{ color: 'var(--color-gray-400)', fontSize: 'var(--text-lg)' }}>Don't just take my word for it.</p>
-           </div>
-           
-           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--space-6)' }}>
-             {[1, 2].map((i) => (
-               <div key={i} style={{ background: 'rgba(255,255,255,0.05)', padding: 'var(--space-8)', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                 <Quote size={32} style={{ color: 'var(--color-accent)', marginBottom: 'var(--space-4)' }} />
-                 <p style={{ fontSize: 'var(--text-lg)', lineHeight: 1.6, fontStyle: 'italic', marginBottom: 'var(--space-6)', color: 'var(--color-gray-300)' }}>
-                   "Absolutely phenomenal service. Very quick to understand the core requirements and produced an audit report matching strict compliance parameters without errors."
-                 </p>
-                 <div style={{ color: 'var(--color-gray-400)', fontSize: 'var(--text-sm)', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase' }}>
-                   — Startup Founder, {safeCity !== 'Any' ? safeCity : 'India'}
-                 </div>
-               </div>
-             ))}
-           </div>
-         </div>
-      </section>
-
-      {/* 6. FAQ */}
+      {/* 5. FAQ */}
       {safeFaqs && safeFaqs.length > 0 && (
-        <section className="container" style={{ padding: 'var(--space-16) 0' }}>
-           <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-              <h2 style={{ textAlign: 'center', fontSize: 'var(--text-3xl)', color: 'var(--color-primary)', marginBottom: 'var(--space-10)' }}>Frequently Asked Questions</h2>
+        <section style={{ background: 'var(--color-gray-50)' }} className="section animate-fade-in-up delay-4">
+           <div className="container" style={{ maxWidth: '800px', margin: '0 auto' }}>
+              <div className="section-header">
+                <h2>Frequently Asked Questions</h2>
+              </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
                  {safeFaqs.map((faq, idx) => (
-                   <div key={idx} style={{ background: 'white', padding: 'var(--space-6)', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-sm)', borderLeft: '4px solid var(--color-accent)' }}>
-                     <h4 style={{ fontSize: 'var(--text-lg)', fontWeight: 600, color: 'var(--color-gray-900)', marginBottom: 'var(--space-2)' }}>{faq.q}</h4>
+                   <div key={idx} className="card-premium" style={{ padding: 'var(--space-6)', borderLeft: '4px solid var(--color-accent)' }}>
+                     <h4 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--color-gray-900)', marginBottom: 'var(--space-2)' }}>{faq.q}</h4>
                      <p style={{ color: 'var(--color-gray-600)', margin: 0, lineHeight: 1.6 }}>{faq.a}</p>
                    </div>
                  ))}
@@ -278,49 +284,52 @@ function PortfolioRenderer({ portfolio, expertId }) {
         </section>
       )}
 
-      {/* 7. Footer & Final CTA */}
-      <footer style={{ background: 'var(--color-gray-900)', color: 'white', marginTop: 'auto' }}>
-        <div className="container" style={{ padding: 'var(--space-16) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+      {/* 6. Footer & Contact Branding */}
+      <footer style={{ background: 'var(--color-gray-900)', color: 'white', marginTop: 'auto', paddingBottom: '80px' /* Pad for mobile sticky CTA */ }}>
+        <div className="container" style={{ padding: 'var(--space-12) 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-             <h2 style={{ fontSize: 'var(--text-4xl)', marginBottom: 'var(--space-4)' }}>Ready to scale together?</h2>
-             <p style={{ fontSize: 'var(--text-xl)', color: 'var(--color-gray-400)', marginBottom: 'var(--space-8)', maxWidth: '600px' }}>
+           <h2 style={{ fontSize: 'var(--text-3xl)', fontWeight: 800, marginBottom: 'var(--space-4)' }}>Ready to scale together?</h2>
+             <p style={{ fontSize: 'var(--text-lg)', color: 'var(--color-gray-400)', marginBottom: 'var(--space-8)', maxWidth: '600px' }}>
                 Book a primary consultation to review your requirements, scope constraints, and long term advisory needs.
              </p>
-             <button onClick={() => expertId ? navigate(`/professional/${expertId}?book=true`) : navigate('/search')} className="btn btn-primary" style={{ background: 'var(--color-accent)', color: 'var(--color-primary-dark)', fontSize: '20px', padding: '20px 48px', borderRadius: 'var(--radius-full)' }}>
+             <button onClick={handleBookSubmit} className="btn-luxury">
                 Schedule Consultation
              </button>
           </div>
         </div>
 
-        {/* Contact Links & "Powered By" */}
-        <div className="container" style={{ padding: 'var(--space-8) 0', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 'var(--space-6)' }}>
-           
-           <div style={{ display: 'flex', gap: 'var(--space-6)' }}>
+        <div className="container" style={{ padding: 'var(--space-6) 0', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 'var(--space-6)' }}>
+           <div style={{ display: 'flex', gap: 'var(--space-6)', flexWrap: 'wrap' }}>
               {safeContactEmail && (
                 <a href={`mailto:${safeContactEmail}`} style={{ color: 'var(--color-gray-400)', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
-                  <Mail size={18} /> Email
+                  <Mail size={16} /> Email
                 </a>
               )}
               {safeContactPhone && (
                 <a href={`tel:${safeContactPhone}`} style={{ color: 'var(--color-gray-400)', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
-                  <Phone size={18} /> Direct Line
+                  <Phone size={16} /> Contact Line
                 </a>
               )}
               {safeSocials.linkedin && (
                 <a href={safeSocials.linkedin.startsWith('http') ? safeSocials.linkedin : `https://${safeSocials.linkedin}`} target="_blank" rel="noreferrer" style={{ color: 'var(--color-gray-400)', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
-                  <Globe size={18} /> LinkedIn
+                  <Globe size={16} /> LinkedIn
                 </a>
               )}
            </div>
 
-           <a href="/" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', background: 'rgba(255,255,255,0.05)', padding: '8px 16px', borderRadius: 'var(--radius-full)', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.1)' }}>
-             <span style={{ color: 'var(--color-gray-400)', fontSize: '13px', marginRight: '8px' }}>Powered by</span>
-             <ShieldCheck size={16} style={{ color: 'var(--color-accent)', marginRight: '6px' }} />
-             <span style={{ color: 'white', fontWeight: 600, fontSize: '14px', letterSpacing: '0.5px' }}>ProServe <span style={{ color: 'var(--color-accent)' }}>Network</span></span>
-           </a>
-
+           <div style={{ color: 'var(--color-gray-500)', fontSize: '13px' }}>
+              &copy; {new Date().getFullYear()} {safeName}. All rights reserved.
+           </div>
         </div>
       </footer>
+
+      {/* 7. Sticky Mobile Bottom CTA */}
+      <div className="sticky-mobile-cta">
+         <button onClick={handleBookSubmit} className="btn-luxury" style={{ width: '100%', padding: '16px', fontSize: '16px' }}>
+           Book Consultation
+         </button>
+      </div>
+
     </div>
   );
 }
