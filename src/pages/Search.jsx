@@ -75,9 +75,9 @@ export default function SearchPage() {
     if (search) {
       const q = search.toLowerCase();
       results = results.filter(p =>
-        p.name.toLowerCase().includes(q) ||
-        p.services.some(s => s.toLowerCase().includes(q)) ||
-        p.category.toLowerCase().includes(q)
+        (p.name || '').toLowerCase().includes(q) ||
+        (p.services || []).some(s => (s || '').toLowerCase().includes(q)) ||
+        (p.category || '').toLowerCase().includes(q)
       );
     }
 
@@ -90,22 +90,23 @@ export default function SearchPage() {
     }
 
     if (ratingFilter) {
-      results = results.filter(p => p.rating >= ratingFilter);
+      results = results.filter(p => (p.rating || 0) >= ratingFilter);
     }
 
     if (experienceFilter) {
       results = results.filter(p => {
-        if (experienceFilter === '0-5') return p.experience <= 5;
-        if (experienceFilter === '5-10') return p.experience > 5 && p.experience <= 10;
-        if (experienceFilter === '10-15') return p.experience > 10 && p.experience <= 15;
-        if (experienceFilter === '15+') return p.experience > 15;
+        const exp = p.experience || 0;
+        if (experienceFilter === '0-5') return exp <= 5;
+        if (experienceFilter === '5-10') return exp > 5 && exp <= 10;
+        if (experienceFilter === '10-15') return exp > 10 && exp <= 15;
+        if (experienceFilter === '15+') return exp > 15;
         return true;
       });
     }
 
     if (languageFilters.length > 0) {
       results = results.filter(p =>
-        languageFilters.some(lang => p.languages.includes(lang))
+        languageFilters.some(lang => (p.languages || []).includes(lang))
       );
     }
 
@@ -115,22 +116,23 @@ export default function SearchPage() {
           let score = 0;
           if (pro.verification?.status === 'verified') score += 50;
           if (pro.featured) score += 10;
-          score += pro.rating * 5;
-          score += Math.min(pro.reviews * 0.1, 10);
+          score += (pro.rating || 0) * 5;
+          score += Math.min((pro.reviews || 0) * 0.1, 10);
           return score;
         };
         return getScore(b) - getScore(a);
       }
-      if (sortBy === 'rating') return b.rating - a.rating;
-      if (sortBy === 'price-low') return a.startingPrice - b.startingPrice;
-      if (sortBy === 'price-high') return b.startingPrice - a.startingPrice;
-      if (sortBy === 'experience') return b.experience - a.experience;
-      if (sortBy === 'reviews') return b.reviews - a.reviews;
+      if (sortBy === 'rating') return (b.rating || 0) - (a.rating || 0);
+      if (sortBy === 'price-low') return (a.startingPrice || 0) - (b.startingPrice || 0);
+      if (sortBy === 'price-high') return (b.startingPrice || 0) - (a.startingPrice || 0);
+      if (sortBy === 'experience') return (b.experience || 0) - (a.experience || 0);
+      if (sortBy === 'reviews') return (b.reviews || 0) - (a.reviews || 0);
       return 0;
     });
 
+    console.log(`[Search] fetched=${professionals.length} filtered=${results.length} filters={category:${categoryFilter||'all'} city:${cityFilter||'all'} rating:${ratingFilter} exp:${experienceFilter}}`);
     return results;
-  }, [search, cityFilter, categoryFilter, ratingFilter, experienceFilter, languageFilters, sortBy]);
+  }, [professionals, search, cityFilter, categoryFilter, ratingFilter, experienceFilter, languageFilters, sortBy]);
 
   const activeFilterCount = [categoryFilter, cityFilter, ratingFilter, experienceFilter, ...languageFilters].filter(Boolean).length;
 
@@ -361,14 +363,22 @@ export default function SearchPage() {
                 filteredPros.map(pro => (
                   <ProfessionalCard key={pro.id} professional={pro} />
                 ))
-              ) : (
+              ) : professionals.length > 0 ? (
+                // Data was fetched but active filters removed everything
                 <div className="search-no-results">
                   <Search size={48} style={{ color: 'var(--color-gray-300)', margin: '0 auto var(--space-4)' }} />
-                  <h3>No professionals found</h3>
-                  <p>Try adjusting your filters or search terms</p>
+                  <h3>No matches for current filters</h3>
+                  <p>{professionals.length} expert{professionals.length !== 1 ? 's are' : ' is'} registered — try broadening your search.</p>
                   <button className="btn btn-secondary" onClick={clearFilters} style={{ marginTop: 'var(--space-4)' }}>
-                    Clear Filters
+                    Show All Experts
                   </button>
+                </div>
+              ) : (
+                // Registry is genuinely empty
+                <div className="search-no-results">
+                  <Search size={48} style={{ color: 'var(--color-gray-300)', margin: '0 auto var(--space-4)' }} />
+                  <h3>No experts yet</h3>
+                  <p>The expert registry is empty. Approved professionals will appear here automatically.</p>
                 </div>
               )}
             </div>
