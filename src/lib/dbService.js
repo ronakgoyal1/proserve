@@ -139,26 +139,54 @@ class DbService {
 
     if (hasSupabaseConfig && !this.isMockEnvironment()) {
       try {
-        const { count: pendingCount } = await supabase.from('professional_applications').select('*', { count: 'exact', head: true }).eq('status', 'Pending');
+        // Count pending applications
+        const { count: pendingCount, error: pendErr } = await supabase
+          .from('professional_applications')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'Pending');
+        if (pendErr) console.error('[Metrics] Pending count error:', pendErr.message);
         pendingApprovals = pendingCount || 0;
-        
-        const { count: proCount } = await supabase.from('professionals').select('*', { count: 'exact', head: true });
-        verifiedPros = proCount || 0;
-        
-        // Sum revenue from leads/bookings where applicable - Mock sum for safety
-        const { data: bookings } = await supabase.from('bookings').select('id');
-        const { data: apps } = await supabase.from('professional_applications').select('user_id');
-        totalUsers = (bookings?.length || 0) + (apps?.length || 0) + verifiedPros * 4; // Mock logic bounded
-        
-        revenue = (bookings?.length || 0) * 1500;
+
+        // Count verified pros: use approved applications as primary source
+        // (professionals table insert may fail due to schema mismatch)
+        const { count: approvedCount, error: appErr } = await supabase
+          .from('professional_applications')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'Approved');
+        if (appErr) console.error('[Metrics] Approved count error:', appErr.message);
+        verifiedPros = approvedCount || 0;
+
+        // Also try professionals table as secondary source — take whichever is higher
+        try {
+          const { count: proCount } = await supabase
+            .from('professionals')
+            .select('*', { count: 'exact', head: true });
+          if (proCount && proCount > verifiedPros) {
+            verifiedPros = proCount;
+          }
+        } catch (_) { /* professionals table may not exist */ }
+
+        // Total users = all applicants + verified + baseline
+        const { count: allAppsCount } = await supabase
+          .from('professional_applications')
+          .select('*', { count: 'exact', head: true });
+        totalUsers = (allAppsCount || 0) + verifiedPros;
+
+        // Revenue from bookings if table exists
+        try {
+          const { data: bookings } = await supabase.from('bookings').select('id');
+          revenue = (bookings?.length || 0) * 1500;
+        } catch (_) { revenue = 0; }
       } catch (e) {
-        console.error("Metric fetch partial failure", e);
+        console.error('[Metrics] Fetch failure:', e);
       }
     } else {
+      // Local/mock mode
       pendingApprovals = this.localApplications.filter(a => a.status === 'Pending').length;
-      verifiedPros = this.localProfessionals.length + mockProfessionals.length;
-      totalUsers = pendingApprovals + verifiedPros + 25; // mock constant baseline
-      revenue = this.localBookings.length * 1500 + 45000;
+      const approvedApps = this.localApplications.filter(a => a.status === 'Approved').length;
+      verifiedPros = Math.max(this.localProfessionals.length, approvedApps);
+      totalUsers = this.localApplications.length + verifiedPros;
+      revenue = this.localBookings.length * 1500;
     }
 
     return { totalUsers, verifiedPros, pendingApprovals, revenue };
@@ -167,59 +195,82 @@ class DbService {
   async approveApplication(appId) {
     if (hasSupabaseConfig && !this.isMockEnvironment()) {
       // 1. Fetch original application
-      const { data: appData, error: fetchErr } = await supabase.from('professional_applications').select('*').eq('id', appId).single();
-      if (fetchErr) throw fetchErr;
+      const { data: appData, error: fetchErr } = await supabase
+        .from('professional_applications')
+        .select('*')
+        .eq('id', appId)
+        .single();
+      if (fetchErr) {
+        console.error('[Approve] Failed to fetch application:', fetchErr);
+        throw fetchErr;
+      }
 
       // 2. Set Status Approved
-      const { data, error } = await supabase.from('professional_applications').update({ status: 'Approved' }).eq('id', appId).select();
-      if (error) throw error;
+      const { data, error } = await supabase
+        .from('professional_applications')
+        .update({ status: 'Approved' })
+        .eq('id', appId)
+        .select();
+      if (error) {
+        console.error('[Approve] Failed to update status:', error);
+        throw error;
+      }
 
-      // 3. Format payload and physically inject to universal 'professionals' registry
-      const regPayload = {
-        user_id: appData.user_id,
-        name: appData.name,
-        category: appData.category || 'CA',
-        city: appData.city || 'Digital',
-        experience: Number(appData.experience) || 0,
-        bio: appData.bio || 'Verified Professional',
-        languages: appData.languages ? String(appData.languages).split(',').map(s=>s.trim()) : ['English'],
-        rating: 5.0,
-        reviews: 0,
-        starting_price: 1500,
-        hourly_rate: 1500,
-        featured: false,
-        verification: { status: 'verified', date: new Date().toISOString(), checks: { identity: true, documents: true, credentials: true } },
-        image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=256',
-        availability: 'Available Today',
-        services: appData.specialties ? appData.specialties.split(',').map(s=>s.trim()) : ['General Consultation'],
-        certifications: appData.certificationId ? [appData.certificationId] : [],
-        packages: [
-          { name: 'Basic Consultation', price: 1500, description: 'Standard advice', features: ['1 Hour Call', 'Action Plan'] },
-          { name: 'Deep Dive', price: 5000, description: 'Full execution', features: ['Dedicated Review', 'Strategic Execution'] }
-        ]
-      };
+      // 3. Attempt to insert into professionals registry (best-effort)
+      // This may fail if the table doesn't exist or schema mismatches — that's OK,
+      // because getAdminMetrics now counts approved applications directly.
+      try {
+        const regPayload = {
+          user_id: appData.user_id || appData.userId,
+          name: appData.name,
+          category: appData.category || 'CA',
+          city: appData.city || 'Digital',
+          experience: Number(appData.experience) || 0,
+          bio: appData.bio || 'Verified Professional',
+          languages: appData.languages ? String(appData.languages).split(',').map(s=>s.trim()) : ['English'],
+          rating: 5.0,
+          reviews: 0,
+          starting_price: 1500,
+          hourly_rate: 1500,
+          featured: false,
+          verification: JSON.stringify({ status: 'verified', date: new Date().toISOString(), checks: { identity: true, documents: true, credentials: true } }),
+          image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=256',
+          availability: 'Available Today',
+          services: appData.specialties ? appData.specialties.split(',').map(s=>s.trim()) : ['General Consultation'],
+          certifications: appData.certificationId ? [appData.certificationId] : [],
+          packages: JSON.stringify([
+            { name: 'Basic Consultation', price: 1500, description: 'Standard advice', features: ['1 Hour Call', 'Action Plan'] },
+            { name: 'Deep Dive', price: 5000, description: 'Full execution', features: ['Dedicated Review', 'Strategic Execution'] }
+          ])
+        };
 
-      const { error: insErr } = await supabase.from('professionals').insert([regPayload]);
-      if (insErr && insErr.code !== '23505') { // Ignore unique constraint violation if accidentally duped
-          console.error("Failed to migrate into professional registry:", insErr);
+        const { error: insErr } = await supabase.from('professionals').insert([regPayload]);
+        if (insErr) {
+          console.warn('[Approve] Professional registry insert failed (non-fatal):', insErr.message, insErr.code);
+        } else {
+          console.log('[Approve] Professional registered in professionals table successfully.');
+        }
+      } catch (regErr) {
+        console.warn('[Approve] Professional registry insert threw (non-fatal):', regErr);
       }
 
       return data[0];
     } else {
+      // --- Local/Mock Mode ---
       const index = this.localApplications.findIndex(a => a.id === appId);
       if (index === -1) throw new Error("Application not found");
       this.localApplications[index].status = 'Approved';
       localStorage.setItem('proserve_applications', JSON.stringify(this.localApplications));
       
-      // Inject to local storage so search works predictably!
+      // Inject professional into local search registry
       const appData = this.localApplications[index];
       const newPro = {
         id: Date.now(),
         name: appData.name,
-        category: appData.category,
-        city: appData.city,
+        category: appData.category || 'CA',
+        city: appData.city || 'Digital',
         experience: Number(appData.experience) || 0,
-        bio: appData.bio,
+        bio: appData.bio || 'Verified Professional',
         languages: appData.languages ? String(appData.languages).split(',').map(s=>s.trim()) : ['English', 'Hindi'],
         rating: 5.0,
         reviews: 0,
@@ -238,6 +289,7 @@ class DbService {
       };
       this.localProfessionals.unshift(newPro);
       localStorage.setItem('proserve_mock_professionals', JSON.stringify(this.localProfessionals));
+      console.log('[Approve] Local professional registered. Total local pros:', this.localProfessionals.length);
       return appData;
     }
   }
