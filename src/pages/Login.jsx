@@ -1,444 +1,501 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams, useNavigate, Navigate } from 'react-router-dom';
-import { Mail, Lock, User, Briefcase, Eye, EyeOff, Shield, AlertCircle, CheckCircle2, Loader2, Clock } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Mail, Lock, User, Briefcase, Eye, EyeOff, Shield, AlertCircle, CheckCircle2, Loader2, Clock, ArrowLeft, ChevronRight } from 'lucide-react';
 import { authService } from '../lib/authService';
 import { useAuth } from '../components/AuthContext';
 import './Login.css';
 
-export default function Login() {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const initialTab = searchParams.get('tab') === 'signup' ? 'signup' : 'login';
-  const initialRole = searchParams.get('role') === 'professional' ? 'professional' : 'user';
+// ─── Routing Helper ──────────────────────────────────────────────────────────
+async function resolveRoute(userObj) {
+  const email = userObj?.email;
+  const meta  = userObj?.user_metadata || {};
+  const role  = meta.role;
+  const onboardingStatus = meta.onboardingStatus;
 
-  const [tab, setTab] = useState(initialTab);
-  const [role, setRole] = useState(initialRole);
-  const [showPassword, setShowPassword] = useState(false);
+  if (email === 'ronakdiscord@gmail.com' || role === 'admin') return '/admin';
 
-  // Form state
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
-  
-  // Rate Limit UI
-  const [cooldownTime, setCooldownTime] = useState(0);
-
-  const { session } = useAuth(); // Monitor global session
-  
-  // Cooldown countdown timer
-  useEffect(() => {
-    let timer;
-    if (cooldownTime > 0) {
-      timer = setInterval(() => setCooldownTime(c => c - 1), 1000);
-    }
-    return () => clearInterval(timer);
-  }, [cooldownTime]);
-
-  // Handle Intent Hydration for OAuth on existing sessions
-  // If the user logs in via Google without setting metadata beforehand, 
-  // we catch the intent from localStorage and apply it now.
-  useEffect(() => {
-    async function hydrateOAuthIntent() {
-      if (session && session.user) {
-        const intentRole = localStorage.getItem('proserve_oauth_intent_role');
-        const isSignUpIntent = intentRole === 'user' || intentRole === 'professional';
-
-        if (isSignUpIntent && !session.user.user_metadata?.role) {
-          console.log('[Login] Hydrating OAuth Role Intent:', intentRole);
-          try {
-             await authService.updateUserMetadata({ 
-               role: intentRole, 
-               onboardingStatus: intentRole === 'professional' ? 'required' : 'complete' 
-             });
-             // Instantly mutate local object so the router below reads the fresh state
-             session.user.user_metadata = session.user.user_metadata || {};
-             session.user.user_metadata.role = intentRole;
-             session.user.user_metadata.onboardingStatus = intentRole === 'professional' ? 'required' : 'complete';
-          } catch(e) { console.error("Hydration failed:", e); }
+  if (role === 'professional') {
+    let status = onboardingStatus;
+    if (status === 'required' || status === 'pending') {
+      try {
+        const { dbService } = await import('../lib/dbService');
+        const real = await dbService.getMyApplicationStatus(userObj.id);
+        if (real === 'Approved') {
+          await authService.updateUserMetadata({ onboardingStatus: 'approved' });
+          status = 'approved';
         }
-        localStorage.removeItem('proserve_oauth_intent_role');
-        
-        // Auto-redirect logic
-        const userRole = session.user?.user_metadata?.role || (isSignUpIntent ? intentRole : 'user');
-        const userEmail = session.user?.email;
-        const onboardingStatus = session.user?.user_metadata?.onboardingStatus || (userRole === 'professional' ? 'required' : 'complete');
-
-        if (userEmail === 'ronakdiscord@gmail.com' || userRole === 'admin') {
-          navigate('/admin', { replace: true });
-        } else if (userRole === 'professional') {
-          if (onboardingStatus !== 'approved') navigate('/onboarding', { replace: true });
-          else navigate('/pro-dashboard', { replace: true });
-        } else {
-          navigate('/dashboard', { replace: true });
-        }
-      }
+      } catch (e) { /* ignore */ }
     }
-    hydrateOAuthIntent();
-  }, [session, navigate]);
-
-  // Don't render the form while auto-redirect is resolving
-  if (session) {
-    return (
-      <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center', background: 'var(--color-primary)' }}>
-        <Loader2 size={40} className="spin" style={{ color: 'var(--color-accent)' }} />
-      </div>
-    );
+    return status === 'approved' ? '/pro-dashboard' : '/onboarding';
   }
 
-  const validate = () => {
-    const newErrors = {};
-    if (tab === 'signup' && !formData.name.trim()) newErrors.name = 'Full name is required';
-    if (!formData.email) {
-      newErrors.email = 'Email address is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (tab === 'signup' && formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters long';
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  return '/dashboard';
+}
 
-  const handleErrorContext = (errorMsg) => {
-    const msg = String(errorMsg).toLowerCase();
-    if (msg.includes('rate limit') || msg.includes('too many requests')) {
+// ─── Google SVG ──────────────────────────────────────────────────────────────
+const GoogleIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+  </svg>
+);
+
+// ─── Main Component ───────────────────────────────────────────────────────────
+export default function Login() {
+  const navigate  = useNavigate();
+  const { session } = useAuth();
+
+  // Screens: 'entry' | 'email' | 'role-select' | 'success'
+  const [screen, setScreen] = useState('entry');
+  const [emailMode, setEmailMode]   = useState('signin'); // 'signin' | 'signup'
+  const [formData, setFormData]     = useState({ name: '', email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
+  const [pendingUser, setPendingUser] = useState(null); // new user waiting for role pick
+  const [selectedRole, setSelectedRole] = useState(null);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors]         = useState({});
+  const [cooldownTime, setCooldownTime] = useState(0);
+
+  // ── Cooldown timer ──
+  useEffect(() => {
+    let t;
+    if (cooldownTime > 0) t = setInterval(() => setCooldownTime(c => c - 1), 1000);
+    return () => clearInterval(t);
+  }, [cooldownTime]);
+
+  // ── Handle returned Google OAuth session ──
+  useEffect(() => {
+    if (!session?.user) return;
+
+    async function handleSession() {
+      const intentRole = localStorage.getItem('proserve_oauth_intent_role');
+      localStorage.removeItem('proserve_oauth_intent_role');
+
+      const meta = session.user.user_metadata || {};
+      const hasRole = !!meta.role;
+
+      // Returning user — route directly
+      if (hasRole) {
+        const route = await resolveRoute(session.user);
+        navigate(route, { replace: true });
+        return;
+      }
+
+      // Intentful OAuth (stored role before clicking Google)
+      if (intentRole && intentRole !== 'login') {
+        try {
+          await authService.updateUserMetadata({
+            role: intentRole,
+            onboardingStatus: intentRole === 'professional' ? 'required' : 'complete'
+          });
+          session.user.user_metadata = { ...meta, role: intentRole, onboardingStatus: intentRole === 'professional' ? 'required' : 'complete' };
+        } catch (e) { console.error('Hydration failed:', e); }
+        const route = await resolveRoute(session.user);
+        navigate(route, { replace: true });
+        return;
+      }
+
+      // Truly new — show role picker
+      setPendingUser(session.user);
+      setScreen('role-select');
+    }
+
+    handleSession();
+  }, [session, navigate]);
+
+  // ── Error helpers ──
+  const setGlobalError = (msg) => setErrors({ global: msg });
+  const clearErrors = () => setErrors({});
+
+  const handleRateLimit = (msg) => {
+    const lower = String(msg).toLowerCase();
+    if (lower.includes('rate limit') || lower.includes('too many')) {
       setCooldownTime(15);
-      setErrors({ global: 'Security pause: Please wait 15 seconds before trying again.' });
-    } else if (msg.includes('already registered')) {
-      setTab('login');
-      setErrors({ email: 'An account with this email already exists. Please sign in instead.' });
+      setGlobalError('Security pause: wait 15 seconds before retrying.');
+    } else if (lower.includes('already registered') || lower.includes('already exists')) {
+      setEmailMode('signin');
+      setErrors({ email: 'Account exists. Sign in instead.' });
     } else {
-      setErrors({ email: errorMsg || 'Authentication failed. Please check credentials.' });
+      setGlobalError(msg || 'Authentication failed.');
     }
   };
 
-  const handleSubmit = async (e) => {
+  // ── Google OAuth ──
+  const handleGoogle = async () => {
+    if (isSubmitting || cooldownTime > 0) return;
+    setIsSubmitting(true);
+    clearErrors();
+    // Don't store a role — we'll detect new vs returning after callback
+    localStorage.setItem('proserve_oauth_intent_role', 'login');
+    try {
+      await authService.signInWithOAuth('google');
+    } catch (err) {
+      setIsSubmitting(false);
+      handleRateLimit(err.message || 'Google auth failed.');
+    }
+  };
+
+  // ── Email form submit ──
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
-    if (isSubmitting || cooldownTime > 0) return; 
-    if (!validate()) return;
+    if (isSubmitting || cooldownTime > 0) return;
+
+    const errs = {};
+    if (emailMode === 'signup' && !formData.name.trim()) errs.name = 'Full name required';
+    if (!formData.email) errs.email = 'Email required';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) errs.email = 'Enter a valid email';
+    if (!formData.password) errs.password = 'Password required';
+    else if (emailMode === 'signup' && formData.password.length < 8) errs.password = 'Min 8 characters';
+    if (Object.keys(errs).length) { setErrors(errs); return; }
 
     setIsSubmitting(true);
-    setErrors({});
-    
-    try {
-      let finalRole = role;
-      let userObj = null;
+    clearErrors();
 
-      if (tab === 'signup') {
-        const metadata = { role: role, name: formData.name, onboardingStatus: role === 'professional' ? 'required' : 'complete' };
-        
-        console.log('[Login] Initiating signUp for:', formData.email);
-        const response = await authService.signUp(formData.email, formData.password, metadata);
-        
-        const { user, session: newSession } = response;
-        userObj = user;
-        
+    try {
+      if (emailMode === 'signup') {
+        // Sign up without role — we'll ask after
+        const { user, session: newSession } = await authService.signUp(
+          formData.email, formData.password,
+          { name: formData.name }
+        );
         if (!newSession && authService.hasSupabaseConfig) {
-          setSuccess(true);
+          setScreen('success');
           return;
         }
+        // No metadata role yet — show role picker
+        setPendingUser(user);
+        setScreen('role-select');
       } else {
-        console.log('[Login] Initiating signIn for:', formData.email);
-        const response = await authService.signIn(formData.email, formData.password);
-        
-        userObj = response?.user;
-        finalRole = userObj?.user_metadata?.role;
+        const { user } = await authService.signIn(formData.email, formData.password);
+        const route = await resolveRoute(user);
+        window.location.href = route;
       }
-
-      let routeTo = '/dashboard';
-      if (userObj?.email === 'ronakdiscord@gmail.com' || finalRole === 'admin') {
-        routeTo = '/admin';
-      } else if (finalRole === 'professional') {
-        let currentStatus = userObj?.user_metadata?.onboardingStatus;
-        if (currentStatus === 'required' || currentStatus === 'pending') {
-          try {
-            const { dbService } = await import('../lib/dbService');
-            const realStatus = await dbService.getMyApplicationStatus(userObj.id);
-            if (realStatus === 'Approved') {
-               currentStatus = 'approved';
-               await authService.updateUserMetadata({ onboardingStatus: 'approved' });
-            }
-          } catch(e) { console.error("Cached check failed", e); }
-          
-          if (currentStatus !== 'approved') routeTo = '/onboarding';
-          else routeTo = '/pro-dashboard';
-        } else {
-          routeTo = '/pro-dashboard';
-        }
-      }
-
-      window.location.href = routeTo;
-
-    } catch (error) {
-      console.error('[Login] Exact Authentication Error:', error);
-      handleErrorContext(error.message);
+    } catch (err) {
+      handleRateLimit(err.message);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name] || errors.global) setErrors(prev => ({ ...prev, [name]: null, global: null }));
-  };
-
-  const handleGoogleLogin = async () => {
-    if (isSubmitting || cooldownTime > 0) return;
+  // ── Role selection confirm ──
+  const handleRoleConfirm = async () => {
+    if (!selectedRole || isSubmitting) return;
     setIsSubmitting(true);
-    setErrors({});
-    
-    // Store exact role intent for Google SSO resolution upon callback
-    const intent = tab === 'login' ? 'login' : role;
-    localStorage.setItem('proserve_oauth_intent_role', intent);
-
+    clearErrors();
     try {
-      await authService.signInWithOAuth('google');
-    } catch (error) {
+      const meta = {
+        role: selectedRole,
+        onboardingStatus: selectedRole === 'professional' ? 'required' : 'complete'
+      };
+      await authService.updateUserMetadata(meta);
+      const route = selectedRole === 'professional' ? '/onboarding' : '/dashboard';
+      window.location.href = route;
+    } catch (err) {
+      setGlobalError('Could not save your role. Please try again.');
       setIsSubmitting(false);
-      handleErrorContext(error.message || 'Failed to authenticate with Google.');
     }
   };
 
+  // ── Dev helpers ──
   const handleDevLogin = async (devRole) => {
     if (isSubmitting || cooldownTime > 0) return;
     setIsSubmitting(true);
-    setErrors({});
+    clearErrors();
     try {
-      const response = await authService.devSignIn(devRole);
-      const userObj = response.user;
-      
+      const { user: userObj } = await authService.devSignIn(devRole);
       let routeTo = '/dashboard';
-      if (devRole === 'admin') {
-        routeTo = '/admin';
-      } else if (devRole.startsWith('expert')) {
-        try {
-          const { dbService } = await import('../lib/dbService');
-          const realStatus = await dbService.getMyApplicationStatus(userObj.id);
-          
-          if (realStatus === 'Approved') {
-            await authService.updateUserMetadata({ onboardingStatus: 'approved' });
-            routeTo = '/pro-dashboard';
-          } else if (realStatus === 'Pending') {
-            await authService.updateUserMetadata({ onboardingStatus: 'pending' });
-            routeTo = '/onboarding';
-          } else if (realStatus === 'Rejected') {
-            await authService.updateUserMetadata({ onboardingStatus: 'rejected' });
-            routeTo = '/onboarding';
-          } else {
-            await authService.updateUserMetadata({ onboardingStatus: 'required' });
-            routeTo = '/onboarding';
-          }
-        } catch(e) {
-          routeTo = '/onboarding';
-        }
+      if (devRole === 'admin') routeTo = '/admin';
+      else if (devRole.startsWith('expert')) {
+        const { dbService } = await import('../lib/dbService');
+        const real = await dbService.getMyApplicationStatus(userObj.id).catch(() => null);
+        if (real === 'Approved') { await authService.updateUserMetadata({ onboardingStatus: 'approved' }); routeTo = '/pro-dashboard'; }
+        else { await authService.updateUserMetadata({ onboardingStatus: real === 'Pending' ? 'pending' : 'required' }); routeTo = '/onboarding'; }
       }
-      
       window.location.href = routeTo;
     } catch (err) {
-      handleErrorContext(err.message);
+      handleRateLimit(err.message);
       setIsSubmitting(false);
     }
   };
 
   const handleResetLocalData = () => {
-    if (!window.confirm("Delete all local test data safely?")) return;
-    const keysToClear = [
-      'proserve_applications', 
-      'proserve_professionals', 
-      'proserve_bookings', 
-      'proserve_leads', 
-      'proserve_portfolios',
-      'proserve_reviews',
-      'proserve_dev_mock_session',
-      'proserve_mock_user',
-      'proserve_oauth_intent_role'
-    ];
-    keysToClear.forEach(k => localStorage.removeItem(k));
-    alert("Local data wiped safely! Refreshing to clean state.");
+    if (!window.confirm('Delete all local test data safely?')) return;
+    ['proserve_applications','proserve_professionals','proserve_bookings','proserve_leads',
+     'proserve_portfolios','proserve_reviews','proserve_dev_mock_session','proserve_mock_user',
+     'proserve_oauth_intent_role','proserve_mock_professionals'].forEach(k => localStorage.removeItem(k));
+    alert('Local data wiped! Refreshing...');
     window.location.reload();
   };
 
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setFormData(p => ({ ...p, [name]: value }));
+    setErrors(p => ({ ...p, [name]: null, global: null }));
+  };
+
+  // ── Guard: session resolving ──
+  if (session && screen === 'entry') {
+    return (
+      <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center', background: 'var(--color-primary-dark)' }}>
+        <Loader2 size={40} className="spin" style={{ color: 'var(--color-accent)' }} />
+      </div>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // SCREEN: SUCCESS (email confirmation sent)
+  // ─────────────────────────────────────────────────────────────────────────────
+  if (screen === 'success') {
+    return (
+      <main className="login-page">
+        <div className="login-container">
+          <div className="login-card animate-scale-in" style={{ textAlign: 'center' }}>
+            <CheckCircle2 size={56} style={{ color: 'var(--color-success)', margin: '0 auto var(--space-4)' }} />
+            <h2 style={{ fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--color-gray-900)', marginBottom: 'var(--space-2)' }}>Check your inbox</h2>
+            <p style={{ color: 'var(--color-gray-500)', marginBottom: 'var(--space-6)' }}>
+              We've sent a verification link to <strong>{formData.email}</strong>. Click it to activate your account.
+            </p>
+            <button className="btn btn-ghost btn-sm" onClick={() => setScreen('entry')}>Back to Sign In</button>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // SCREEN: ROLE SELECT (new users only)
+  // ─────────────────────────────────────────────────────────────────────────────
+  if (screen === 'role-select') {
+    return (
+      <main className="login-page">
+        <div className="login-container" style={{ maxWidth: '520px' }}>
+          <div className="login-card animate-scale-in">
+            <div className="login-header">
+              <div style={{ display: 'inline-flex', padding: '12px', background: 'var(--color-primary-bg)', borderRadius: '50%', marginBottom: 'var(--space-4)' }}>
+                <Shield size={28} style={{ color: 'var(--color-primary)' }} />
+              </div>
+              <h1>How will you use ProServe?</h1>
+              <p>Choose your account type. You can always change this later.</p>
+            </div>
+
+            {errors.global && (
+              <div className="auth-error-banner"><AlertCircle size={16} />{errors.global}</div>
+            )}
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', margin: 'var(--space-2) 0 var(--space-6)' }}>
+              {[
+                { id: 'user', icon: <User size={28} />, label: 'I need an expert', sub: 'Find and book verified CAs, CMAs, and more.' },
+                { id: 'professional', icon: <Briefcase size={28} />, label: 'I am an expert', sub: 'Get verified and offer your services to clients.' }
+              ].map(opt => (
+                <button
+                  key={opt.id}
+                  type="button"
+                  onClick={() => setSelectedRole(opt.id)}
+                  className={`role-card-btn${selectedRole === opt.id ? ' selected' : ''}`}
+                >
+                  <div className="role-card-icon">{opt.icon}</div>
+                  <div className="role-card-text">
+                    <strong>{opt.label}</strong>
+                    <span>{opt.sub}</span>
+                  </div>
+                  <div className={`role-card-check${selectedRole === opt.id ? ' visible' : ''}`}>
+                    <CheckCircle2 size={22} />
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            <button
+              className="btn btn-primary btn-lg"
+              style={{ width: '100%' }}
+              disabled={!selectedRole || isSubmitting}
+              onClick={handleRoleConfirm}
+            >
+              {isSubmitting
+                ? <><Loader2 size={18} className="spin" /> Setting up your account...</>
+                : <>Continue <ChevronRight size={18} /></>
+              }
+            </button>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // SCREEN: EMAIL FORM
+  // ─────────────────────────────────────────────────────────────────────────────
+  if (screen === 'email') {
+    return (
+      <main className="login-page">
+        <div className="login-container">
+          <div className="login-card animate-scale-in">
+            <button
+              type="button"
+              onClick={() => { setScreen('entry'); clearErrors(); }}
+              className="auth-back-btn"
+            >
+              <ArrowLeft size={16} /> Back
+            </button>
+
+            <div className="login-header" style={{ marginTop: 'var(--space-2)' }}>
+              <h1>{emailMode === 'signin' ? 'Sign in' : 'Create account'}</h1>
+              <p>{emailMode === 'signin' ? 'Welcome back to ProServe' : 'Join ProServe — free forever'}</p>
+            </div>
+
+            {/* Mode toggle */}
+            <div className="login-tabs" style={{ marginBottom: 'var(--space-5)' }}>
+              <button className={`login-tab ${emailMode === 'signin' ? 'active' : ''}`} onClick={() => { setEmailMode('signin'); clearErrors(); }}>Sign In</button>
+              <button className={`login-tab ${emailMode === 'signup' ? 'active' : ''}`} onClick={() => { setEmailMode('signup'); clearErrors(); }}>Sign Up</button>
+            </div>
+
+            {errors.global && (
+              <div className="auth-error-banner">
+                {cooldownTime > 0 ? <Clock size={16} /> : <AlertCircle size={16} />}
+                {errors.global}
+              </div>
+            )}
+
+            <form onSubmit={handleEmailSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+              {emailMode === 'signup' && (
+                <div className="form-field">
+                  <label>Full Name</label>
+                  <div className={`form-input ${errors.name ? 'form-input-error' : ''}`}>
+                    <User size={18} />
+                    <input type="text" name="name" placeholder="Your full name" value={formData.name} onChange={handleInput} disabled={isSubmitting || cooldownTime > 0} autoFocus />
+                  </div>
+                  {errors.name && <span className="error-text"><AlertCircle size={14}/> {errors.name}</span>}
+                </div>
+              )}
+
+              <div className="form-field">
+                <label>Email</label>
+                <div className={`form-input ${errors.email ? 'form-input-error' : ''}`}>
+                  <Mail size={18} />
+                  <input type="email" name="email" placeholder="you@example.com" value={formData.email} onChange={handleInput} disabled={isSubmitting || cooldownTime > 0} autoFocus={emailMode === 'signin'} />
+                </div>
+                {errors.email && <span className="error-text"><AlertCircle size={14}/> {errors.email}</span>}
+              </div>
+
+              <div className="form-field">
+                <label>Password</label>
+                <div className={`form-input ${errors.password ? 'form-input-error' : ''}`}>
+                  <Lock size={18} />
+                  <input type={showPassword ? 'text' : 'password'} name="password" placeholder={emailMode === 'signup' ? 'Min 8 characters' : 'Your password'} value={formData.password} onChange={handleInput} disabled={isSubmitting || cooldownTime > 0} />
+                  <button type="button" onClick={() => setShowPassword(s => !s)} className="password-toggle" disabled={isSubmitting}>
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                {errors.password && <span className="error-text"><AlertCircle size={14}/> {errors.password}</span>}
+              </div>
+
+              <button type="submit" className="btn btn-primary btn-lg" disabled={isSubmitting || cooldownTime > 0}>
+                {cooldownTime > 0 ? <><Clock size={18} /> Retry in {cooldownTime}s</>
+                  : isSubmitting ? <><Loader2 size={18} className="spin" /> Processing...</>
+                  : emailMode === 'signin' ? 'Sign In' : 'Create Account'}
+              </button>
+            </form>
+
+            {/* Dev tools */}
+            {import.meta.env.DEV && (
+              <div style={{ marginTop: 'var(--space-6)', paddingTop: 'var(--space-4)', borderTop: '1px dashed var(--color-gray-200)', textAlign: 'center' }}>
+                <p style={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-primary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 'var(--space-3)' }}>Dev Bypass</p>
+                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDevLogin('user')} disabled={isSubmitting}>Test User</button>
+                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDevLogin('expert_approved')} disabled={isSubmitting}>Test Pro</button>
+                  <button type="button" className="btn btn-outline btn-sm" onClick={handleResetLocalData} style={{ color: 'var(--color-danger)', borderColor: 'rgba(220,38,38,0.2)' }}>Wipe Data</button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // SCREEN: ENTRY (default)
+  // ─────────────────────────────────────────────────────────────────────────────
   return (
-    <main className="login-page" id="login-page">
+    <main className="login-page">
       <div className="login-container">
         <div className="login-card animate-scale-in">
           <div className="login-header">
-            {success ? (
-              <div className="success-header animate-fade-in">
-                <CheckCircle2 size={48} color="var(--color-success)" />
-                <h1>Check your email!</h1>
-                <p>We've sent a verification link. Please confirm your account before logging in.</p>
+            <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', marginBottom: 'var(--space-5)' }}>
+              <div style={{ background: 'var(--color-primary)', borderRadius: '10px', padding: '8px', display: 'flex' }}>
+                <Shield size={20} style={{ color: 'white' }} />
               </div>
-            ) : (
-              <>
-                <h1>{tab === 'login' ? 'Welcome Back' : 'Create Account'}</h1>
-                <p>
-                  {tab === 'login'
-                    ? 'Sign in to access your ProServe account'
-                    : 'Join ProServe to find or become a verified expert'
-                  }
-                </p>
-              </>
-            )}
+              <span style={{ fontWeight: 800, fontSize: 'var(--text-lg)', color: 'var(--color-gray-900)' }}>Pro<span style={{ color: 'var(--color-accent)' }}>Serve</span></span>
+            </Link>
+            <h1>Welcome</h1>
+            <p>Sign in or create your account in seconds</p>
           </div>
 
-          {!success && (
-            <>
-              {/* Tab Toggle */}
-              <div className="login-tabs">
-                <button
-                  className={`login-tab ${tab === 'login' ? 'active' : ''}`}
-                  onClick={() => { setTab('login'); setErrors({}); }}
-                >
-                  Log In
-                </button>
-                <button
-                  className={`login-tab ${tab === 'signup' ? 'active' : ''}`}
-                  onClick={() => { setTab('signup'); setErrors({}); }}
-                >
-                  Sign Up
-                </button>
+          {errors.global && (
+            <div className="auth-error-banner">
+              {cooldownTime > 0 ? <Clock size={16} /> : <AlertCircle size={16} />}
+              {errors.global}
+            </div>
+          )}
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+            {/* Google */}
+            <button
+              type="button"
+              className="social-btn"
+              onClick={handleGoogle}
+              disabled={isSubmitting || cooldownTime > 0}
+              style={{ width: '100%', padding: '14px 20px', justifyContent: 'center', fontSize: 'var(--text-sm)', fontWeight: 600 }}
+            >
+              {isSubmitting
+                ? <Loader2 size={20} className="spin" />
+                : <GoogleIcon />
+              }
+              <span>Continue with Google</span>
+            </button>
+
+            {/* Email */}
+            <button
+              type="button"
+              onClick={() => setScreen('email')}
+              disabled={isSubmitting}
+              style={{
+                width: '100%', padding: '14px 20px',
+                background: 'var(--color-gray-50)',
+                border: '1.5px solid var(--color-gray-200)',
+                borderRadius: 'var(--radius-lg)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
+                fontSize: 'var(--text-sm)', fontWeight: 600,
+                color: 'var(--color-gray-700)',
+                cursor: 'pointer', transition: 'all 0.15s ease'
+              }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--color-primary)'}
+              onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--color-gray-200)'}
+            >
+              <Mail size={20} />
+              <span>Continue with Email</span>
+            </button>
+          </div>
+
+          <p style={{ textAlign: 'center', fontSize: 'var(--text-xs)', color: 'var(--color-gray-400)', marginTop: 'var(--space-5)', lineHeight: 1.6 }}>
+            By continuing, you agree to our{' '}
+            <Link to="/terms" style={{ color: 'var(--color-primary)' }}>Terms</Link> and{' '}
+            <Link to="/privacy" style={{ color: 'var(--color-primary)' }}>Privacy Policy</Link>.
+          </p>
+
+          {/* Dev tools on entry screen too */}
+          {import.meta.env.DEV && (
+            <div style={{ marginTop: 'var(--space-5)', paddingTop: 'var(--space-4)', borderTop: '1px dashed var(--color-gray-200)', textAlign: 'center' }}>
+              <p style={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-primary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 'var(--space-3)' }}>Dev Bypass</p>
+              <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDevLogin('user')} disabled={isSubmitting}>Test User</button>
+                <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDevLogin('expert_approved')} disabled={isSubmitting}>Test Pro</button>
+                <button type="button" className="btn btn-outline btn-sm" onClick={handleResetLocalData} style={{ color: 'var(--color-danger)', borderColor: 'rgba(220,38,38,0.2)' }}>Wipe Data</button>
               </div>
-
-              {/* Role Selector (signup only) - Preserves state cross-tab */}
-              {tab === 'signup' && (
-                <div className="role-selector">
-                  <div
-                    className={`role-option ${role === 'user' ? 'active' : ''}`}
-                    onClick={() => setRole('user')}
-                  >
-                    <div className="role-option-icon"><User size={20} /></div>
-                    <span>I need an expert</span>
-                  </div>
-                  <div
-                    className={`role-option ${role === 'professional' ? 'active' : ''}`}
-                    onClick={() => setRole('professional')}
-                  >
-                    <div className="role-option-icon"><Briefcase size={20} /></div>
-                    <span>I am an expert</span>
-                  </div>
-                </div>
-              )}
-
-              {/* Globally Displayed API Errors / Rate Limits */}
-              {errors.global && (
-                <div style={{ background: 'var(--color-warning-bg)', margin: '0 0 var(--space-4)', padding: '12px', border: '1px solid var(--color-warning)', color: 'var(--color-warning)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 600 }}>
-                   {cooldownTime > 0 ? <Clock size={16} /> : <AlertCircle size={16} />}
-                   {errors.global}
-                </div>
-              )}
-
-              {/* Google OAuth (Moved Up for Primary Focus) */}
-              <div className="social-login" style={{ marginTop: tab === 'signup' ? '1rem' : '1.5rem', marginBottom: '1.5rem', flexDirection: 'column' }}>
-                <button type="button" className="social-btn" onClick={handleGoogleLogin} disabled={isSubmitting || cooldownTime > 0} style={{ width: '100%', padding: '14px', justifyContent: 'center' }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-                  <span>Continue with Google</span>
-                </button>
-              </div>
-
-              <div className="login-divider">
-                <span>or continue with email</span>
-              </div>
-
-              {/* Explicit Email Form */}
-              <form className="login-form" onSubmit={handleSubmit} noValidate>
-                {tab === 'signup' && (
-                  <div className="form-field">
-                    <label>Full Name</label>
-                    <div className={`form-input ${errors.name ? 'form-input-error' : ''}`}>
-                      <User size={18} />
-                      <input 
-                        type="text" 
-                        name="name"
-                        placeholder="Enter your full name" 
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        disabled={isSubmitting || cooldownTime > 0}
-                      />
-                    </div>
-                    {errors.name && <span className="error-text"><AlertCircle size={14}/> {errors.name}</span>}
-                  </div>
-                )}
-
-                <div className="form-field">
-                  <label>Email Address</label>
-                  <div className={`form-input ${errors.email ? 'form-input-error' : ''}`}>
-                    <Mail size={18} />
-                    <input 
-                      type="email" 
-                      name="email"
-                      placeholder="you@example.com" 
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      disabled={isSubmitting || cooldownTime > 0}
-                    />
-                  </div>
-                  {errors.email && <span className="error-text"><AlertCircle size={14}/> {errors.email}</span>}
-                </div>
-
-                <div className="form-field">
-                  <label>Password</label>
-                  <div className={`form-input ${errors.password ? 'form-input-error' : ''}`}>
-                    <Lock size={18} />
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      name="password"
-                      placeholder="Enter your password"
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      disabled={isSubmitting || cooldownTime > 0}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="password-toggle"
-                      disabled={isSubmitting || cooldownTime > 0}
-                    >
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                    </button>
-                  </div>
-                  {errors.password && <span className="error-text"><AlertCircle size={14}/> {errors.password}</span>}
-                </div>
-
-                {tab === 'login' && (
-                  <div className="form-row">
-                    <label>
-                      <input type="checkbox" disabled={isSubmitting || cooldownTime > 0} /> Remember me
-                    </label>
-                    <a href="#">Forgot password?</a>
-                  </div>
-                )}
-
-                <button type="submit" className="btn btn-primary btn-lg" disabled={isSubmitting || cooldownTime > 0}>
-                  {cooldownTime > 0 ? (
-                    <><Clock size={18} /> Try again in {cooldownTime}s</>
-                  ) : isSubmitting ? (
-                    <><Loader2 size={18} className="spin" /> Processing...</>
-                  ) : (
-                    tab === 'login' ? 'Sign In' : `Create ${role === 'professional' ? 'Expert ' : ''}Account`
-                  )}
-                </button>
-              </form>
-
-              {/* Dev Only Testing Block */}
-              {import.meta.env.DEV && (
-                <div style={{ marginTop: 'var(--space-6)', paddingTop: 'var(--space-4)', borderTop: '1px dashed var(--color-gray-200)', textAlign: 'center' }}>
-                  <p style={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-primary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 'var(--space-3)' }}>
-                    Test Environment Bypass
-                  </p>
-                  <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDevLogin('user')} disabled={isSubmitting || cooldownTime > 0}>Test User</button>
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDevLogin('expert_approved')} disabled={isSubmitting || cooldownTime > 0}>Test Pro</button>
-                    <button type="button" className="btn btn-outline btn-sm" onClick={handleResetLocalData} style={{ color: 'var(--color-danger)', borderColor: 'rgba(220, 38, 38, 0.2)' }}>Wipe Dev Data</button>
-                  </div>
-                </div>
-              )}
-            </>
+            </div>
           )}
         </div>
       </div>

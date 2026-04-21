@@ -337,3 +337,96 @@
 .login-footer a:hover {
   text-decoration: underline;
 }
+
+/* ── Progressive Auth Additions ─────────────────────────── */
+.auth-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-gray-500);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: var(--space-4);
+  transition: color 0.15s;
+}
+.auth-back-btn:hover { color: var(--color-primary); }
+
+.auth-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-warning-bg, #fffbeb);
+  border: 1px solid var(--color-warning, #f59e0b);
+  color: var(--color-warning, #b45309);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: var(--space-4);
+}
+
+/* Role selection cards */
+.role-card-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-gray-50);
+  border: 2px solid var(--color-gray-200);
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  text-align: left;
+}
+.role-card-btn:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-bg, #eff6ff);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+.role-card-btn.selected {
+  border-color: var(--color-primary);
+  background: var(--color-primary-bg, #eff6ff);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb, 30,64,175), 0.12);
+}
+.role-card-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  background: white;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-gray-200);
+  color: var(--color-primary);
+}
+.role-card-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.role-card-text strong {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--color-gray-900);
+}
+.role-card-text span {
+  font-size: 12px;
+  color: var(--color-gray-500);
+  line-height: 1.4;
+}
+.role-card-check {
+  flex-shrink: 0;
+  color: var(--color-primary);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.role-card-check.visible { opacity: 1; }
+
