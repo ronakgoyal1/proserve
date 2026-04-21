@@ -42,21 +42,27 @@ export default function Login() {
     async function hydrateOAuthIntent() {
       if (session && session.user) {
         const intentRole = localStorage.getItem('proserve_oauth_intent_role');
-        if (intentRole && !session.user.user_metadata?.role) {
+        const isSignUpIntent = intentRole === 'user' || intentRole === 'professional';
+
+        if (isSignUpIntent && !session.user.user_metadata?.role) {
           console.log('[Login] Hydrating OAuth Role Intent:', intentRole);
           try {
              await authService.updateUserMetadata({ 
                role: intentRole, 
                onboardingStatus: intentRole === 'professional' ? 'required' : 'complete' 
              });
+             // Instantly mutate local object so the router below reads the fresh state
+             session.user.user_metadata = session.user.user_metadata || {};
+             session.user.user_metadata.role = intentRole;
+             session.user.user_metadata.onboardingStatus = intentRole === 'professional' ? 'required' : 'complete';
           } catch(e) { console.error("Hydration failed:", e); }
         }
         localStorage.removeItem('proserve_oauth_intent_role');
         
         // Auto-redirect logic
-        const userRole = session.user?.user_metadata?.role || intentRole;
+        const userRole = session.user?.user_metadata?.role || (isSignUpIntent ? intentRole : 'user');
         const userEmail = session.user?.email;
-        const onboardingStatus = session.user?.user_metadata?.onboardingStatus || (intentRole === 'professional' ? 'required' : 'complete');
+        const onboardingStatus = session.user?.user_metadata?.onboardingStatus || (userRole === 'professional' ? 'required' : 'complete');
 
         if (userEmail === 'ronakdiscord@gmail.com' || userRole === 'admin') {
           navigate('/admin', { replace: true });
@@ -187,9 +193,8 @@ export default function Login() {
     setErrors({});
     
     // Store exact role intent for Google SSO resolution upon callback
-    if (tab === 'signup') {
-      localStorage.setItem('proserve_oauth_intent_role', role);
-    }
+    const intent = tab === 'login' ? 'login' : role;
+    localStorage.setItem('proserve_oauth_intent_role', intent);
 
     try {
       await authService.signInWithOAuth('google');
