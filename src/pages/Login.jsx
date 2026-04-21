@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate, Navigate } from 'react-router-dom';
-import { Mail, Lock, User, Briefcase, Eye, EyeOff, Shield, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
+import { Mail, Lock, User, Briefcase, Eye, EyeOff, Shield, AlertCircle, CheckCircle2, Loader2, Clock } from 'lucide-react';
 import { authService } from '../lib/authService';
 import { useAuth } from '../components/AuthContext';
 import './Login.css';
@@ -20,23 +20,64 @@ export default function Login() {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  
+  // Rate Limit UI
+  const [cooldownTime, setCooldownTime] = useState(0);
 
   const { session } = useAuth(); // Monitor global session
   
-  // Auto-redirect if session exists (e.g. successful OAuth or previous login)
-  if (session) {
-    const userRole = session.user?.user_metadata?.role;
-    const userEmail = session.user?.email;
-    const onboardingStatus = session.user?.user_metadata?.onboardingStatus;
-
-    if (userEmail === 'ronakdiscord@gmail.com' || userRole === 'admin') {
-      return <Navigate to="/admin" replace />;
-    } else if (userRole === 'professional') {
-      if (onboardingStatus !== 'approved') return <Navigate to="/onboarding" replace />;
-      return <Navigate to="/pro-dashboard" replace />;
-    } else {
-      return <Navigate to="/dashboard" replace />;
+  // Cooldown countdown timer
+  useEffect(() => {
+    let timer;
+    if (cooldownTime > 0) {
+      timer = setInterval(() => setCooldownTime(c => c - 1), 1000);
     }
+    return () => clearInterval(timer);
+  }, [cooldownTime]);
+
+  // Handle Intent Hydration for OAuth on existing sessions
+  // If the user logs in via Google without setting metadata beforehand, 
+  // we catch the intent from localStorage and apply it now.
+  useEffect(() => {
+    async function hydrateOAuthIntent() {
+      if (session && session.user) {
+        const intentRole = localStorage.getItem('proserve_oauth_intent_role');
+        if (intentRole && !session.user.user_metadata?.role) {
+          console.log('[Login] Hydrating OAuth Role Intent:', intentRole);
+          try {
+             await authService.updateUserMetadata({ 
+               role: intentRole, 
+               onboardingStatus: intentRole === 'professional' ? 'required' : 'complete' 
+             });
+          } catch(e) { console.error("Hydration failed:", e); }
+        }
+        localStorage.removeItem('proserve_oauth_intent_role');
+        
+        // Auto-redirect logic
+        const userRole = session.user?.user_metadata?.role || intentRole;
+        const userEmail = session.user?.email;
+        const onboardingStatus = session.user?.user_metadata?.onboardingStatus || (intentRole === 'professional' ? 'required' : 'complete');
+
+        if (userEmail === 'ronakdiscord@gmail.com' || userRole === 'admin') {
+          navigate('/admin', { replace: true });
+        } else if (userRole === 'professional') {
+          if (onboardingStatus !== 'approved') navigate('/onboarding', { replace: true });
+          else navigate('/pro-dashboard', { replace: true });
+        } else {
+          navigate('/dashboard', { replace: true });
+        }
+      }
+    }
+    hydrateOAuthIntent();
+  }, [session, navigate]);
+
+  // Don't render the form while auto-redirect is resolving
+  if (session) {
+    return (
+      <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center', background: 'var(--color-primary)' }}>
+        <Loader2 size={40} className="spin" style={{ color: 'var(--color-accent)' }} />
+      </div>
+    );
   }
 
   const validate = () => {
@@ -56,9 +97,22 @@ export default function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleErrorContext = (errorMsg) => {
+    const msg = String(errorMsg).toLowerCase();
+    if (msg.includes('rate limit') || msg.includes('too many requests')) {
+      setCooldownTime(15);
+      setErrors({ global: 'Security pause: Please wait 15 seconds before trying again.' });
+    } else if (msg.includes('already registered')) {
+      setTab('login');
+      setErrors({ email: 'An account with this email already exists. Please sign in instead.' });
+    } else {
+      setErrors({ email: errorMsg || 'Authentication failed. Please check credentials.' });
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isSubmitting) return; // Prevent duplicate submissions
+    if (isSubmitting || cooldownTime > 0) return; 
     if (!validate()) return;
 
     setIsSubmitting(true);
@@ -73,12 +127,10 @@ export default function Login() {
         
         console.log('[Login] Initiating signUp for:', formData.email);
         const response = await authService.signUp(formData.email, formData.password, metadata);
-        console.log('[Login] signUp response:', response);
         
         const { user, session: newSession } = response;
         userObj = user;
         
-        // Supabase edge case: If confirmed email is required, session might be null.
         if (!newSession && authService.hasSupabaseConfig) {
           setSuccess(true);
           return;
@@ -86,20 +138,17 @@ export default function Login() {
       } else {
         console.log('[Login] Initiating signIn for:', formData.email);
         const response = await authService.signIn(formData.email, formData.password);
-        console.log('[Login] signIn response:', response);
         
         userObj = response?.user;
         finalRole = userObj?.user_metadata?.role;
       }
 
-      // Calculate accurate destination based on User Metadata
       let routeTo = '/dashboard';
       if (userObj?.email === 'ronakdiscord@gmail.com' || finalRole === 'admin') {
         routeTo = '/admin';
       } else if (finalRole === 'professional') {
         let currentStatus = userObj?.user_metadata?.onboardingStatus;
         if (currentStatus === 'required' || currentStatus === 'pending') {
-          // Double check database source of truth explicitly to clear stale cached flags instantly
           try {
             const { dbService } = await import('../lib/dbService');
             const realStatus = await dbService.getMyApplicationStatus(userObj.id);
@@ -109,23 +158,18 @@ export default function Login() {
             }
           } catch(e) { console.error("Cached check failed", e); }
           
-          if (currentStatus !== 'approved') {
-            routeTo = '/onboarding';
-          } else {
-            routeTo = '/pro-dashboard';
-          }
+          if (currentStatus !== 'approved') routeTo = '/onboarding';
+          else routeTo = '/pro-dashboard';
         } else {
           routeTo = '/pro-dashboard';
         }
       }
 
-      // Hard navigation ensures that whether using Supabase global event listeners
-      // or the local mock auth service, the AuthContext will cleanly hydrate on load.
       window.location.href = routeTo;
 
     } catch (error) {
       console.error('[Login] Exact Authentication Error:', error);
-      setErrors({ email: error.message || 'Authentication failed. Please check credentials.' });
+      handleErrorContext(error.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -134,26 +178,29 @@ export default function Login() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    // Clear error as user types
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: null }));
+    if (errors[name] || errors.global) setErrors(prev => ({ ...prev, [name]: null, global: null }));
   };
 
   const handleGoogleLogin = async () => {
+    if (isSubmitting || cooldownTime > 0) return;
     setIsSubmitting(true);
     setErrors({});
-    console.log('[Login] Google SSO clicked. Triggering Supabase OAuth...');
+    
+    // Store exact role intent for Google SSO resolution upon callback
+    if (tab === 'signup') {
+      localStorage.setItem('proserve_oauth_intent_role', role);
+    }
+
     try {
       await authService.signInWithOAuth('google');
-      // No immediate navigate() call here.
-      // We rely on Supabase redirecting the user to Google, then bounding back.
     } catch (error) {
-      console.error('[Login] Google login caught exception:', error);
       setIsSubmitting(false);
-      setErrors({ email: error.message || 'Failed to authenticate with Google.' });
+      handleErrorContext(error.message || 'Failed to authenticate with Google.');
     }
   };
 
   const handleDevLogin = async (devRole) => {
+    if (isSubmitting || cooldownTime > 0) return;
     setIsSubmitting(true);
     setErrors({});
     try {
@@ -182,15 +229,13 @@ export default function Login() {
             routeTo = '/onboarding';
           }
         } catch(e) {
-          console.error("Dev sync failed", e);
           routeTo = '/onboarding';
         }
       }
       
       window.location.href = routeTo;
     } catch (err) {
-      console.error('[Login] Dev login failed:', err);
-      setErrors({ email: err.message });
+      handleErrorContext(err.message);
       setIsSubmitting(false);
     }
   };
@@ -225,7 +270,7 @@ export default function Login() {
               <div className="login-tabs">
                 <button
                   className={`login-tab ${tab === 'login' ? 'active' : ''}`}
-                  onClick={() => { setTab('login'); setErrors({}); setFormData({name:'', email:'', password:''}); }}
+                  onClick={() => { setTab('login'); setErrors({}); }}
                 >
                   Log In
                 </button>
@@ -237,7 +282,7 @@ export default function Login() {
                 </button>
               </div>
 
-              {/* Role Selector (signup only) */}
+              {/* Role Selector (signup only) - Preserves state cross-tab */}
               {tab === 'signup' && (
                 <div className="role-selector">
                   <div
@@ -257,7 +302,27 @@ export default function Login() {
                 </div>
               )}
 
-              {/* Form */}
+              {/* Globally Displayed API Errors / Rate Limits */}
+              {errors.global && (
+                <div style={{ background: 'var(--color-warning-bg)', margin: '0 0 var(--space-4)', padding: '12px', border: '1px solid var(--color-warning)', color: 'var(--color-warning)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 600 }}>
+                   {cooldownTime > 0 ? <Clock size={16} /> : <AlertCircle size={16} />}
+                   {errors.global}
+                </div>
+              )}
+
+              {/* Google OAuth (Moved Up for Primary Focus) */}
+              <div className="social-login" style={{ marginTop: tab === 'signup' ? '1rem' : '1.5rem', marginBottom: '1.5rem', flexDirection: 'column' }}>
+                <button type="button" className="social-btn" onClick={handleGoogleLogin} disabled={isSubmitting || cooldownTime > 0} style={{ width: '100%', padding: '14px', justifyContent: 'center' }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                  <span>Continue with Google</span>
+                </button>
+              </div>
+
+              <div className="login-divider">
+                <span>or continue with email</span>
+              </div>
+
+              {/* Explicit Email Form */}
               <form className="login-form" onSubmit={handleSubmit} noValidate>
                 {tab === 'signup' && (
                   <div className="form-field">
@@ -270,7 +335,7 @@ export default function Login() {
                         placeholder="Enter your full name" 
                         value={formData.name}
                         onChange={handleInputChange}
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || cooldownTime > 0}
                       />
                     </div>
                     {errors.name && <span className="error-text"><AlertCircle size={14}/> {errors.name}</span>}
@@ -287,7 +352,7 @@ export default function Login() {
                       placeholder="you@example.com" 
                       value={formData.email}
                       onChange={handleInputChange}
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || cooldownTime > 0}
                     />
                   </div>
                   {errors.email && <span className="error-text"><AlertCircle size={14}/> {errors.email}</span>}
@@ -303,12 +368,13 @@ export default function Login() {
                       placeholder="Enter your password"
                       value={formData.password}
                       onChange={handleInputChange}
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || cooldownTime > 0}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="password-toggle"
+                      disabled={isSubmitting || cooldownTime > 0}
                     >
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -319,42 +385,22 @@ export default function Login() {
                 {tab === 'login' && (
                   <div className="form-row">
                     <label>
-                      <input type="checkbox" disabled={isSubmitting} /> Remember me
+                      <input type="checkbox" disabled={isSubmitting || cooldownTime > 0} /> Remember me
                     </label>
                     <a href="#">Forgot password?</a>
                   </div>
                 )}
 
-                <button type="submit" className="btn btn-primary btn-lg" disabled={isSubmitting}>
-                  {isSubmitting ? (
+                <button type="submit" className="btn btn-primary btn-lg" disabled={isSubmitting || cooldownTime > 0}>
+                  {cooldownTime > 0 ? (
+                    <><Clock size={18} /> Try again in {cooldownTime}s</>
+                  ) : isSubmitting ? (
                     <><Loader2 size={18} className="spin" /> Processing...</>
                   ) : (
-                    tab === 'login' ? 'Sign In' : 'Create Account'
+                    tab === 'login' ? 'Sign In' : `Create ${role === 'professional' ? 'Expert ' : ''}Account`
                   )}
                 </button>
               </form>
-
-              <div className="login-divider">
-                <span>or</span>
-              </div>
-
-              <div className="social-login">
-                <button type="button" className="social-btn" onClick={handleGoogleLogin} disabled={isSubmitting}>
-                  <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-                  Google
-                </button>
-                <button type="button" className="social-btn" disabled={isSubmitting}>
-                  <Shield size={18} />
-                  SSO
-                </button>
-              </div>
-
-              <div className="login-footer">
-                {tab === 'login'
-                  ? <>Don't have an account? <a href="#" onClick={(e) => { e.preventDefault(); setTab('signup'); setErrors({}); }}>Sign up</a></>
-                  : <>Already have an account? <a href="#" onClick={(e) => { e.preventDefault(); setTab('login'); setErrors({}); }}>Log in</a></>
-                }
-              </div>
 
               {/* Dev Only Testing Block */}
               {import.meta.env.DEV && (
@@ -363,12 +409,8 @@ export default function Login() {
                     Test Environment Bypass
                   </p>
                   <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDevLogin('user')} disabled={isSubmitting}>Test User</button>
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDevLogin('admin')} disabled={isSubmitting}>Test Admin</button>
-                    <div style={{ width: '100%', height: 4 }}></div>
-                    <button type="button" className="btn btn-outline btn-sm" onClick={() => handleDevLogin('expert_new')} disabled={isSubmitting}>New Expert</button>
-                    <button type="button" className="btn btn-outline btn-sm" onClick={() => handleDevLogin('expert_pending')} disabled={isSubmitting}>Pending Expert</button>
-                    <button type="button" className="btn btn-outline btn-sm" onClick={() => handleDevLogin('expert_approved')} disabled={isSubmitting}>Approved Expert</button>
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDevLogin('user')} disabled={isSubmitting || cooldownTime > 0}>Test User</button>
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDevLogin('expert_approved')} disabled={isSubmitting || cooldownTime > 0}>Test Pro</button>
                   </div>
                 </div>
               )}
