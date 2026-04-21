@@ -70,3 +70,16 @@ CREATE INDEX IF NOT EXISTS idx_professionals_category ON professionals(category)
 CREATE INDEX IF NOT EXISTS idx_leads_professional_id ON leads(professional_id);
 CREATE INDEX IF NOT EXISTS idx_bookings_user_id ON bookings(user_id);
 CREATE INDEX IF NOT EXISTS idx_bookings_professional_id ON bookings(professional_id);
+
+-- 6. Create Portfolios Table (Phase 3)
+CREATE TABLE IF NOT EXISTS portfolios (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    slug TEXT UNIQUE NOT NULL,
+    published BOOLEAN DEFAULT true,
+    content JSONB NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_portfolios_slug ON portfolios(slug);
+CREATE INDEX IF NOT EXISTS idx_portfolios_user_id ON portfolios(user_id);

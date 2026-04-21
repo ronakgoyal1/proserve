@@ -16,3 +16,18 @@ ALTER TABLE public.professional_applications
 -- If dbService also pulls 'hourlyRate' in camelCase from the live database:
 ALTER TABLE public.professionals
     ADD COLUMN IF NOT EXISTS "hourlyRate" INTEGER DEFAULT 1500;
+
+-- -----------------------------------------------------
+-- MIGRATION: Phase 3 Portfolios
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.portfolios (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    slug TEXT UNIQUE NOT NULL,
+    published BOOLEAN DEFAULT true,
+    content JSONB NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_portfolios_slug ON public.portfolios(slug);
+CREATE INDEX IF NOT EXISTS idx_portfolios_user_id ON public.portfolios(user_id);

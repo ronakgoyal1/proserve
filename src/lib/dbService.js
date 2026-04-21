@@ -21,6 +21,12 @@ class DbService {
     } catch {
       this.localProfessionals = [];
     }
+    try {
+      const storedPorts = localStorage.getItem('proserve_portfolios');
+      this.localPortfolios = storedPorts ? JSON.parse(storedPorts) : [];
+    } catch {
+      this.localPortfolios = [];
+    }
   }
 
   isMockEnvironment(userId = null) {
@@ -233,6 +239,117 @@ class DbService {
     } else {
       // Fire and forget returning success
       return reviewData;
+    }
+  }
+
+  // --- Portfolios (Phase 3) ---
+  async savePortfolio(userId, slug, contentData) {
+    let fallbackToLocal = false;
+
+    if (hasSupabaseConfig && !this.isMockEnvironment(userId)) {
+      const { data: existing, error: existError } = await supabase.from('portfolios').select('id').eq('user_id', userId).single();
+      
+      if (existError && (existError.code === 'PGRST205' || existError.message?.includes('schema cache') || existError.message?.includes('does not exist'))) {
+         console.warn("Portfolios table not found in Supabase. Falling back to local mock storage.");
+         fallbackToLocal = true;
+      } else if (existError && existError.code !== 'PGRST116') {
+         throw new Error("Database error: " + existError.message);
+      } else {
+          const payload = {
+             user_id: userId,
+             slug: slug,
+             content: contentData,
+             published: true,
+             updated_at: new Date().toISOString()
+          };
+
+          if (existing) {
+             const { data, error } = await supabase.from('portfolios').update(payload).eq('id', existing.id).select();
+             if (error) throw new Error(error.message);
+             return data[0];
+          } else {
+             const { data, error } = await supabase.from('portfolios').insert([payload]).select();
+             if (error) throw new Error(error.message);
+             return data[0];
+          }
+      }
+    } else {
+        fallbackToLocal = true;
+    }
+
+    if (fallbackToLocal) {
+      let index = this.localPortfolios.findIndex(p => p.userId === userId);
+      const payload = {
+        id: index >= 0 ? this.localPortfolios[index].id : `PORT-${Date.now()}`,
+        userId: userId,
+        slug: slug,
+        content: contentData,
+        published: true,
+        updated_at: new Date().toISOString()
+      };
+      
+      if (index >= 0) {
+        this.localPortfolios[index] = payload;
+      } else {
+        if (this.localPortfolios.some(p => p.slug === slug)) {
+           throw new Error("Slug is already taken in the local mock environment.");
+        }
+        this.localPortfolios.unshift(payload);
+      }
+      localStorage.setItem('proserve_portfolios', JSON.stringify(this.localPortfolios));
+      return payload;
+    }
+  }
+
+  async getPortfolioBySlug(slug) {
+    let fallbackToLocal = false;
+
+    if (hasSupabaseConfig) {
+      const localMatch = this.localPortfolios.find(p => p.slug === slug);
+      if (localMatch) return localMatch;
+
+      const { data, error } = await supabase.from('portfolios').select('*').eq('slug', slug).single();
+      if (error) {
+        if (error.code === 'PGRST116') return null;
+        if (error.code === 'PGRST205' || error.message?.includes('schema cache')) {
+            fallbackToLocal = true;
+        } else {
+            console.error("Supabase Error fetching portfolio:", error.message);
+            throw new Error("Failed to load portfolio. " + error.message);
+        }
+      } else {
+          return data;
+      }
+    } else {
+        fallbackToLocal = true;
+    }
+
+    if (fallbackToLocal) {
+      return this.localPortfolios.find(p => p.slug === slug) || null;
+    }
+  }
+
+  async getMyPortfolio(userId) {
+    let fallbackToLocal = false;
+
+    if (hasSupabaseConfig && !this.isMockEnvironment(userId)) {
+      const { data, error } = await supabase.from('portfolios').select('*').eq('user_id', userId).single();
+      if (error) {
+         if (error.code === 'PGRST116') return null;
+         if (error.code === 'PGRST205' || error.message?.includes('schema cache')) {
+            fallbackToLocal = true;
+         } else {
+            throw new Error("Failed to fetch your portfolio: " + error.message);
+         }
+      } else {
+         return data || null;
+      }
+    } else {
+      fallbackToLocal = true;
+    }
+
+    if (fallbackToLocal) {
+        return this.localPortfolios.find(p => p.userId === userId) || null;
     }
   }
 }

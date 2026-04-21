@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  BarChart3, UserCheck, User, Star, DollarSign, Search, Check, LogOut, ShieldCheck, UploadCloud, X, Loader2
+  BarChart3, UserCheck, User, Star, DollarSign, Search, Check, LogOut, ShieldCheck, UploadCloud, X, Loader2, LayoutTemplate
 } from 'lucide-react';
 import { useAuth } from '../components/AuthContext';
 import { authService } from '../lib/authService';
@@ -261,6 +261,9 @@ export default function ProDashboard() {
             >
               <BarChart3 size={18} /> Overview
             </div>
+            <Link to="/ai-portfolio" className="sidebar-nav-item" style={{ color: 'var(--color-accent)' }}>
+              <LayoutTemplate size={18} /> AI Portfolio
+            </Link>
             <div style={{ margin: 'var(--space-4) 0', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }} />
             
             <a href="#" className="sidebar-nav-item" style={{ color: 'var(--color-danger)' }} onClick={handleLogout}>
