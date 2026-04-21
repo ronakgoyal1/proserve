@@ -83,27 +83,118 @@ class DbService {
   }
 
   // --- Professionals ---
+
+  /**
+   * Synthesize a display-ready professional record from an approved application row.
+   * Used as a fallback when the professionals table is empty or inaccessible.
+   */
+  synthesizeFromApplication(app) {
+    const name = app.name || 'Professional';
+    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+    return this.normalizeProfessional({
+      id: app.id,
+      user_id: app.user_id || app.userId,
+      name,
+      initials,
+      category: app.category || 'CA',
+      city: app.city || 'Digital',
+      experience: Number(app.experience) || 0,
+      bio: app.bio || 'Verified Professional on ProServe.',
+      languages: app.languages ? String(app.languages).split(',').map(s => s.trim()) : ['English'],
+      rating: 5.0,
+      reviews: 0,
+      startingPrice: 1500,
+      hourlyRate: 1500,
+      featured: false,
+      availability: 'Available Today',
+      verification: { status: 'verified', date: new Date().toISOString(), checks: { identity: true, documents: true, credentials: true } },
+      image: null,
+      services: app.specialties ? String(app.specialties).split(',').map(s => s.trim()) : ['General Consultation'],
+      certifications: app.certificationId ? [app.certificationId] : [],
+      packages: [
+        { name: 'Basic Consultation', price: 1500, description: 'Standard advice', features: ['1 Hour Call', 'Action Plan'] },
+        { name: 'Deep Dive', price: 5000, description: 'Full execution', features: ['Dedicated Review', 'Strategic Execution'] }
+      ]
+    });
+  }
+
   async getProfessionals(filters = {}) {
     if (hasSupabaseConfig && !this.isMockEnvironment()) {
-      let query = supabase.from('professionals').select('*');
-      if (filters.category) query = query.eq('category', filters.category);
-      if (filters.city) query = query.ilike('city', `%${filters.city}%`);
-      const { data, error } = await query;
-      if (error) throw error;
-      return (data || []).map(row => this.normalizeProfessional(row));
+      // --- Layer 1: Try the professionals table ---
+      try {
+        let query = supabase.from('professionals').select('*');
+        if (filters.category) query = query.eq('category', filters.category);
+        if (filters.city) query = query.ilike('city', `%${filters.city}%`);
+        const { data, error } = await query;
+
+        if (error) {
+          console.warn('[Search] professionals table error:', error.message, '— falling back to approved applications');
+        } else if (data && data.length > 0) {
+          console.log(`[Search] Source: professionals table (${data.length} rows)`);
+          return data.map(row => this.normalizeProfessional(row));
+        } else {
+          console.log('[Search] professionals table empty — falling back to approved applications');
+        }
+      } catch (e) {
+        console.warn('[Search] professionals table threw:', e.message);
+      }
+
+      // --- Layer 2: Synthesize from approved applications ---
+      try {
+        const { data: approvedApps, error: appsErr } = await supabase
+          .from('professional_applications')
+          .select('*')
+          .eq('status', 'Approved');
+
+        if (appsErr) {
+          console.error('[Search] approved applications query failed:', appsErr.message);
+        } else if (approvedApps && approvedApps.length > 0) {
+          let results = approvedApps.map(app => this.synthesizeFromApplication(app));
+          if (filters.category) results = results.filter(p => p.category === filters.category);
+          if (filters.city) results = results.filter(p => p.city.toLowerCase().includes(filters.city.toLowerCase()));
+          console.log(`[Search] Source: approved applications fallback (${results.length} synthesized)`);
+          return results;
+        }
+      } catch (e) {
+        console.warn('[Search] approved applications fallback threw:', e.message);
+      }
+
+      console.log('[Search] No data from any Supabase source — returning empty');
+      return [];
     } else {
+      // --- Layer 3: Local/Mock ---
       let result = [...this.localProfessionals, ...mockProfessionals];
       if (filters.category) result = result.filter(p => p.category === filters.category);
       if (filters.city) result = result.filter(p => p.city.toLowerCase().includes(filters.city.toLowerCase()));
+      console.log(`[Search] Source: local/mock (${result.length} records)`);
       return result.map(row => this.normalizeProfessional(row));
     }
   }
 
   async getProfessionalById(id) {
     if (hasSupabaseConfig && !this.isMockEnvironment()) {
-      const { data, error } = await supabase.from('professionals').select('*').eq('id', id).single();
-      if (error) throw error;
-      return this.normalizeProfessional(data);
+      // Try professionals table first
+      try {
+        const { data, error } = await supabase.from('professionals').select('*').eq('id', id).single();
+        if (!error && data) return this.normalizeProfessional(data);
+      } catch (_) {}
+
+      // Fallback: find in approved applications
+      try {
+        const { data: apps } = await supabase
+          .from('professional_applications')
+          .select('*')
+          .eq('status', 'Approved');
+        const match = (apps || []).find(a => String(a.id) === String(id));
+        if (match) {
+          console.log('[Profile] Source: approved application fallback for id', id);
+          return this.synthesizeFromApplication(match);
+        }
+      } catch (_) {}
+
+      // Last resort: return first approved professional
+      console.warn('[Profile] Could not find professional id:', id);
+      return null;
     } else {
       const allPros = [...this.localProfessionals, ...mockProfessionals];
       const found = allPros.find(p => String(p.id) === String(id)) || allPros[0];
