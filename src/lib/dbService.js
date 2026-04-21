@@ -38,6 +38,50 @@ class DbService {
     return false;
   }
 
+  /**
+   * Normalize a professional record from any source (Supabase snake_case, local camelCase)
+   * into the exact shape the frontend components expect.
+   */
+  normalizeProfessional(row) {
+    if (!row) return row;
+    // Parse JSON strings back to objects if Supabase stored them as text
+    const parseJsonField = (val, fallback) => {
+      if (val === null || val === undefined) return fallback;
+      if (typeof val === 'object') return val; // already parsed (jsonb column)
+      try { return JSON.parse(val); } catch { return fallback; }
+    };
+
+    const name = row.name || 'Professional';
+    const initials = row.initials || name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+
+    return {
+      ...row,
+      name,
+      initials,
+      category: row.category || 'CA',
+      city: row.city || 'Digital',
+      experience: Number(row.experience) || 0,
+      rating: Number(row.rating) || 5.0,
+      reviews: Number(row.reviews) || 0,
+      featured: row.featured || false,
+      availability: row.availability || 'Available Today',
+      bio: row.bio || '',
+      // Handle snake_case ↔ camelCase
+      startingPrice: Number(row.startingPrice || row.starting_price) || 1500,
+      hourlyRate: Number(row.hourlyRate || row.hourly_rate) || 1500,
+      // Parse compound fields
+      verification: parseJsonField(row.verification, { status: 'verified', date: new Date().toISOString(), checks: { identity: true, documents: true, credentials: true } }),
+      services: parseJsonField(row.services, ['General Consultation']),
+      certifications: parseJsonField(row.certifications, []),
+      packages: parseJsonField(row.packages, [
+        { name: 'Basic Consultation', price: 1500, description: 'Standard advice', features: ['1 Hour Call', 'Action Plan'] },
+        { name: 'Deep Dive', price: 5000, description: 'Full execution', features: ['Dedicated Review', 'Strategic Execution'] }
+      ]),
+      languages: parseJsonField(row.languages, ['English']),
+      image: row.image || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=256',
+    };
+  }
+
   // --- Professionals ---
   async getProfessionals(filters = {}) {
     if (hasSupabaseConfig && !this.isMockEnvironment()) {
@@ -46,12 +90,12 @@ class DbService {
       if (filters.city) query = query.ilike('city', `%${filters.city}%`);
       const { data, error } = await query;
       if (error) throw error;
-      return data;
+      return (data || []).map(row => this.normalizeProfessional(row));
     } else {
       let result = [...this.localProfessionals, ...mockProfessionals];
       if (filters.category) result = result.filter(p => p.category === filters.category);
       if (filters.city) result = result.filter(p => p.city.toLowerCase().includes(filters.city.toLowerCase()));
-      return result;
+      return result.map(row => this.normalizeProfessional(row));
     }
   }
 
@@ -59,10 +103,11 @@ class DbService {
     if (hasSupabaseConfig && !this.isMockEnvironment()) {
       const { data, error } = await supabase.from('professionals').select('*').eq('id', id).single();
       if (error) throw error;
-      return data;
+      return this.normalizeProfessional(data);
     } else {
       const allPros = [...this.localProfessionals, ...mockProfessionals];
-      return allPros.find(p => String(p.id) === String(id)) || allPros[0];
+      const found = allPros.find(p => String(p.id) === String(id)) || allPros[0];
+      return this.normalizeProfessional(found);
     }
   }
 
@@ -216,42 +261,63 @@ class DbService {
         throw error;
       }
 
-      // 3. Attempt to insert into professionals registry (best-effort)
-      // This may fail if the table doesn't exist or schema mismatches — that's OK,
-      // because getAdminMetrics now counts approved applications directly.
-      try {
-        const regPayload = {
-          user_id: appData.user_id || appData.userId,
-          name: appData.name,
-          category: appData.category || 'CA',
-          city: appData.city || 'Digital',
-          experience: Number(appData.experience) || 0,
-          bio: appData.bio || 'Verified Professional',
-          languages: appData.languages ? String(appData.languages).split(',').map(s=>s.trim()) : ['English'],
-          rating: 5.0,
-          reviews: 0,
-          starting_price: 1500,
-          hourly_rate: 1500,
-          featured: false,
-          verification: JSON.stringify({ status: 'verified', date: new Date().toISOString(), checks: { identity: true, documents: true, credentials: true } }),
-          image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=256',
-          availability: 'Available Today',
-          services: appData.specialties ? appData.specialties.split(',').map(s=>s.trim()) : ['General Consultation'],
-          certifications: appData.certificationId ? [appData.certificationId] : [],
-          packages: JSON.stringify([
-            { name: 'Basic Consultation', price: 1500, description: 'Standard advice', features: ['1 Hour Call', 'Action Plan'] },
-            { name: 'Deep Dive', price: 5000, description: 'Full execution', features: ['Dedicated Review', 'Strategic Execution'] }
-          ])
-        };
+      // 3. Build professional registry payload using FRONTEND-COMPATIBLE field names.
+      //    Supabase will auto-create columns on first insert if table was created loosely.
+      //    We use camelCase to match what ProfessionalCard/Profile/Search expect.
+      const nameVal = appData.name || 'Professional';
+      const regPayload = {
+        user_id: appData.user_id || appData.userId,
+        name: nameVal,
+        initials: nameVal.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2),
+        category: appData.category || 'CA',
+        city: appData.city || 'Digital',
+        experience: Number(appData.experience) || 0,
+        bio: appData.bio || 'Verified Professional',
+        languages: appData.languages ? String(appData.languages).split(',').map(s=>s.trim()) : ['English'],
+        rating: 5.0,
+        reviews: 0,
+        startingPrice: 1500,
+        hourlyRate: 1500,
+        featured: false,
+        verification: { status: 'verified', date: new Date().toISOString(), checks: { identity: true, documents: true, credentials: true } },
+        image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=256',
+        availability: 'Available Today',
+        services: appData.specialties ? appData.specialties.split(',').map(s=>s.trim()) : ['General Consultation'],
+        certifications: appData.certificationId ? [appData.certificationId] : [],
+        packages: [
+          { name: 'Basic Consultation', price: 1500, description: 'Standard advice', features: ['1 Hour Call', 'Action Plan'] },
+          { name: 'Deep Dive', price: 5000, description: 'Full execution', features: ['Dedicated Review', 'Strategic Execution'] }
+        ]
+      };
 
-        const { error: insErr } = await supabase.from('professionals').insert([regPayload]);
-        if (insErr) {
-          console.warn('[Approve] Professional registry insert failed (non-fatal):', insErr.message, insErr.code);
+      const { data: insertedPro, error: insErr } = await supabase
+        .from('professionals')
+        .insert([regPayload])
+        .select();
+
+      if (insErr) {
+        console.error('[Approve] ❌ Professional registry INSERT failed:', {
+          code: insErr.code,
+          message: insErr.message,
+          details: insErr.details,
+          hint: insErr.hint,
+          payload: regPayload
+        });
+        // Don't throw — approval itself succeeded. The metric still counts via approved applications.
+      } else {
+        console.log('[Approve] ✅ Professional created in registry:', insertedPro?.[0]?.id);
+        
+        // Post-insert verification
+        const { data: verifyRow } = await supabase
+          .from('professionals')
+          .select('id, name')
+          .eq('user_id', regPayload.user_id)
+          .single();
+        if (verifyRow) {
+          console.log('[Approve] ✅ Post-insert verified: Row exists with id', verifyRow.id);
         } else {
-          console.log('[Approve] Professional registered in professionals table successfully.');
+          console.warn('[Approve] ⚠️ Post-insert check: Row not found after insert (possible RLS issue)');
         }
-      } catch (regErr) {
-        console.warn('[Approve] Professional registry insert threw (non-fatal):', regErr);
       }
 
       return data[0];
