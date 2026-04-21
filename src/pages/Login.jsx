@@ -240,6 +240,24 @@ export default function Login() {
     }
   };
 
+  const handleResetLocalData = () => {
+    if (!window.confirm("Delete all local test data safely?")) return;
+    const keysToClear = [
+      'proserve_applications', 
+      'proserve_professionals', 
+      'proserve_bookings', 
+      'proserve_leads', 
+      'proserve_portfolios',
+      'proserve_reviews',
+      'proserve_dev_mock_session',
+      'proserve_mock_user',
+      'proserve_oauth_intent_role'
+    ];
+    keysToClear.forEach(k => localStorage.removeItem(k));
+    alert("Local data wiped safely! Refreshing to clean state.");
+    window.location.reload();
+  };
+
   return (
     <main className="login-page" id="login-page">
       <div className="login-container">
@@ -411,6 +429,7 @@ export default function Login() {
                   <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
                     <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDevLogin('user')} disabled={isSubmitting || cooldownTime > 0}>Test User</button>
                     <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDevLogin('expert_approved')} disabled={isSubmitting || cooldownTime > 0}>Test Pro</button>
+                    <button type="button" className="btn btn-outline btn-sm" onClick={handleResetLocalData} style={{ color: 'var(--color-danger)', borderColor: 'rgba(220, 38, 38, 0.2)' }}>Wipe Dev Data</button>
                   </div>
                 </div>
               )}
