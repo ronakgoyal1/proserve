@@ -107,28 +107,33 @@ export default function ProOnboarding() {
   useEffect(() => {
     let intervalId;
     async function checkApproval() {
-      if (localStatus === 'pending' && session?.user?.id) {
-        try {
-          const actualStatus = await dbService.getMyApplicationStatus(session.user.id);
-          if (actualStatus === 'Approved') {
-            setLocalStatus('approved');
+      if (!session?.user?.id) return;
+      try {
+        const actualStatus = await dbService.getMyApplicationStatus(session.user.id);
+        if (actualStatus) {
+          const lowerStatus = actualStatus.toLowerCase();
+          if (localStatus !== lowerStatus) {
+            setLocalStatus(lowerStatus);
+          }
+          
+          if (actualStatus === 'Approved' && session?.user?.user_metadata?.onboardingStatus !== 'approved') {
             await authService.updateUserMetadata({ onboardingStatus: 'approved' });
             setTimeout(() => navigate('/pro-dashboard'), 3000);
-          } else if (actualStatus === 'Rejected') {
-            setLocalStatus('rejected');
+          } else if (actualStatus === 'Rejected' && session?.user?.user_metadata?.onboardingStatus !== 'rejected') {
+            await authService.updateUserMetadata({ onboardingStatus: 'rejected' });
           }
-        } catch (e) {
-          console.error("Failed to fetch application status", e);
         }
+      } catch (e) {
+        console.error("Failed to fetch application status", e);
       }
     }
     
-    // Initial check
+    // Initial blind check unconditionally connects DB state to UI
     checkApproval();
     
-    // Poll every 10s while parked on pending screen for MVP
+    // Always poll if any non-terminal state
     if (localStatus === 'pending') {
-      intervalId = setInterval(checkApproval, 10000);
+      intervalId = setInterval(checkApproval, 8000);
     }
     return () => clearInterval(intervalId);
   }, [localStatus, session, navigate]);

@@ -68,15 +68,18 @@ class DbService {
 
   // --- Professional Applications (Onboarding) ---
   async submitProfessionalApplication(applicationData) {
-    if (hasSupabaseConfig && !this.isMockEnvironment(applicationData?.user_id)) {
-      const { data, error } = await supabase.from('professional_applications').insert([{ ...applicationData, status: 'Pending' }]).select();
+    const userIdVal = applicationData.user_id || applicationData.userId;
+    const payload = { ...applicationData, user_id: userIdVal, userId: userIdVal };
+
+    if (hasSupabaseConfig && !this.isMockEnvironment(userIdVal)) {
+      const { data, error } = await supabase.from('professional_applications').insert([{ ...payload, status: 'Pending' }]).select();
       if (error) {
         if (error.code === '42P01') throw new Error("Database Schema Error: Required table missing. Please execute supabase_setup.sql in your Supabase SQL Editor.");
         throw error;
       }
       return data[0];
     } else {
-      const newApp = { id: `APP-${Date.now()}`, date: new Date().toLocaleDateString(), status: 'Pending', ...applicationData };
+      const newApp = { id: `APP-${Date.now()}`, date: new Date().toLocaleDateString(), status: 'Pending', ...payload };
       this.localApplications.unshift(newApp);
       localStorage.setItem('proserve_applications', JSON.stringify(this.localApplications));
       return newApp;
@@ -98,24 +101,32 @@ class DbService {
 
   async getMyApplicationStatus(userId) {
     if (hasSupabaseConfig && !this.isMockEnvironment(userId)) {
+      // Fetch both user_id and userId dynamically in case legacy rows existed
       const { data, error } = await supabase
         .from('professional_applications')
         .select('status, created_at')
-        .eq('user_id', userId)
+        .or(`user_id.eq.${userId},userId.eq.${userId}`)
         .order('created_at', { ascending: false });
         
-      if (error) throw error;
+      if (error) {
+        if (error.code === '42P01') return null; // table doesn't exist
+        throw error;
+      }
       if (!data || data.length === 0) return null;
       
       const hasApproved = data.some(app => app.status === 'Approved');
       if (hasApproved) return 'Approved';
+      const hasRejected = data.some(app => app.status === 'Rejected');
+      if (hasRejected) return 'Rejected';
       
       return data[0].status;
     } else {
-      const apps = this.localApplications.filter(a => a.userId === userId);
+      const apps = this.localApplications.filter(a => a.userId === userId || a.user_id === userId);
       if (!apps || apps.length === 0) return null;
       const hasApproved = apps.some(app => app.status === 'Approved');
       if (hasApproved) return 'Approved';
+      const hasRejected = apps.some(app => app.status === 'Rejected');
+      if (hasRejected) return 'Rejected';
       return apps[0].status;
     }
   }
