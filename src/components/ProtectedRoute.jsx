@@ -2,7 +2,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { Loader2 } from 'lucide-react';
 
-export default function ProtectedRoute({ children, allowAdmin = false, requirePro = false }) {
+export default function ProtectedRoute({ children, requireAdmin = false, requirePro = false, requireUser = false, requireOnboardingFlow = false }) {
   const { session, loading } = useAuth();
   const location = useLocation();
 
@@ -15,34 +15,44 @@ export default function ProtectedRoute({ children, allowAdmin = false, requirePr
   }
 
   if (!session) {
-    // Save the route they were trying to access to redirect later if needed
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Basic Role Based Logic implementation if User Metadata holds "role"
-  // If the app scales, we can enforce `session.user.user_metadata.role` here.
-  // We'll trust the route assignments for now as an MVP.
-  // Professional routing protection
-  if (requirePro) {
-    if (session.user?.user_metadata?.role !== 'professional') {
+  // Identity extraction
+  const isTestingAdmin = session.user?.email === 'ronakdiscord@gmail.com';
+  const isRoleAdmin = session.user?.user_metadata?.role === 'admin';
+  const isAdmin = isTestingAdmin || isRoleAdmin;
+  const isPro = session.user?.user_metadata?.role === 'professional';
+  const isGenericUser = (!isAdmin && !isPro);
+
+  // 1. Admin Routing Isolation
+  if (requireAdmin) {
+    if (!isAdmin) {
+      if (isPro) return <Navigate to="/pro-dashboard" replace />;
       return <Navigate to="/dashboard" replace />;
-    }
-    const onboardingStatus = session.user?.user_metadata?.onboardingStatus;
-    if (onboardingStatus !== 'approved') {
-      return <Navigate to="/onboarding" replace />;
     }
   }
 
-  // Admin routing protection
-  // 1. Temporary email-based bypass for direct testing
-  const isTestingAdmin = session.user?.email === 'ronakdiscord@gmail.com';
-  
-  // 2. Scalable Role-Based Authorization
-  // This verifies the role injected into user_metadata from the Supabase auth token
-  const isRoleAdmin = session.user?.user_metadata?.role === 'admin';
+  // 2. Expert Routing Isolation
+  if (requirePro) {
+    if (isAdmin) return <Navigate to="/admin" replace />;
+    if (!isPro) return <Navigate to="/dashboard" replace />;
 
-  if (allowAdmin && !(isTestingAdmin || isRoleAdmin)) {
-    return <Navigate to="/dashboard" replace />;
+    const onboardingStatus = session.user?.user_metadata?.onboardingStatus;
+    
+    // If they are on the Onboarding route but already approved, boot them to dashboard
+    if (requireOnboardingFlow) {
+        if (onboardingStatus === 'approved') return <Navigate to="/pro-dashboard" replace />;
+    } else {
+        // Normal Pro routes (e.g. ProDashboard) - block access if not approved
+        if (onboardingStatus !== 'approved') return <Navigate to="/onboarding" replace />;
+    }
+  }
+
+  // 3. Strict User Isolation
+  if (requireUser) {
+    if (isAdmin) return <Navigate to="/admin" replace />;
+    if (isPro) return <Navigate to="/pro-dashboard" replace />;
   }
 
   return children;

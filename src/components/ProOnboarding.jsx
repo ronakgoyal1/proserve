@@ -111,9 +111,9 @@ export default function ProOnboarding() {
         try {
           const actualStatus = await dbService.getMyApplicationStatus(session.user.id);
           if (actualStatus === 'Approved') {
-            await authService.updateUserMetadata({ onboardingStatus: 'approved' });
             setLocalStatus('approved');
-            navigate('/pro-dashboard');
+            await authService.updateUserMetadata({ onboardingStatus: 'approved' });
+            setTimeout(() => navigate('/pro-dashboard'), 3000);
           } else if (actualStatus === 'Rejected') {
             setLocalStatus('rejected');
           }
@@ -155,6 +155,28 @@ export default function ProOnboarding() {
             >
               <RefreshCw size={16} /> Check Status Again
             </button>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  if (localStatus === 'approved') {
+    return (
+      <main style={{ minHeight: '80vh', padding: 'var(--space-8) 0', background: 'var(--color-gray-50)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="container" style={{ maxWidth: '500px' }}>
+          <div className="animate-fade-in-up" style={{ background: 'white', padding: 'var(--space-8)', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-md)', textAlign: 'center' }}>
+            <div style={{ display: 'inline-flex', padding: 'var(--space-4)', background: 'var(--color-success-bg)', color: 'var(--color-success)', borderRadius: '50%', marginBottom: 'var(--space-4)' }}>
+              <ShieldCheck size={40} />
+            </div>
+            <h2>Application Approved!</h2>
+            <p style={{ color: 'var(--color-gray-500)', marginTop: 'var(--space-4)', lineHeight: '1.6' }}>
+              Welcome to ProServe. Your expert registry profile has been created and you are now live.
+            </p>
+            <p style={{ color: 'var(--color-gray-500)', marginTop: 'var(--space-2)' }}>
+              Redirecting to your dashboard...
+            </p>
+            <Loader2 size={24} className="spin" style={{ margin: 'var(--space-6) auto 0', color: 'var(--color-primary)' }} />
           </div>
         </div>
       </main>

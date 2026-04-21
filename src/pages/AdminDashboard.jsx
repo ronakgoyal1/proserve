@@ -13,6 +13,7 @@ import './Dashboard.css';
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [queue, setQueue] = useState([]);
+  const [metrics, setMetrics] = useState({ totalUsers: 0, verifiedPros: 0, pendingApprovals: 0, revenue: 0 });
   const [loadingQueue, setLoadingQueue] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -20,8 +21,12 @@ export default function AdminDashboard() {
   useEffect(() => {
     async function loadQueue() {
       try {
-        const apps = await dbService.getPendingApplications();
+        const [apps, m] = await Promise.all([
+           dbService.getPendingApplications(),
+           dbService.getAdminMetrics()
+        ]);
         setQueue(apps);
+        setMetrics(m);
       } catch (e) {
         console.error("Failed to load queue", e);
       } finally {
@@ -50,11 +55,10 @@ export default function AdminDashboard() {
     try {
       if (action === 'approve') {
         await dbService.approveApplication(id);
-        
-        // Also update AuthContext mock locally if it's the current user simulating admin locally
-        // (In a real app, Supabase triggers or admin endpoints would do this)
+        setMetrics(prev => ({ ...prev, verifiedPros: prev.verifiedPros + 1, pendingApprovals: Math.max(0, prev.pendingApprovals - 1) }));
       } else {
         await dbService.rejectApplication(id);
+        setMetrics(prev => ({ ...prev, pendingApprovals: Math.max(0, prev.pendingApprovals - 1) }));
       }
       setQueue(queue.filter(p => p.id !== id));
     } catch (e) {
@@ -74,7 +78,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="stat-info">
                   <h4>Total Users</h4>
-                  <div className="stat-value">12.5k</div>
+                  <div className="stat-value">{metrics.totalUsers || 0}</div>
                 </div>
               </div>
               <div className="stat-card">
@@ -83,7 +87,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="stat-info">
                   <h4>Verified Pros</h4>
-                  <div className="stat-value">845</div>
+                  <div className="stat-value">{metrics.verifiedPros || 0}</div>
                 </div>
               </div>
               <div className="stat-card">
@@ -92,7 +96,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="stat-info">
                   <h4>Pending Approvals</h4>
-                  <div className="stat-value">{queue.length}</div>
+                  <div className="stat-value">{metrics.pendingApprovals || 0}</div>
                 </div>
               </div>
               <div className="stat-card">
@@ -101,7 +105,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="stat-info">
                   <h4>Revenue (Mtd)</h4>
-                  <div className="stat-value">₹2.4M</div>
+                  <div className="stat-value">₹{metrics.revenue?.toLocaleString() || 0}</div>
                 </div>
               </div>
             </div>

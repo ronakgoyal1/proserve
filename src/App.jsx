@@ -58,10 +58,10 @@ export default function App() {
           <Route path="/search" element={<SearchPage />} />
           <Route path="/professional/:id" element={<Profile />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<ProtectedRoute requireUser><UserDashboard /></ProtectedRoute>} />
           <Route path="/pro-dashboard" element={<ProtectedRoute requirePro><ProDashboard /></ProtectedRoute>} />
-          <Route path="/admin" element={<ProtectedRoute allowAdmin><AdminDashboard /></ProtectedRoute>} />
-          <Route path="/onboarding" element={<ProtectedRoute><ProOnboarding /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/onboarding" element={<ProtectedRoute requirePro requireOnboardingFlow><ProOnboarding /></ProtectedRoute>} />
           <Route path="/ai-discovery" element={<AiDiscovery />} />
           <Route path="/ai-portfolio" element={<ProtectedRoute requirePro><AiPortfolio /></ProtectedRoute>} />
           <Route path="/portfolio/:slug" element={<PublicPortfolio />} />
