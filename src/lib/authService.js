@@ -4,11 +4,26 @@ import { supabase, hasSupabaseConfig } from './supabase';
  * Authentication Service Wrapper
  * Uses Supabase if configured, otherwise simulates authentication via local memory/promises.
  */
+const devUuidMap = {
+  user: '00000000-0000-4000-8000-000000000001',
+  professional: '00000000-0000-4000-8000-000000000002',
+  expert_new: '00000000-0000-4000-8000-000000000101',
+  expert_pending: '00000000-0000-4000-8000-000000000102',
+  expert_approved: '00000000-0000-4000-8000-000000000103',
+  admin: '00000000-0000-4000-8000-000000000003'
+};
+
 class AuthService {
   constructor() {
     try {
       const stored = localStorage.getItem('proserve_mock_user');
       this.mockUser = stored ? JSON.parse(stored) : null;
+      
+      // Auto-migrate standard mock users if they carry an old DEV- or mock- ID
+      if (this.mockUser && (this.mockUser.id.startsWith('DEV-') || this.mockUser.id.startsWith('mock-'))) {
+         this.mockUser.id = devUuidMap[this.mockUser.user_metadata?.role || 'user'] || devUuidMap.user;
+         localStorage.setItem('proserve_mock_user', JSON.stringify(this.mockUser));
+      }
     } catch {
       this.mockUser = null;
     }
@@ -25,7 +40,7 @@ class AuthService {
       return data;
     } else {
       // Mock flow
-      this.mockUser = { id: 'mock-123', email, user_metadata: metadata };
+      this.mockUser = { id: devUuidMap.user, email, user_metadata: metadata };
       localStorage.setItem('proserve_mock_user', JSON.stringify(this.mockUser));
       return { user: this.mockUser };
     }
@@ -38,7 +53,7 @@ class AuthService {
       return data;
     } else {
       // Mock flow
-      this.mockUser = { id: 'mock-123', email };
+      this.mockUser = { id: devUuidMap.user, email };
       localStorage.setItem('proserve_mock_user', JSON.stringify(this.mockUser));
       return { user: this.mockUser };
     }
@@ -107,8 +122,12 @@ class AuthService {
       const devMock = localStorage.getItem('proserve_dev_mock_session');
       if (devMock) {
         const parsed = JSON.parse(devMock);
-        // Normalize mock session format
-        return { user: parsed.user };
+        // Stale checking: purge any legacy 'DEV-' styled sessions automatically
+        if (parsed.user && parsed.user.id && (parsed.user.id.startsWith('DEV-') || parsed.user.id.startsWith('mock-'))) {
+           localStorage.removeItem('proserve_dev_mock_session');
+        } else {
+           return { user: parsed.user };
+        }
       }
     } catch {}
 
@@ -122,17 +141,44 @@ class AuthService {
   }
 
   async devSignIn(role) {
-    const mockId = `DEV-${Date.now()}`;
+    const mockId = devUuidMap[role] || '00000000-0000-4000-8000-000000000000';
+    const baseRole = role.startsWith('expert') ? 'professional' : role;
     const email = `test_${role}@proserve.local`;
-    const name = `Test ${role.charAt(0).toUpperCase() + role.slice(1)}`;
+
+    // Automatically seed/reset the target database state in localStorage
+    if (role === 'expert_new') {
+        const appsStr = localStorage.getItem('proserve_applications');
+        let apps = appsStr ? JSON.parse(appsStr) : [];
+        apps = apps.filter(a => a.userId !== mockId);
+        localStorage.setItem('proserve_applications', JSON.stringify(apps));
+    } else if (role === 'expert_pending' || role === 'expert_approved') {
+        const appsStr = localStorage.getItem('proserve_applications');
+        let apps = appsStr ? JSON.parse(appsStr) : [];
+        apps = apps.filter(a => a.userId !== mockId); // remove stale if any
+        
+        apps.unshift({
+           id: `APP-DEV-${Date.now()}`,
+           userId: mockId,
+           name: 'Dev Test Expert',
+           email: email,
+           category: 'CA',
+           city: 'Mumbai',
+           experience: 5,
+           status: role === 'expert_approved' ? 'Approved' : 'Pending',
+           date: new Date().toLocaleDateString()
+        });
+        localStorage.setItem('proserve_applications', JSON.stringify(apps));
+    }
+
+    const name = `Test ${baseRole.charAt(0).toUpperCase() + baseRole.slice(1)}`;
     const mockUser = {
       id: mockId,
       email: email,
       user_metadata: {
-        role: role,
+        role: baseRole,
         name: name,
         full_name: name,
-        onboardingStatus: role === 'professional' ? 'required' : 'complete'
+        onboardingStatus: baseRole === 'professional' ? 'required' : 'complete'
       }
     };
     const sessionData = { user: mockUser };

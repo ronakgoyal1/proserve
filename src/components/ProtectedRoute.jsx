@@ -28,7 +28,7 @@ export default function ProtectedRoute({ children, allowAdmin = false, requirePr
       return <Navigate to="/dashboard" replace />;
     }
     const onboardingStatus = session.user?.user_metadata?.onboardingStatus;
-    if (onboardingStatus === 'required' || onboardingStatus === 'pending') {
+    if (onboardingStatus !== 'approved') {
       return <Navigate to="/onboarding" replace />;
     }
   }

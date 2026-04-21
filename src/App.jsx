@@ -21,6 +21,7 @@ const Contact = lazy(() => import('./pages/Contact'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const Terms = lazy(() => import('./pages/Terms'));
 const ProOnboarding = lazy(() => import('./components/ProOnboarding'));
+const AiDiscovery = lazy(() => import('./pages/AiDiscovery'));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -59,6 +60,7 @@ export default function App() {
           <Route path="/pro-dashboard" element={<ProtectedRoute requirePro><ProDashboard /></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute allowAdmin><AdminDashboard /></ProtectedRoute>} />
           <Route path="/onboarding" element={<ProtectedRoute><ProOnboarding /></ProtectedRoute>} />
+          <Route path="/ai-discovery" element={<AiDiscovery />} />
           
           {/* Static Pages */}
           <Route path="/about" element={<About />} />

@@ -32,7 +32,7 @@ export default function Login() {
     if (userEmail === 'ronakdiscord@gmail.com' || userRole === 'admin') {
       return <Navigate to="/admin" replace />;
     } else if (userRole === 'professional') {
-      if (onboardingStatus === 'required') return <Navigate to="/onboarding" replace />;
+      if (onboardingStatus !== 'approved') return <Navigate to="/onboarding" replace />;
       return <Navigate to="/pro-dashboard" replace />;
     } else {
       return <Navigate to="/dashboard" replace />;
@@ -109,7 +109,7 @@ export default function Login() {
             }
           } catch(e) { console.error("Cached check failed", e); }
           
-          if (currentStatus === 'required' || currentStatus === 'pending') {
+          if (currentStatus !== 'approved') {
             routeTo = '/onboarding';
           } else {
             routeTo = '/pro-dashboard';
@@ -157,10 +157,35 @@ export default function Login() {
     setIsSubmitting(true);
     setErrors({});
     try {
-      await authService.devSignIn(devRole);
+      const response = await authService.devSignIn(devRole);
+      const userObj = response.user;
+      
       let routeTo = '/dashboard';
-      if (devRole === 'admin') routeTo = '/admin';
-      else if (devRole === 'professional') routeTo = '/onboarding';
+      if (devRole === 'admin') {
+        routeTo = '/admin';
+      } else if (devRole.startsWith('expert')) {
+        try {
+          const { dbService } = await import('../lib/dbService');
+          const realStatus = await dbService.getMyApplicationStatus(userObj.id);
+          
+          if (realStatus === 'Approved') {
+            await authService.updateUserMetadata({ onboardingStatus: 'approved' });
+            routeTo = '/pro-dashboard';
+          } else if (realStatus === 'Pending') {
+            await authService.updateUserMetadata({ onboardingStatus: 'pending' });
+            routeTo = '/onboarding';
+          } else if (realStatus === 'Rejected') {
+            await authService.updateUserMetadata({ onboardingStatus: 'rejected' });
+            routeTo = '/onboarding';
+          } else {
+            await authService.updateUserMetadata({ onboardingStatus: 'required' });
+            routeTo = '/onboarding';
+          }
+        } catch(e) {
+          console.error("Dev sync failed", e);
+          routeTo = '/onboarding';
+        }
+      }
       
       window.location.href = routeTo;
     } catch (err) {
@@ -339,8 +364,11 @@ export default function Login() {
                   </p>
                   <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
                     <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDevLogin('user')} disabled={isSubmitting}>Test User</button>
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDevLogin('professional')} disabled={isSubmitting}>Test Expert</button>
                     <button type="button" className="btn btn-secondary btn-sm" onClick={() => handleDevLogin('admin')} disabled={isSubmitting}>Test Admin</button>
+                    <div style={{ width: '100%', height: 4 }}></div>
+                    <button type="button" className="btn btn-outline btn-sm" onClick={() => handleDevLogin('expert_new')} disabled={isSubmitting}>New Expert</button>
+                    <button type="button" className="btn btn-outline btn-sm" onClick={() => handleDevLogin('expert_pending')} disabled={isSubmitting}>Pending Expert</button>
+                    <button type="button" className="btn btn-outline btn-sm" onClick={() => handleDevLogin('expert_approved')} disabled={isSubmitting}>Approved Expert</button>
                   </div>
                 </div>
               )}
