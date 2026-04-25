@@ -6,9 +6,6 @@ export default function ReviewForm({ onReviewSubmitted }) {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [review, setReview] = useState('');
-  const [reviewerName, setReviewerName] = useState('');
-  const [serviceUsed, setServiceUsed] = useState('');
-  const [isVerified, setIsVerified] = useState(false); // Demo purposes
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -24,9 +21,9 @@ export default function ReviewForm({ onReviewSubmitted }) {
         onReviewSubmitted({
           rating,
           text: review,
-          author_name: reviewerName || 'Anonymous User',
-          service_used: serviceUsed,
-          is_verified_client: isVerified
+          author: 'You',
+          date: 'Just now',
+          initials: 'Y'
         });
       }
     }, 1500);
@@ -63,44 +60,6 @@ export default function ReviewForm({ onReviewSubmitted }) {
             </button>
           ))}
         </div>
-      </div>
-
-      <div className="form-field">
-        <label>Your Name (Optional)</label>
-        <input 
-          type="text" 
-          className="review-input"
-          placeholder="How should we display your name?"
-          value={reviewerName}
-          onChange={(e) => setReviewerName(e.target.value)}
-          disabled={isSubmitting}
-        />
-      </div>
-
-      <div className="form-field">
-        <label>Service Used (Optional)</label>
-        <input 
-          type="text" 
-          className="review-input"
-          placeholder="e.g. GST Registration"
-          value={serviceUsed}
-          onChange={(e) => setServiceUsed(e.target.value)}
-          disabled={isSubmitting}
-        />
-      </div>
-
-      <div className="form-field" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: 'var(--space-4)' }}>
-        <input 
-          type="checkbox" 
-          id="verifiedClient"
-          checked={isVerified}
-          onChange={(e) => setIsVerified(e.target.checked)}
-          disabled={isSubmitting}
-          style={{ width: '16px', height: '16px' }}
-        />
-        <label htmlFor="verifiedClient" style={{ margin: 0, fontSize: 'var(--text-sm)', color: 'var(--color-gray-600)', cursor: 'pointer' }}>
-          I am a verified client (Demo)
-        </label>
       </div>
 
       <div className="form-field">
