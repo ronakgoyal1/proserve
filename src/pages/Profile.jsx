@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { services } from '../data/mockData';
 import { dbService } from '../lib/dbService';
+import { buildWhatsAppUrl, trackWhatsAppClick, isWhatsAppEnabled } from '../lib/whatsapp';
 import BookingModal from '../components/BookingModal';
 import ReviewForm from '../components/ReviewForm';
 import './Profile.css';
@@ -108,12 +109,31 @@ export default function Profile() {
                 <button className="btn btn-primary" onClick={() => setIsBookingOpen(true)}>
                   <Calendar size={16} /> Book Consultation
                 </button>
-                <button className="btn btn-whatsapp">
-                  <MessageCircle size={16} /> WhatsApp
-                </button>
-                <button className="btn btn-secondary">
-                  <Phone size={16} /> Call
-                </button>
+                {isWhatsAppEnabled(professional) ? (
+                  <a
+                    href={buildWhatsAppUrl(
+                      professional.contactPhone || professional.contact_phone ||
+                      professional.settings?.whatsappNumber || '',
+                      professional.name,
+                      professional.services
+                    )}
+                    onClick={() => trackWhatsAppClick(professional.id)}
+                    className="btn btn-whatsapp"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <MessageCircle size={16} /> WhatsApp
+                  </a>
+                ) : (
+                  <button className="btn btn-whatsapp" style={{ opacity: 0.45, cursor: 'not-allowed' }} disabled title="WhatsApp not available for this expert">
+                    <MessageCircle size={16} /> WhatsApp
+                  </button>
+                )}
+                {(professional.contactPhone || professional.contact_phone) && (
+                  <a href={`tel:${professional.contactPhone || professional.contact_phone}`} className="btn btn-secondary">
+                    <Phone size={16} /> Call
+                  </a>
+                )}
               </div>
             </div>
           </div>

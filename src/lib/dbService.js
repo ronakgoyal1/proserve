@@ -27,6 +27,12 @@ class DbService {
     } catch {
       this.localPortfolios = [];
     }
+    try {
+      const storedReviews = localStorage.getItem('proserve_reviews');
+      this.localReviews = storedReviews ? JSON.parse(storedReviews) : [];
+    } catch {
+      this.localReviews = [];
+    }
   }
 
   isMockEnvironment(userId = null) {
@@ -519,10 +525,32 @@ class DbService {
     if (hasSupabaseConfig && !this.isMockEnvironment()) {
       const { data, error } = await supabase.from('reviews').insert([reviewData]).select();
       if (error) throw error;
+      return data[0];
+    } else {
+      const newReview = { 
+        id: `REV-${Date.now()}`, 
+        created_at: new Date().toISOString(), 
+        ...reviewData 
+      };
+      this.localReviews.unshift(newReview);
+      localStorage.setItem('proserve_reviews', JSON.stringify(this.localReviews));
+      return newReview;
+    }
+  }
+
+  async getReviewsForProfessional(professionalId) {
+    if (hasSupabaseConfig && !this.isMockEnvironment(professionalId)) {
+      const { data, error } = await supabase.from('reviews').select('*').eq('professional_id', professionalId).order('created_at', { ascending: false });
+      if (error) {
+         if (error.code === '42P01') {
+            console.warn("Reviews table missing in supabase");
+            return [];
+         }
+         throw error;
+      }
       return data;
     } else {
-      // Fire and forget returning success
-      return reviewData;
+      return this.localReviews.filter(r => String(r.professional_id) === String(professionalId));
     }
   }
 

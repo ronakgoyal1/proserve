@@ -157,3 +157,26 @@
   border-radius: 50%;
   background: var(--color-success);
 }
+
+/* WhatsApp CTA on card footer */
+.btn-wa-card {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(37,211,102,0.10);
+  border: 1.5px solid rgba(37,211,102,0.28);
+  color: #25d366;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: all 0.18s ease;
+}
+.btn-wa-card:hover {
+  background: rgba(37,211,102,0.18);
+  border-color: rgba(37,211,102,0.55);
+  transform: scale(1.08);
+  box-shadow: 0 4px 14px rgba(37,211,102,0.22);
+}
+

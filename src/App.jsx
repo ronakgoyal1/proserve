@@ -24,6 +24,7 @@ const ProOnboarding = lazy(() => import('./components/ProOnboarding'));
 const AiDiscovery = lazy(() => import('./pages/AiDiscovery'));
 const AiPortfolio = lazy(() => import('./pages/AiPortfolio'));
 const PublicPortfolio = lazy(() => import('./pages/PublicPortfolio'));
+const Pricing = lazy(() => import('./pages/Pricing'));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -65,6 +66,7 @@ export default function App() {
           <Route path="/ai-discovery" element={<AiDiscovery />} />
           <Route path="/ai-portfolio" element={<ProtectedRoute requirePro><AiPortfolio /></ProtectedRoute>} />
           <Route path="/portfolio/:slug" element={<PublicPortfolio />} />
+          <Route path="/pricing" element={<Pricing />} />
           
           {/* Static Pages */}
           <Route path="/about" element={<About />} />
