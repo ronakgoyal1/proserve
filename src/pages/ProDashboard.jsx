@@ -214,7 +214,7 @@ function LockedAnalytics({ navigate }) {
       {/* Lock overlay */}
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
         <div style={{ background: '#fff', border: '1px solid #e8edf5', borderRadius: 24, padding: '40px 36px', boxShadow: '0 8px 40px rgba(0,0,0,0.08)', maxWidth: 360 }}>
-          <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(197,160,89,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: '#C5A059' }}>
+          <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(122,154,110,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: '#7A9A6E' }}>
             <Lock size={26} />
           </div>
           <h3 style={{ fontSize: 18, fontWeight: 800, color: '#0f172a', marginBottom: 10 }}>
@@ -230,7 +230,7 @@ function LockedAnalytics({ navigate }) {
               </div>
             ))}
           </div>
-          <button onClick={() => navigate('/pricing')} style={{ width: '100%', background: 'linear-gradient(135deg,#DBC086,#C5A059)', color: '#020617', border: 'none', borderRadius: 999, padding: '13px', fontSize: 14, fontWeight: 800, cursor: 'pointer', boxShadow: '0 6px 20px rgba(197,160,89,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+          <button onClick={() => navigate('/pricing')} style={{ width: '100%', background: 'linear-gradient(135deg,#92B284,#7A9A6E)', color: '#1A1A1A', border: 'none', borderRadius: 999, padding: '13px', fontSize: 14, fontWeight: 800, cursor: 'pointer', boxShadow: '0 6px 20px rgba(122,154,110,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
             Upgrade to Pro — ₹999/yr <ArrowRight size={15} />
           </button>
           <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 10 }}>14-day refund guarantee</p>
@@ -516,13 +516,13 @@ export default function ProDashboard() {
             </div>
 
             {/* Quick analytics preview → full view CTA */}
-            <div className="dashboard-section animate-fade-in" style={{ background: 'linear-gradient(135deg,rgba(197,160,89,0.06),rgba(197,160,89,0.02))', borderColor: 'rgba(197,160,89,0.2)' }}>
+            <div className="dashboard-section animate-fade-in" style={{ background: 'linear-gradient(135deg,rgba(122,154,110,0.06),rgba(122,154,110,0.02))', borderColor: 'rgba(122,154,110,0.2)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
                 <div>
-                  <h3 style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}><BarChart3 size={18} style={{ color: '#C5A059' }} /> ROI Analytics</h3>
+                  <h3 style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}><BarChart3 size={18} style={{ color: '#7A9A6E' }} /> ROI Analytics</h3>
                   <p style={{ fontSize: 13, color: 'var(--color-gray-500)' }}>See profile trends, lead sources, and AI growth insights.</p>
                 </div>
-                <button className="btn btn-primary btn-sm" onClick={() => setActiveTab('analytics')} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'linear-gradient(135deg,#DBC086,#C5A059)', color: '#020617', border: 'none', fontWeight: 700 }}>
+                <button className="btn btn-primary btn-sm" onClick={() => setActiveTab('analytics')} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'linear-gradient(135deg,#92B284,#7A9A6E)', color: '#1A1A1A', border: 'none', fontWeight: 700 }}>
                   View Analytics <ArrowRight size={14} />
                 </button>
               </div>
@@ -693,7 +693,7 @@ export default function ProDashboard() {
             <div className={`sidebar-nav-item ${activeTab === 'analytics' ? 'active' : ''}`} onClick={() => setActiveTab('analytics')} style={{ position: 'relative' }}>
               <BarChart3 size={18} /> Analytics
               {isPro
-                ? <span style={{ marginLeft: 'auto', fontSize: 10, fontWeight: 700, background: '#C5A059', color: '#020617', borderRadius: 4, padding: '1px 6px' }}>PRO</span>
+                ? <span style={{ marginLeft: 'auto', fontSize: 10, fontWeight: 700, background: '#7A9A6E', color: '#1A1A1A', borderRadius: 4, padding: '1px 6px' }}>PRO</span>
                 : <Lock size={12} style={{ marginLeft: 'auto', color: '#94a3b8' }} />}
             </div>
             <Link to="/ai-portfolio" className="sidebar-nav-item" style={{ color: 'var(--color-accent)' }}>

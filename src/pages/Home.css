@@ -14,7 +14,7 @@
   width: 60vw;
   height: 60vw;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(197, 160, 89, 0.15) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(122, 154, 110, 0.12) 0%, transparent 60%);
   pointer-events: none;
 }
 
@@ -26,7 +26,7 @@
   width: 50vw;
   height: 50vw;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(10, 25, 47, 0.8) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(26, 26, 26, 0.5) 0%, transparent 60%);
   pointer-events: none;
 }
 
@@ -43,8 +43,8 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-4);
-  background: rgba(197, 160, 89, 0.1);
-  border: 1px solid rgba(197, 160, 89, 0.3);
+  background: rgba(122, 154, 110, 0.1);
+  border: 1px solid rgba(122, 154, 110, 0.25);
   border-radius: var(--radius-full);
   font-size: var(--text-xs);
   font-weight: 600;
@@ -105,8 +105,8 @@
 
 .hero-search:hover {
   background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(197, 160, 89, 0.4);
-  box-shadow: 0 20px 40px rgba(197, 160, 89, 0.1);
+  border-color: rgba(122, 154, 110, 0.35);
+  box-shadow: 0 12px 24px rgba(122, 154, 110, 0.08);
 }
 
 .hero-search-input {
@@ -170,7 +170,7 @@
 .btn-hero-primary:hover {
   background: var(--color-accent-light);
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(197, 160, 89, 0.3);
+  box-shadow: 0 8px 16px rgba(122, 154, 110, 0.2);
 }
 
 .btn-hero-secondary {
@@ -241,14 +241,14 @@
 .hero-feature-card:hover {
   transform: translateY(-8px);
   box-shadow: var(--shadow-card-hover);
-  border-color: rgba(197, 160, 89, 0.3);
+  border-color: rgba(122, 154, 110, 0.3);
 }
 
 .feature-icon-wrapper {
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: rgba(197, 160, 89, 0.15);
+  background: rgba(122, 154, 110, 0.12);
   color: var(--color-accent-dark);
   display: flex;
   align-items: center;
@@ -436,7 +436,7 @@
 
 .dark-card:hover {
   background: rgba(255, 255, 255, 0.05) !important;
-  border-color: rgba(197, 160, 89, 0.3) !important;
+  border-color: rgba(122, 154, 110, 0.3) !important;
 }
 
 /* Why Choose */

@@ -101,7 +101,7 @@ export default function Home() {
 
             <div className="hero-social-proof">
               <div className="avatars-overlap">
-                <img src="https://ui-avatars.com/api/?name=Anita+R&background=C5A059&color=fff" alt="User 1" />
+                <img src="https://ui-avatars.com/api/?name=Anita+R&background=7A9A6E&color=fff" alt="User 1" />
                 <img src="https://ui-avatars.com/api/?name=David+M&background=182C4D&color=fff" alt="User 2" />
                 <img src="https://ui-avatars.com/api/?name=Sanjay+K&background=0A192F&color=fff" alt="User 3" />
               </div>

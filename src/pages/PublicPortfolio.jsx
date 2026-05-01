@@ -11,38 +11,15 @@ import { Helmet } from 'react-helmet-async';
 
 // ─── Theme Registry ───────────────────────────────────────────────────────────
 function resolveTheme(themeKey = '') {
-  const key = (themeKey || '').toLowerCase();
-  if (key.includes('ca') || key.includes('chartered') || key.includes('tax') || key.includes('audit')) return {
-    heroBg: '#020617', accent: '#C5A059', accentLight: '#DBC086', accentRgb: '197,160,89',
-    pill: 'rgba(197,160,89,0.14)', pillText: '#DBC086',
-    btnBg: 'linear-gradient(135deg,#DBC086,#C5A059)', btnColor: '#020617',
-    glow1: 'rgba(197,160,89,0.16)', glow2: 'rgba(14,165,233,0.08)',
-    altBg: '#fafaf7', nameGrad: 'linear-gradient(to right,#fff 40%,#DBC086 100%)',
-    footerBg: '#010409', cardBorder: '#f0ead6',
-  };
-  if (key.includes('cma') || key.includes('cost') || key.includes('management')) return {
-    heroBg: '#022c22', accent: '#10b981', accentLight: '#6ee7b7', accentRgb: '16,185,129',
-    pill: 'rgba(16,185,129,0.14)', pillText: '#6ee7b7',
-    btnBg: 'linear-gradient(135deg,#10b981,#059669)', btnColor: '#fff',
-    glow1: 'rgba(16,185,129,0.16)', glow2: 'rgba(5,150,105,0.08)',
-    altBg: '#f0fdf7', nameGrad: 'linear-gradient(to right,#fff 40%,#6ee7b7 100%)',
-    footerBg: '#011a0e', cardBorder: '#bbf7d0',
-  };
-  if (key.includes('consult') || key.includes('advisor') || key.includes('strategy') || key.includes('coach')) return {
-    heroBg: '#0d0520', accent: '#8b5cf6', accentLight: '#c4b5fd', accentRgb: '139,92,246',
-    pill: 'rgba(139,92,246,0.14)', pillText: '#c4b5fd',
-    btnBg: 'linear-gradient(135deg,#8b5cf6,#6d28d9)', btnColor: '#fff',
-    glow1: 'rgba(139,92,246,0.18)', glow2: 'rgba(236,72,153,0.08)',
-    altBg: '#faf5ff', nameGrad: 'linear-gradient(to right,#fff 40%,#c4b5fd 100%)',
-    footerBg: '#060010', cardBorder: '#e9d5ff',
-  };
   return {
-    heroBg: '#0f2044', accent: '#3b82f6', accentLight: '#93c5fd', accentRgb: '59,130,246',
-    pill: 'rgba(59,130,246,0.14)', pillText: '#93c5fd',
-    btnBg: 'linear-gradient(135deg,#3b82f6,#1d4ed8)', btnColor: '#fff',
-    glow1: 'rgba(59,130,246,0.16)', glow2: 'rgba(16,185,129,0.08)',
-    altBg: '#f0f7ff', nameGrad: 'linear-gradient(to right,#fff 40%,#93c5fd 100%)',
-    footerBg: '#080f24', cardBorder: '#bfdbfe',
+    heroBg: '#F8F8F5', heroText: '#1A1A1A', heroSubText: '#6B7280',
+    accent: '#7A9A6E', accentLight: '#92B284', accentRgb: '122,154,110',
+    pill: 'rgba(122,154,110,0.14)', pillText: '#5E7D52',
+    btnBg: '#1A1A1A', btnColor: '#ffffff',
+    glow1: 'rgba(122,154,110,0.16)', glow2: 'rgba(26,26,26,0.08)',
+    altBg: '#F2F4F0', nameGrad: 'linear-gradient(to right,#1A1A1A 40%,#7A9A6E 100%)',
+    footerBg: '#111111', cardBorder: '#E8E8E5',
+    statBg: '#ffffff', statBorder: '#E8E8E5'
   };
 }
 
@@ -127,7 +104,7 @@ function GhostBtn({ children, onClick, style = {} }) {
   const [hov, setHov] = useState(false);
   return (
     <button onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{ background: hov ? 'rgba(255,255,255,0.07)' : 'transparent', color: hov ? 'white' : 'rgba(255,255,255,0.65)', border: '1px solid rgba(255,255,255,0.18)', borderRadius: 999, padding: '14px 28px', fontSize: 15, fontWeight: 500, cursor: 'pointer', transition: 'all 0.2s', ...style }}>
+      style={{ background: hov ? 'rgba(26,26,26,0.05)' : 'transparent', color: hov ? '#1A1A1A' : '#6B7280', border: '1px solid rgba(26,26,26,0.15)', borderRadius: 999, padding: '14px 28px', fontSize: 15, fontWeight: 500, cursor: 'pointer', transition: 'all 0.2s', ...style }}>
       {children}
     </button>
   );
@@ -269,16 +246,16 @@ function FooterCTA({ c, t, onBook }) {
     <section style={{ padding: '80px 24px', background: t.heroBg, position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(circle at 50% 0%, rgba(${t.accentRgb},0.14) 0%,transparent 70%)`, pointerEvents: 'none' }} />
       <div style={{ maxWidth: 640, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
-        <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.8rem)', fontWeight: 900, color: 'white', marginBottom: 14, letterSpacing: '-0.5px', lineHeight: 1.1 }}>
+        <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.8rem)', fontWeight: 900, color: t.heroText, marginBottom: 14, letterSpacing: '-0.5px', lineHeight: 1.1 }}>
           {c.ctaHeadline || 'Let\'s work together.'}
         </h2>
-        <p style={{ color: 'rgba(148,163,184,0.85)', fontSize: 15, lineHeight: 1.75, marginBottom: 40 }}>
+        <p style={{ color: t.heroSubText, fontSize: 15, lineHeight: 1.75, marginBottom: 40 }}>
           {c.ctaBody || 'Book a consultation and get a plan tailored to your situation.'}
         </p>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
           <LuxuryBtn t={t} onClick={onBook}><MessageSquare size={17} /> Book Consultation</LuxuryBtn>
           {c.contactEmail && (
-            <a href={`mailto:${c.contactEmail}`} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.75)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 999, padding: '14px 24px', fontSize: 15, fontWeight: 600, textDecoration: 'none' }}>
+            <a href={`mailto:${c.contactEmail}`} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(26,26,26,0.05)', color: t.heroText, border: '1px solid rgba(26,26,26,0.15)', borderRadius: 999, padding: '14px 24px', fontSize: 15, fontWeight: 600, textDecoration: 'none' }}>
               <Mail size={15} /> Email Me
             </a>
           )}
@@ -328,10 +305,10 @@ function LayoutAuthority({ c, t, onBook }) {
             <h1 style={{ background: t.nameGrad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', fontSize: 'clamp(2.8rem,6vw,5rem)', fontWeight: 900, letterSpacing: '-2px', lineHeight: 1, margin: '20px 0 14px' }}>
               {c.name}
             </h1>
-            <p style={{ fontSize: 'clamp(1rem,2vw,1.3rem)', color: '#94a3b8', marginBottom: 12, fontWeight: 400 }}>
+            <p style={{ fontSize: 'clamp(1rem,2vw,1.3rem)', color: t.heroSubText, marginBottom: 12, fontWeight: 400 }}>
               {c.profession}{c.city && c.city !== 'India' ? ` · ${c.city}` : ''}
             </p>
-            <p style={{ fontSize: 16, color: 'rgba(148,163,184,0.8)', maxWidth: 560, lineHeight: 1.75, marginBottom: 36 }}>
+            <p style={{ fontSize: 16, color: t.heroSubText, maxWidth: 560, lineHeight: 1.75, marginBottom: 36 }}>
               {c.heroStatement || c.bio || ''}
             </p>
             {c.tagline && (
@@ -358,9 +335,9 @@ function LayoutAuthority({ c, t, onBook }) {
             <Avatar initials={initials} t={t} size={140} />
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, minWidth: 240 }}>
               {stats.map((s, i) => (
-                <div key={i} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(10px)', borderRadius: 14, padding: '14px 12px', textAlign: 'center' }}>
-                  <div style={{ fontSize: 22, fontWeight: 900, color: 'white', letterSpacing: '-0.5px' }}>{s.value}</div>
-                  <div style={{ fontSize: 11, color: '#64748b', marginTop: 3 }}>{s.label}</div>
+                <div key={i} style={{ background: t.statBg, border: `1px solid ${t.statBorder}`, backdropFilter: 'blur(10px)', borderRadius: 14, padding: '14px 12px', textAlign: 'center' }}>
+                  <div style={{ fontSize: 22, fontWeight: 900, color: t.heroText, letterSpacing: '-0.5px' }}>{s.value}</div>
+                  <div style={{ fontSize: 11, color: t.heroSubText, marginTop: 3 }}>{s.label}</div>
                 </div>
               ))}
             </div>
@@ -416,10 +393,10 @@ function LayoutSpecialist({ c, t, onBook }) {
           <h1 style={{ background: t.nameGrad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', fontSize: 'clamp(2.6rem,6vw,4.5rem)', fontWeight: 900, letterSpacing: '-2px', lineHeight: 1.05, marginBottom: 16 }}>
             {c.name}
           </h1>
-          <p style={{ fontSize: 18, color: '#94a3b8', marginBottom: 10, fontWeight: 400 }}>
+          <p style={{ fontSize: 18, color: t.heroSubText, marginBottom: 10, fontWeight: 400 }}>
             {c.profession}{c.city && c.city !== 'India' ? <> &nbsp;·&nbsp; <MapPin size={14} style={{ display: 'inline', verticalAlign: 'middle' }} /> {c.city}</> : ''}
           </p>
-          <p style={{ fontSize: 15, color: 'rgba(148,163,184,0.8)', maxWidth: 580, margin: '0 auto 36px', lineHeight: 1.75 }}>
+          <p style={{ fontSize: 15, color: t.heroSubText, maxWidth: 580, margin: '0 auto 36px', lineHeight: 1.75 }}>
             {c.heroStatement || c.bio || ''}
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
@@ -435,9 +412,9 @@ function LayoutSpecialist({ c, t, onBook }) {
       <div style={{ background: t.heroBg, borderTop: 'none', borderBottom: `1px solid rgba(255,255,255,0.07)` }}>
         <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 32px', display: 'flex', flexWrap: 'wrap', gap: 0, justifyContent: 'center' }}>
           {stats.map((s, i) => (
-            <div key={i} style={{ flex: '1 1 180px', textAlign: 'center', padding: '20px 16px', borderRight: i < stats.length - 1 ? '1px solid rgba(255,255,255,0.07)' : 'none' }}>
-              <div style={{ fontSize: 28, fontWeight: 900, color: 'white', letterSpacing: '-0.5px' }}>{s.value}</div>
-              <div style={{ fontSize: 12, color: '#64748b', marginTop: 4, fontWeight: 500 }}>{s.label}</div>
+            <div key={i} style={{ flex: '1 1 180px', textAlign: 'center', padding: '20px 16px', borderRight: i < stats.length - 1 ? '1px solid rgba(26,26,26,0.1)' : 'none' }}>
+              <div style={{ fontSize: 28, fontWeight: 900, color: t.heroText, letterSpacing: '-0.5px' }}>{s.value}</div>
+              <div style={{ fontSize: 12, color: t.heroSubText, marginTop: 4, fontWeight: 500 }}>{s.label}</div>
             </div>
           ))}
         </div>
@@ -518,40 +495,40 @@ function LayoutAdvisor({ c, t, onBook }) {
               )}
             </div>
 
-            <h1 style={{ fontSize: 'clamp(3rem,7vw,5.5rem)', fontWeight: 900, color: 'white', letterSpacing: '-3px', lineHeight: 0.95, marginBottom: 24 }}>
+            <h1 style={{ fontSize: 'clamp(3rem,7vw,5.5rem)', fontWeight: 900, color: t.heroText, letterSpacing: '-3px', lineHeight: 0.95, marginBottom: 24 }}>
               {(c.name || '').split(' ').map((word, i) => (
-                <span key={i} style={{ display: 'block', color: i === 0 ? 'white' : t.accentLight }}>{word}</span>
+                <span key={i} style={{ display: 'block', color: i === 0 ? t.heroText : t.accent }}>{word}</span>
               ))}
             </h1>
 
             <div style={{ width: 60, height: 3, background: t.btnBg, borderRadius: 999, marginBottom: 24 }} />
 
-            <p style={{ fontSize: 18, color: '#94a3b8', fontWeight: 300, lineHeight: 1.65, maxWidth: 500, marginBottom: 40 }}>
+            <p style={{ fontSize: 18, color: t.heroSubText, fontWeight: 300, lineHeight: 1.65, maxWidth: 500, marginBottom: 40 }}>
               {c.heroStatement || c.bio || ''}
             </p>
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
               <LuxuryBtn t={t} onClick={onBook}><MessageSquare size={16} /> Book a Call</LuxuryBtn>
               {c.contactPhone && (
-                <a href={`tel:${c.contactPhone}`} style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'rgba(255,255,255,0.6)', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
-                  <Phone size={15} style={{ color: t.accentLight }} /> {c.contactPhone}
+                <a href={`tel:${c.contactPhone}`} style={{ display: 'flex', alignItems: 'center', gap: 8, color: t.heroSubText, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
+                  <Phone size={15} style={{ color: t.accent }} /> {c.contactPhone}
                 </a>
               )}
             </div>
           </div>
 
           {/* Right: card */}
-          <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(20px)', borderRadius: 28, padding: '36px 28px', display: 'flex', flexDirection: 'column', gap: 24 }}>
+          <div style={{ background: t.statBg, border: `1px solid ${t.statBorder}`, backdropFilter: 'blur(20px)', borderRadius: 28, padding: '36px 28px', display: 'flex', flexDirection: 'column', gap: 24 }}>
             <Avatar initials={initials} t={t} size={80} />
             <div>
-              <p style={{ fontSize: 13, fontWeight: 600, color: t.accentLight, marginBottom: 4, letterSpacing: 0.5 }}>{c.profession}</p>
-              <p style={{ fontSize: 12, color: '#475569' }}>{c.languages?.join(' · ')}</p>
+              <p style={{ fontSize: 13, fontWeight: 600, color: t.accent, marginBottom: 4, letterSpacing: 0.5 }}>{c.profession}</p>
+              <p style={{ fontSize: 12, color: t.heroSubText }}>{c.languages?.join(' · ')}</p>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {stats.map((s, i) => (
-                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 12, borderBottom: i < stats.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
-                  <span style={{ fontSize: 12, color: '#475569' }}>{s.label}</span>
-                  <span style={{ fontSize: 16, fontWeight: 800, color: 'white' }}>{s.value}</span>
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 12, borderBottom: i < stats.length - 1 ? '1px solid rgba(26,26,26,0.1)' : 'none' }}>
+                  <span style={{ fontSize: 12, color: t.heroSubText }}>{s.label}</span>
+                  <span style={{ fontSize: 16, fontWeight: 800, color: t.heroText }}>{s.value}</span>
                 </div>
               ))}
             </div>
@@ -621,7 +598,7 @@ export default function PublicPortfolio() {
 
   if (loading) return (
     <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center', background: '#020617' }}>
-      <Loader2 size={40} className="spin" style={{ color: '#C5A059' }} />
+      <Loader2 size={40} className="spin" style={{ color: '#7A9A6E' }} />
     </div>
   );
 
@@ -630,7 +607,7 @@ export default function PublicPortfolio() {
       <ShieldCheck size={64} style={{ color: '#334155', marginBottom: 24 }} />
       <h1 style={{ fontSize: 'clamp(1.4rem,4vw,2.4rem)', marginBottom: 12 }}>Portfolio Not Found</h1>
       <p style={{ color: '#475569', marginBottom: 32, maxWidth: 400 }}>This link is inactive or doesn't exist. Browse verified experts instead.</p>
-      <Link to="/experts" style={{ padding: '12px 32px', background: '#C5A059', color: '#020617', borderRadius: 999, fontWeight: 700, textDecoration: 'none' }}>Browse Experts</Link>
+      <Link to="/experts" style={{ padding: '12px 32px', background: '#7A9A6E', color: '#1A1A1A', borderRadius: 999, fontWeight: 700, textDecoration: 'none' }}>Browse Experts</Link>
     </div>
   );
 
@@ -665,14 +642,14 @@ function PortfolioMain({ portfolio, expertId, navigate }) {
       </Helmet>
 
       {/* Sticky Navbar */}
-      <header style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 500, background: 'rgba(2,6,23,0.88)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '12px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <header style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 500, background: 'rgba(248,248,245,0.88)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(26,26,26,0.06)', padding: '12px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 7, textDecoration: 'none' }}>
           <ShieldCheck size={17} style={{ color: t.accent }} />
-          <span style={{ fontWeight: 800, fontSize: 14, color: 'white' }}>Wi<span style={{ color: t.accent }}>sor</span></span>
+          <span style={{ fontWeight: 800, fontSize: 14, color: '#1A1A1A' }}>Wi<span style={{ color: t.accent }}>sor</span></span>
         </a>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           {c.contactPhone && (
-            <a href={`tel:${c.contactPhone}`} style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 5, fontWeight: 500 }}>
+            <a href={`tel:${c.contactPhone}`} style={{ fontSize: 13, color: '#6B7280', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 5, fontWeight: 500 }}>
               <Phone size={13} /> Call
             </a>
           )}

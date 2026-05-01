@@ -50,10 +50,10 @@ function Counter({ target, suffix = '', prefix = '' }) {
 function FaqItem({ q, a }) {
   const [open, setOpen] = useState(false);
   return (
-    <div style={{ borderRadius: 16, border: `1px solid ${open ? '#C5A059' : 'rgba(255,255,255,0.08)'}`, overflow: 'hidden', transition: 'border-color 0.2s, box-shadow 0.2s', boxShadow: open ? '0 0 0 1px rgba(197,160,89,0.15)' : 'none' }}>
-      <button onClick={() => setOpen(o => !o)} style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px', background: open ? 'rgba(197,160,89,0.06)' : 'rgba(255,255,255,0.02)', border: 'none', cursor: 'pointer', gap: 16, textAlign: 'left' }}>
+    <div style={{ borderRadius: 16, border: `1px solid ${open ? '#7A9A6E' : 'rgba(255,255,255,0.08)'}`, overflow: 'hidden', transition: 'border-color 0.2s, box-shadow 0.2s', boxShadow: open ? '0 0 0 1px rgba(122,154,110,0.15)' : 'none' }}>
+      <button onClick={() => setOpen(o => !o)} style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px', background: open ? 'rgba(122,154,110,0.06)' : 'rgba(255,255,255,0.02)', border: 'none', cursor: 'pointer', gap: 16, textAlign: 'left' }}>
         <span style={{ fontSize: 15, fontWeight: 700, color: 'white', lineHeight: 1.4 }}>{q}</span>
-        {open ? <ChevronUp size={18} style={{ color: '#C5A059', flexShrink: 0 }} /> : <ChevronDown size={18} style={{ color: '#64748b', flexShrink: 0 }} />}
+        {open ? <ChevronUp size={18} style={{ color: '#7A9A6E', flexShrink: 0 }} /> : <ChevronDown size={18} style={{ color: '#64748b', flexShrink: 0 }} />}
       </button>
       {open && (
         <div style={{ padding: '0 24px 20px', color: '#94a3b8', lineHeight: 1.75, fontSize: 14.5, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
@@ -79,10 +79,10 @@ function PlanCard({ plan, isHighlighted, navigate }) {
           ? 'linear-gradient(145deg, #1a1200 0%, #0a0800 100%)'
           : 'rgba(255,255,255,0.03)',
         border: isHighlighted
-          ? '1.5px solid rgba(197,160,89,0.6)'
+          ? '1.5px solid rgba(122,154,110,0.6)'
           : '1px solid rgba(255,255,255,0.07)',
         boxShadow: isHighlighted
-          ? `0 ${hov ? 40 : 24}px ${hov ? 80 : 48}px rgba(197,160,89,${hov ? 0.18 : 0.1})`
+          ? `0 ${hov ? 40 : 24}px ${hov ? 80 : 48}px rgba(122,154,110,${hov ? 0.18 : 0.1})`
           : hov ? '0 8px 32px rgba(255,255,255,0.05)' : 'none',
         transform: isHighlighted && hov ? 'translateY(-4px) scale(1.01)' : 'translateY(0) scale(1)',
         transition: 'all 0.28s',
@@ -93,13 +93,13 @@ function PlanCard({ plan, isHighlighted, navigate }) {
       }}
     >
       {isHighlighted && (
-        <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg,#DBC086,#C5A059)', color: '#020617', fontSize: 11, fontWeight: 800, letterSpacing: 1.5, textTransform: 'uppercase', padding: '5px 18px', borderRadius: 999, whiteSpace: 'nowrap', boxShadow: '0 4px 16px rgba(197,160,89,0.4)' }}>
+        <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg,#92B284,#7A9A6E)', color: '#1A1A1A', fontSize: 11, fontWeight: 800, letterSpacing: 1.5, textTransform: 'uppercase', padding: '5px 18px', borderRadius: 999, whiteSpace: 'nowrap', boxShadow: '0 4px 16px rgba(122,154,110,0.4)' }}>
           ⭐ Most Popular
         </div>
       )}
 
       <div style={{ marginBottom: 20 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: isHighlighted ? '#C5A059' : '#475569', marginBottom: 8 }}>{plan.label}</div>
+        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: isHighlighted ? '#7A9A6E' : '#475569', marginBottom: 8 }}>{plan.label}</div>
         <h3 style={{ fontSize: 22, fontWeight: 800, color: 'white', margin: '0 0 4px' }}>{plan.name}</h3>
         <p style={{ fontSize: 13, color: '#64748b', margin: 0 }}>{plan.tagline}</p>
       </div>
@@ -125,7 +125,7 @@ function PlanCard({ plan, isHighlighted, navigate }) {
         {plan.features.map((f, i) => (
           <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 14, color: f.included ? '#e2e8f0' : '#475569' }}>
             {f.included
-              ? <Check size={15} style={{ color: isHighlighted ? '#C5A059' : '#22c55e', flexShrink: 0, marginTop: 2 }} />
+              ? <Check size={15} style={{ color: isHighlighted ? '#7A9A6E' : '#22c55e', flexShrink: 0, marginTop: 2 }} />
               : <X size={15} style={{ color: '#334155', flexShrink: 0, marginTop: 2 }} />}
             <span style={{ textDecoration: f.included ? 'none' : 'line-through', opacity: f.included ? 1 : 0.4 }}>{f.text}</span>
           </li>
@@ -136,10 +136,10 @@ function PlanCard({ plan, isHighlighted, navigate }) {
         onClick={() => navigate(plan.cta.href)}
         style={{
           width: '100%', padding: '14px', borderRadius: 999, border: 'none',
-          background: isHighlighted ? 'linear-gradient(135deg,#DBC086,#C5A059)' : 'rgba(255,255,255,0.06)',
-          color: isHighlighted ? '#020617' : '#94a3b8',
+          background: isHighlighted ? 'linear-gradient(135deg,#92B284,#7A9A6E)' : 'rgba(255,255,255,0.06)',
+          color: isHighlighted ? '#1A1A1A' : '#94a3b8',
           fontSize: 14, fontWeight: 700, cursor: 'pointer',
-          boxShadow: isHighlighted ? '0 8px 24px rgba(197,160,89,0.3)' : 'none',
+          boxShadow: isHighlighted ? '0 8px 24px rgba(122,154,110,0.3)' : 'none',
           transition: 'all 0.2s',
         }}
       >
@@ -258,11 +258,11 @@ export default function Pricing() {
         <meta name="description" content="Join Wisor as a verified expert. Launch offer: ₹999 for 1 full year. First 100 CAs and CMAs in Mumbai get founding member status forever." />
       </Helmet>
 
-      <main style={{ background: '#020617', minHeight: '100vh', fontFamily: 'Inter,system-ui,sans-serif', paddingTop: 80 }}>
+      <main style={{ background: '#1A1A1A', minHeight: '100vh', fontFamily: 'Inter,system-ui,sans-serif', paddingTop: 80 }}>
 
         {/* ── URGENCY BANNER ─────────────────────────────────────────── */}
-        <div style={{ background: 'linear-gradient(135deg,#C5A059,#DBC086)', padding: '10px 24px', textAlign: 'center', position: 'sticky', top: 64, zIndex: 100 }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: '#020617', margin: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, flexWrap: 'wrap' }}>
+        <div style={{ background: 'linear-gradient(135deg,#7A9A6E,#92B284)', padding: '10px 24px', textAlign: 'center', position: 'sticky', top: 64, zIndex: 100 }}>
+          <p style={{ fontSize: 13, fontWeight: 700, color: '#1A1A1A', margin: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, flexWrap: 'wrap' }}>
             <Clock size={14} style={{ flexShrink: 0 }} />
             Launch Offer Ends in:
             <span style={{ fontFamily: 'monospace', fontSize: 14, letterSpacing: 1 }}>
@@ -275,19 +275,19 @@ export default function Pricing() {
         {/* ── HERO ───────────────────────────────────────────────────── */}
         <section style={{ position: 'relative', overflow: 'hidden', padding: 'clamp(64px,10vw,120px) 24px clamp(48px,8vw,96px)' }}>
           {/* Glows */}
-          <div style={{ position: 'absolute', top: '-10%', left: '-5%', width: '60vw', height: '60vw', borderRadius: '50%', background: 'radial-gradient(circle,rgba(197,160,89,0.14) 0%,transparent 60%)', filter: 'blur(80px)', pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', top: '-10%', left: '-5%', width: '60vw', height: '60vw', borderRadius: '50%', background: 'radial-gradient(circle,rgba(122,154,110,0.14) 0%,transparent 60%)', filter: 'blur(80px)', pointerEvents: 'none' }} />
           <div style={{ position: 'absolute', bottom: '-10%', right: '-5%', width: '40vw', height: '40vw', borderRadius: '50%', background: 'radial-gradient(circle,rgba(14,165,233,0.08) 0%,transparent 60%)', filter: 'blur(100px)', pointerEvents: 'none' }} />
 
           <div style={{ maxWidth: 760, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
             {/* Eyebrow */}
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(197,160,89,0.12)', border: '1px solid rgba(197,160,89,0.25)', borderRadius: 999, padding: '6px 16px', fontSize: 12, fontWeight: 700, color: '#DBC086', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 28 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(122,154,110,0.12)', border: '1px solid rgba(122,154,110,0.25)', borderRadius: 999, padding: '6px 16px', fontSize: 12, fontWeight: 700, color: '#92B284', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 28 }}>
               <Zap size={12} /> Mumbai Launch — First 100 Experts
             </div>
 
             <h1 style={{ fontSize: 'clamp(2.4rem,6vw,4.2rem)', fontWeight: 900, color: 'white', letterSpacing: '-2px', lineHeight: 1.05, marginBottom: 20 }}>
               Grow Your Practice
               <br />
-              <span style={{ background: 'linear-gradient(to right,#fff 30%,#DBC086 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+              <span style={{ background: 'linear-gradient(to right,#fff 30%,#92B284 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                 in Mumbai
               </span>
             </h1>
@@ -299,7 +299,7 @@ export default function Pricing() {
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
               <button
                 onClick={() => { document.getElementById('pricing-cards')?.scrollIntoView({ behavior: 'smooth' }); }}
-                style={{ background: 'linear-gradient(135deg,#DBC086,#C5A059)', color: '#020617', border: 'none', borderRadius: 999, padding: '15px 36px', fontSize: 15, fontWeight: 800, cursor: 'pointer', boxShadow: '0 8px 30px rgba(197,160,89,0.35)', display: 'inline-flex', alignItems: 'center', gap: 8 }}
+                style={{ background: 'linear-gradient(135deg,#92B284,#7A9A6E)', color: '#1A1A1A', border: 'none', borderRadius: 999, padding: '15px 36px', fontSize: 15, fontWeight: 800, cursor: 'pointer', boxShadow: '0 8px 30px rgba(122,154,110,0.35)', display: 'inline-flex', alignItems: 'center', gap: 8 }}
               >
                 Claim Founding Spot <ArrowRight size={16} />
               </button>
@@ -312,7 +312,7 @@ export default function Pricing() {
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, marginTop: 28 }}>
               <div style={{ display: 'flex', gap: -4 }}>
                 {['#1e40af','#7c3aed','#065f46'].map((bg, i) => (
-                  <div key={i} style={{ width: 28, height: 28, borderRadius: '50%', background: bg, border: '2px solid #020617', marginLeft: i ? -8 : 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 800, color: 'white' }}>
+                  <div key={i} style={{ width: 28, height: 28, borderRadius: '50%', background: bg, border: '2px solid #1A1A1A', marginLeft: i ? -8 : 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 800, color: 'white' }}>
                     {['R','P','A'][i]}
                   </div>
                 ))}
@@ -329,7 +329,7 @@ export default function Pricing() {
           <div style={{ maxWidth: 900, margin: '0 auto', display: 'flex', flexWrap: 'wrap', gap: 0, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 24, overflow: 'hidden' }}>
             {TRUST_STATS.map((s, i) => (
               <div key={i} style={{ flex: '1 1 180px', padding: '28px 20px', textAlign: 'center', borderRight: i < TRUST_STATS.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
-                <div style={{ color: '#C5A059', marginBottom: 8, display: 'flex', justifyContent: 'center' }}>{s.icon}</div>
+                <div style={{ color: '#7A9A6E', marginBottom: 8, display: 'flex', justifyContent: 'center' }}>{s.icon}</div>
                 <div style={{ fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 900, color: 'white', letterSpacing: '-0.5px', lineHeight: 1 }}>
                   {s.customValue ? s.customValue : <Counter target={s.value} suffix={s.suffix} />}
                 </div>
@@ -342,7 +342,7 @@ export default function Pricing() {
         {/* ── PRICING CARDS ──────────────────────────────────────────── */}
         <section id="pricing-cards" style={{ padding: '0 24px 96px' }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 3, textTransform: 'uppercase', color: '#C5A059', marginBottom: 14 }}>Pricing</p>
+            <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 3, textTransform: 'uppercase', color: '#7A9A6E', marginBottom: 14 }}>Pricing</p>
             <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.8rem)', fontWeight: 900, color: 'white', letterSpacing: '-1px', marginBottom: 12 }}>
               Simple, transparent pricing
             </h2>
@@ -369,8 +369,8 @@ export default function Pricing() {
 
         {/* ── URGENCY / FOUNDING SPOTS ───────────────────────────────── */}
         <section style={{ padding: '0 24px 96px' }}>
-          <div style={{ maxWidth: 800, margin: '0 auto', background: 'linear-gradient(145deg,rgba(197,160,89,0.08) 0%,rgba(197,160,89,0.03) 100%)', border: '1px solid rgba(197,160,89,0.2)', borderRadius: 28, padding: 'clamp(36px,6vw,60px)', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', top: '-30%', right: '-10%', width: '50%', height: '50%', borderRadius: '50%', background: 'radial-gradient(circle,rgba(197,160,89,0.1) 0%,transparent 70%)', filter: 'blur(40px)', pointerEvents: 'none' }} />
+          <div style={{ maxWidth: 800, margin: '0 auto', background: 'linear-gradient(145deg,rgba(122,154,110,0.08) 0%,rgba(122,154,110,0.03) 100%)', border: '1px solid rgba(122,154,110,0.2)', borderRadius: 28, padding: 'clamp(36px,6vw,60px)', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: '-30%', right: '-10%', width: '50%', height: '50%', borderRadius: '50%', background: 'radial-gradient(circle,rgba(122,154,110,0.1) 0%,transparent 70%)', filter: 'blur(40px)', pointerEvents: 'none' }} />
 
             <div style={{ position: 'relative', zIndex: 2 }}>
               <div style={{ fontSize: 40, marginBottom: 16 }}>🏆</div>
@@ -385,10 +385,10 @@ export default function Pricing() {
               <div style={{ maxWidth: 400, margin: '0 auto 32px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                   <span style={{ fontSize: 12, color: '#64748b' }}>53 spots claimed</span>
-                  <span style={{ fontSize: 12, color: '#C5A059', fontWeight: 700 }}>{spotsLeft} remaining</span>
+                  <span style={{ fontSize: 12, color: '#7A9A6E', fontWeight: 700 }}>{spotsLeft} remaining</span>
                 </div>
                 <div style={{ height: 8, background: 'rgba(255,255,255,0.06)', borderRadius: 999, overflow: 'hidden' }}>
-                  <div style={{ height: '100%', width: '53%', background: 'linear-gradient(to right,#C5A059,#DBC086)', borderRadius: 999, boxShadow: '0 0 12px rgba(197,160,89,0.4)', transition: 'width 1s ease' }} />
+                  <div style={{ height: '100%', width: '53%', background: 'linear-gradient(to right,#7A9A6E,#92B284)', borderRadius: 999, boxShadow: '0 0 12px rgba(122,154,110,0.4)', transition: 'width 1s ease' }} />
                 </div>
               </div>
 
@@ -409,7 +409,7 @@ export default function Pricing() {
 
               <button
                 onClick={() => navigate('/login')}
-                style={{ background: 'linear-gradient(135deg,#DBC086,#C5A059)', color: '#020617', border: 'none', borderRadius: 999, padding: '15px 40px', fontSize: 15, fontWeight: 800, cursor: 'pointer', boxShadow: '0 8px 30px rgba(197,160,89,0.35)', display: 'inline-flex', alignItems: 'center', gap: 8 }}
+                style={{ background: 'linear-gradient(135deg,#92B284,#7A9A6E)', color: '#1A1A1A', border: 'none', borderRadius: 999, padding: '15px 40px', fontSize: 15, fontWeight: 800, cursor: 'pointer', boxShadow: '0 8px 30px rgba(122,154,110,0.35)', display: 'inline-flex', alignItems: 'center', gap: 8 }}
               >
                 Claim Your Founding Spot <ArrowRight size={16} />
               </button>
@@ -421,7 +421,7 @@ export default function Pricing() {
         <section style={{ padding: '0 24px 96px' }}>
           <div style={{ maxWidth: 1080, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 56 }}>
-              <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 3, textTransform: 'uppercase', color: '#C5A059', marginBottom: 14 }}>Why Wisor</p>
+              <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 3, textTransform: 'uppercase', color: '#7A9A6E', marginBottom: 14 }}>Why Wisor</p>
               <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.6rem)', fontWeight: 900, color: 'white', letterSpacing: '-0.5px' }}>What you actually get</h2>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: 20 }}>
@@ -434,7 +434,7 @@ export default function Pricing() {
                 { icon: '🤝', title: 'Onboarding Support', desc: 'Our team personally helps you set up your profile and portfolio. You don\'t have to figure anything out alone.' },
               ].map((item, i) => (
                 <div key={i} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 20, padding: '28px 24px', transition: 'all 0.22s', cursor: 'default' }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(197,160,89,0.05)'; e.currentTarget.style.borderColor = 'rgba(197,160,89,0.2)'; e.currentTarget.style.transform = 'translateY(-3px)'; }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(122,154,110,0.05)'; e.currentTarget.style.borderColor = 'rgba(122,154,110,0.2)'; e.currentTarget.style.transform = 'translateY(-3px)'; }}
                   onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.transform = 'translateY(0)'; }}
                 >
                   <div style={{ fontSize: 36, marginBottom: 14 }}>{item.icon}</div>
@@ -450,7 +450,7 @@ export default function Pricing() {
         <section style={{ padding: '0 24px 96px' }}>
           <div style={{ maxWidth: 720, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 48 }}>
-              <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 3, textTransform: 'uppercase', color: '#C5A059', marginBottom: 14 }}>FAQ</p>
+              <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 3, textTransform: 'uppercase', color: '#7A9A6E', marginBottom: 14 }}>FAQ</p>
               <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.4rem)', fontWeight: 900, color: 'white', letterSpacing: '-0.5px' }}>Common questions</h2>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -470,7 +470,7 @@ export default function Pricing() {
             </p>
             <button
               onClick={() => navigate('/login')}
-              style={{ background: 'linear-gradient(135deg,#DBC086,#C5A059)', color: '#020617', border: 'none', borderRadius: 999, padding: '16px 44px', fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 8px 36px rgba(197,160,89,0.35)', display: 'inline-flex', alignItems: 'center', gap: 10 }}
+              style={{ background: 'linear-gradient(135deg,#92B284,#7A9A6E)', color: '#1A1A1A', border: 'none', borderRadius: 999, padding: '16px 44px', fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 8px 36px rgba(122,154,110,0.35)', display: 'inline-flex', alignItems: 'center', gap: 10 }}
             >
               Get Started — ₹999/year <ArrowRight size={18} />
             </button>
