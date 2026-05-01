@@ -20,12 +20,19 @@ export default function Profile() {
   const [professional, setProfessional] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [avgRating, setAvgRating] = useState({ average: 0, count: 0 });
 
   useEffect(() => {
     async function load() {
       try {
         const data = await dbService.getProfessionalById(id);
         setProfessional(data);
+        // Load reviews
+        const proReviews = dbService.getReviewsForProfessional(id);
+        setReviews(proReviews);
+        const avg = dbService.getAverageRating(id);
+        setAvgRating(avg);
       } catch (e) {
         console.error(e);
       } finally {
@@ -34,6 +41,17 @@ export default function Profile() {
     }
     load();
   }, [id]);
+
+  const handleReviewSubmitted = (newReview) => {
+    // Prepend the new review and recalculate average
+    setReviews(prev => [newReview, ...prev]);
+    const updatedReviews = [newReview, ...reviews];
+    const sum = updatedReviews.reduce((acc, r) => acc + Number(r.rating), 0);
+    setAvgRating({
+      average: Math.round((sum / updatedReviews.length) * 10) / 10,
+      count: updatedReviews.length,
+    });
+  };
 
   if (isLoading) {
     return (
@@ -59,6 +77,10 @@ export default function Profile() {
     );
   }
 
+  // Use live review count if we have reviews, otherwise fall back to professional.reviews
+  const displayRating = avgRating.count > 0 ? avgRating.average : professional.rating;
+  const displayCount = avgRating.count > 0 ? avgRating.count : professional.reviews;
+
   const tabs = ['about', 'services', 'reviews', 'certifications'];
 
   return (
@@ -74,7 +96,7 @@ export default function Profile() {
                   {professional.name}
                   {professional.verification?.status === 'verified' && (
                     <span className="badge badge-gold" style={{ fontSize: '12px' }}>
-                      <Shield size={14} /> Verified Professional
+                      <Shield size={14} /> Wisor Verified
                     </span>
                   )}
                 </h1>
@@ -99,7 +121,7 @@ export default function Profile() {
               <div className="profile-meta">
                 <span className="rating-text">
                   <Star size={14} fill="var(--color-star)" color="var(--color-star)" />
-                  {professional.rating} ({professional.reviews} reviews)
+                  {displayRating} ({displayCount} reviews)
                 </span>
                 <span><Briefcase size={14} /> {professional.experience} years</span>
                 <span><MapPin size={14} /> {professional.city}</span>
@@ -223,36 +245,67 @@ export default function Profile() {
                 <div className="animate-fade-in">
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-5)' }}>
                     <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, fontFamily: 'var(--font-display)' }}>
-                      Client Reviews ({professional.reviews})
+                      Client Reviews ({displayCount})
                     </h2>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--color-gray-900)' }}>
                       <Star size={20} fill="var(--color-star)" color="var(--color-star)" />
-                      {professional.rating}
+                      {displayRating}
                     </div>
                   </div>
-                  <div className="profile-reviews-list">
-                    {mockReviews.map(r => (
-                      <div key={r.id} className="profile-review">
-                        <div className="review-header">
-                          <div className="review-author">
-                            <div className="review-avatar">
-                              {r.name.split(' ').map(n => n[0]).join('')}
-                            </div>
-                            <div className="review-author-info">
-                              <h4>{r.name}</h4>
-                              <div style={{ display: 'flex', gap: '2px', marginTop: '2px' }}>
-                                {Array.from({ length: r.rating }, (_, i) => (
-                                  <Star key={i} size={12} fill="var(--color-star)" color="var(--color-star)" />
-                                ))}
+
+                  {reviews.length > 0 ? (
+                    <div className="profile-reviews-list">
+                      {reviews.map(r => (
+                        <div key={r.id} className="profile-review">
+                          <div className="review-header">
+                            <div className="review-author">
+                              <div className="review-avatar">
+                                {(r.author_name || 'A').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                              </div>
+                              <div className="review-author-info">
+                                <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                  {r.author_name}
+                                  {r.is_verified_client && (
+                                    <span style={{ 
+                                      display: 'inline-flex', alignItems: 'center', gap: '3px',
+                                      fontSize: '10px', fontWeight: 600, color: 'var(--color-success)',
+                                      background: 'var(--color-success-bg)', padding: '1px 8px',
+                                      borderRadius: 'var(--radius-full)'
+                                    }}>
+                                      <ShieldCheck size={10} /> Verified Client
+                                    </span>
+                                  )}
+                                </h4>
+                                <div style={{ display: 'flex', gap: '2px', marginTop: '2px' }}>
+                                  {Array.from({ length: r.rating }, (_, i) => (
+                                    <Star key={i} size={12} fill="var(--color-star)" color="var(--color-star)" />
+                                  ))}
+                                </div>
                               </div>
                             </div>
+                            <div>
+                              <span className="review-date">
+                                {new Date(r.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}
+                              </span>
+                              {r.service_used && (
+                                <div style={{ fontSize: '11px', color: 'var(--color-gray-400)', marginTop: '2px' }}>
+                                  Service: {r.service_used}
+                                </div>
+                              )}
+                            </div>
                           </div>
-                          <span className="review-date">{r.date}</span>
+                          <p className="review-text">{r.text}</p>
                         </div>
-                        <p className="review-text">{r.text}</p>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div style={{ textAlign: 'center', padding: 'var(--space-8)', color: 'var(--color-gray-400)' }}>
+                      <p>No reviews yet. Be the first to leave a review!</p>
+                    </div>
+                  )}
+
+                  {/* Review Form */}
+                  <ReviewForm professionalId={id} onReviewSubmitted={handleReviewSubmitted} />
                 </div>
               )}
 

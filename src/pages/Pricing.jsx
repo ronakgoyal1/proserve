@@ -160,7 +160,7 @@ const PLANS = [
     cta: { label: 'Create Free Account', href: '/login' },
     features: [
       { text: 'Basic directory listing', included: true },
-      { text: 'ProServe profile page', included: true },
+      { text: 'Wisor profile page', included: true },
       { text: 'Limited search visibility', included: true },
       { text: 'Client leads & WhatsApp', included: false },
       { text: 'Verified badge', included: false },
@@ -212,11 +212,11 @@ const PLANS = [
 const FAQS = [
   {
     q: 'Why should I pay? Listing sites are usually free.',
-    a: 'Free directories give you a name on a page. ProServe gives you a verified identity, a premium portfolio website clients can share, WhatsApp lead delivery, and analytics — the infrastructure of a professional digital practice. Our paid members are seeing clients reach out directly within days of going live.',
+    a: 'Free directories give you a name on a page. Wisor gives you a verified identity, a premium portfolio website clients can share, WhatsApp lead delivery, and analytics — the infrastructure of a professional digital practice. Our paid members are seeing clients reach out directly within days of going live.',
   },
   {
     q: 'How do client leads actually work?',
-    a: 'When a potential client searches for a CA or CMA on ProServe and views your profile, they can click "Book Consultation" or message you directly on WhatsApp. You receive the lead instantly — no middleman, no commission per lead. It\'s direct contact, always.',
+    a: 'When a potential client searches for a CA or CMA on Wisor and views your profile, they can click "Book Consultation" or message you directly on WhatsApp. You receive the lead instantly — no middleman, no commission per lead. It\'s direct contact, always.',
   },
   {
     q: 'What is the AI portfolio website?',
@@ -254,8 +254,8 @@ export default function Pricing() {
   return (
     <>
       <Helmet>
-        <title>Pricing — ProServe | Verified Expert Listings for CAs & CMAs</title>
-        <meta name="description" content="Join ProServe as a verified expert. Launch offer: ₹999 for 1 full year. First 100 CAs and CMAs in Mumbai get founding member status forever." />
+        <title>Pricing — Wisor | Verified Expert Listings for CAs & CMAs</title>
+        <meta name="description" content="Join Wisor as a verified expert. Launch offer: ₹999 for 1 full year. First 100 CAs and CMAs in Mumbai get founding member status forever." />
       </Helmet>
 
       <main style={{ background: '#020617', minHeight: '100vh', fontFamily: 'Inter,system-ui,sans-serif', paddingTop: 80 }}>
@@ -421,7 +421,7 @@ export default function Pricing() {
         <section style={{ padding: '0 24px 96px' }}>
           <div style={{ maxWidth: 1080, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 56 }}>
-              <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 3, textTransform: 'uppercase', color: '#C5A059', marginBottom: 14 }}>Why ProServe</p>
+              <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 3, textTransform: 'uppercase', color: '#C5A059', marginBottom: 14 }}>Why Wisor</p>
               <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.6rem)', fontWeight: 900, color: 'white', letterSpacing: '-0.5px' }}>What you actually get</h2>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: 20 }}>
@@ -429,7 +429,7 @@ export default function Pricing() {
                 { icon: '🌐', title: 'Your Own Website', desc: 'An AI-generated premium portfolio at proserve.in/portfolio/your-name — shareable on WhatsApp, LinkedIn, and visiting cards.' },
                 { icon: '📲', title: 'Direct WhatsApp Leads', desc: 'Clients tap one button and land in your WhatsApp — no form fills, no middleman, no referral fee per lead.' },
                 { icon: '🔍', title: 'Priority Visibility', desc: 'Pro members rank above free listings in every search. When someone searches "CA in Andheri", you appear first.' },
-                { icon: '✅', title: 'Verified Badge', desc: 'ProServe verification signals trust instantly. Clients filter for verified experts — and you\'ve already passed.' },
+                { icon: '✅', title: 'Verified Badge', desc: 'Wisor verification signals trust instantly. Clients filter for verified experts — and you\'ve already passed.' },
                 { icon: '📊', title: 'Analytics Dashboard', desc: 'Know how many people viewed your profile, clicked your WhatsApp, and booked a call — every week.' },
                 { icon: '🤝', title: 'Onboarding Support', desc: 'Our team personally helps you set up your profile and portfolio. You don\'t have to figure anything out alone.' },
               ].map((item, i) => (

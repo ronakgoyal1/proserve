@@ -40,7 +40,7 @@ export default function Navbar() {
             <div className="logo-icon">
               <Shield size={20} />
             </div>
-            Pro<span>Serve</span>
+            Wi<span>sor</span>
           </Link>
 
           <div className="navbar-links">
@@ -95,7 +95,7 @@ export default function Navbar() {
             <div className="logo-icon">
               <Shield size={18} />
             </div>
-            Pro<span>Serve</span>
+            Wi<span>sor</span>
           </Link>
           <button
             className="mobile-menu-close"

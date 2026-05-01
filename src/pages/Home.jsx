@@ -40,7 +40,7 @@ export default function Home() {
   const toggleFaq = (index) => setOpenFaq(openFaq === index ? null : index);
 
   const faqs = [
-    { q: "How are professionals verified on ProServe?", a: "Every professional undergoes a rigorous 3-step verification process validating their identity, firm registration, and active ICAI/ICMA credentials." },
+    { q: "How are professionals verified on Wisor?", a: "Every professional undergoes a rigorous 3-step verification process validating their identity, firm registration, and active ICAI/ICMA credentials." },
     { q: "Is the initial consultation completely free?", a: "Professionals set their own rates. However, you can freely chat or message them through our platform to discuss your requirements before committing to a paid booking." },
     { q: "How do payments and bookings work?", a: "Once you select an expert, you can book a specific time slot directly on their calendar. Payment flows depend on the package but are protected by our satisfaction guarantee." }
   ];
@@ -53,7 +53,7 @@ export default function Home() {
           <div className="hero-content animate-fade-in-up">
             <div className="hero-badge">
               <span className="dot" />
-              ProServe verified network 2026
+              Wisor verified network 2026
             </div>
 
             <h1>
@@ -107,7 +107,7 @@ export default function Home() {
               </div>
               <div className="social-proof-text">
                 <strong>10,000+ Businesses</strong>
-                trust ProServe experts
+                trust Wisor experts
               </div>
             </div>
           </div>
@@ -248,7 +248,7 @@ export default function Home() {
         <section className="section-sm" id="why-choose">
           <div className="container">
             <div className="section-header">
-              <h2 style={{color: 'var(--color-white)'}}>Why Choose ProServe?</h2>
+              <h2 style={{color: 'var(--color-white)'}}>Why Choose Wisor?</h2>
               <p style={{color: 'var(--color-gray-400)'}}>Built for trust, transparency, and high-end convenience</p>
             </div>
 
@@ -325,7 +325,7 @@ export default function Home() {
           <div className="container" style={{ maxWidth: '800px' }}>
             <div className="section-header">
               <h2 style={{color: 'var(--color-white)'}}>Frequently Asked Questions</h2>
-              <p style={{color: 'var(--color-gray-400)'}}>Everything you need to know about navigating ProServe.</p>
+              <p style={{color: 'var(--color-gray-400)'}}>Everything you need to know about navigating Wisor.</p>
             </div>
             <div className="faq-list">
               {faqs.map((faq, index) => (

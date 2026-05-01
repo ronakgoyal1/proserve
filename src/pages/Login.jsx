@@ -277,7 +277,7 @@ export default function Login() {
               <div style={{ display: 'inline-flex', padding: '12px', background: 'var(--color-primary-bg)', borderRadius: '50%', marginBottom: 'var(--space-4)' }}>
                 <Shield size={28} style={{ color: 'var(--color-primary)' }} />
               </div>
-              <h1>How will you use ProServe?</h1>
+              <h1>How will you use Wisor?</h1>
               <p>Choose your account type. You can always change this later.</p>
             </div>
 
@@ -343,7 +343,7 @@ export default function Login() {
 
             <div className="login-header" style={{ marginTop: 'var(--space-2)' }}>
               <h1>{emailMode === 'signin' ? 'Sign in' : 'Create account'}</h1>
-              <p>{emailMode === 'signin' ? 'Welcome back to ProServe' : 'Join ProServe — free forever'}</p>
+              <p>{emailMode === 'signin' ? 'Welcome back to Wisor' : 'Join Wisor — free forever'}</p>
             </div>
 
             {/* Mode toggle */}
@@ -428,7 +428,7 @@ export default function Login() {
               <div style={{ background: 'var(--color-primary)', borderRadius: '10px', padding: '8px', display: 'flex' }}>
                 <Shield size={20} style={{ color: 'white' }} />
               </div>
-              <span style={{ fontWeight: 800, fontSize: 'var(--text-lg)', color: 'var(--color-gray-900)' }}>Pro<span style={{ color: 'var(--color-accent)' }}>Serve</span></span>
+              <span style={{ fontWeight: 800, fontSize: 'var(--text-lg)', color: 'var(--color-gray-900)' }}>Wi<span style={{ color: 'var(--color-accent)' }}>sor</span></span>
             </Link>
             <h1>Welcome</h1>
             <p>Sign in or create your account in seconds</p>

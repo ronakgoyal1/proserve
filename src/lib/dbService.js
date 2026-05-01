@@ -99,7 +99,7 @@ class DbService {
       category: app.category || 'CA',
       city: app.city || 'Digital',
       experience: Number(app.experience) || 0,
-      bio: app.bio || 'Verified Professional on ProServe.',
+      bio: app.bio || 'Verified Professional on Wisor.',
       languages: app.languages ? String(app.languages).split(',').map(s => s.trim()) : ['English'],
       rating: 5.0,
       reviews: 0,
@@ -524,6 +524,54 @@ class DbService {
       // Fire and forget returning success
       return reviewData;
     }
+  }
+
+  // --- Reviews & Ratings (Phase 1 – localStorage) ---
+  _loadReviews() {
+    try {
+      const stored = localStorage.getItem('wisor_reviews');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  _saveReviews(reviews) {
+    localStorage.setItem('wisor_reviews', JSON.stringify(reviews));
+  }
+
+  getReviewsForProfessional(proId) {
+    const all = this._loadReviews();
+    return all
+      .filter(r => String(r.professional_id) === String(proId))
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  }
+
+  submitReview(reviewData) {
+    const all = this._loadReviews();
+    const newReview = {
+      id: `REV-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+      professional_id: reviewData.professional_id,
+      rating: Number(reviewData.rating),
+      text: reviewData.text || '',
+      author_name: reviewData.author_name || 'Anonymous',
+      service_used: reviewData.service_used || '',
+      is_verified_client: reviewData.is_verified_client || false,
+      created_at: new Date().toISOString(),
+    };
+    all.unshift(newReview);
+    this._saveReviews(all);
+    return newReview;
+  }
+
+  getAverageRating(proId) {
+    const reviews = this.getReviewsForProfessional(proId);
+    if (reviews.length === 0) return { average: 0, count: 0 };
+    const sum = reviews.reduce((acc, r) => acc + Number(r.rating), 0);
+    return {
+      average: Math.round((sum / reviews.length) * 10) / 10,
+      count: reviews.length,
+    };
   }
 
   // --- Portfolios (Phase 3) ---

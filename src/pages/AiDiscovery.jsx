@@ -188,7 +188,7 @@ export default function AiDiscovery() {
       <div style={{ padding: 'var(--space-4) var(--space-8)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
           <Sparkles style={{ color: 'var(--color-accent)' }} size={24} />
-          <span style={{ color: 'white', fontWeight: 700, fontSize: '18px', letterSpacing: '0.5px' }}>ProServe <span style={{ color: 'var(--color-accent)' }}>AI</span></span>
+          <span style={{ color: 'white', fontWeight: 700, fontSize: '18px', letterSpacing: '0.5px' }}>Wisor <span style={{ color: 'var(--color-accent)' }}>AI</span></span>
         </div>
         <button className="btn btn-ghost" style={{ color: 'var(--color-gray-300)' }} onClick={() => navigate('/search')}>
           Exit

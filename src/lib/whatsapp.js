@@ -20,7 +20,7 @@ export function buildWhatsAppUrl(phone, expertName = '', services = []) {
     : 'financial advisory';
   const svcRaw = typeof svc === 'string' ? svc : (svc?.name || 'financial advisory');
   const msg    = encodeURIComponent(
-    `Hi, I found your profile on ProServe Mumbai and need help with ${svcRaw}. Can we connect?`
+    `Hi, I found your profile on Wisor Mumbai and need help with ${svcRaw}. Can we connect?`
   );
   return `https://wa.me/${intl}?text=${msg}`;
 }

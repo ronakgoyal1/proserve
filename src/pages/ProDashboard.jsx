@@ -478,7 +478,7 @@ export default function ProDashboard() {
             )}
             {verificationStatus === 'verified' && (
               <div className="dashboard-section animate-fade-in" style={{ background: 'var(--color-success-bg)', borderColor: 'var(--color-success)', marginBottom: 'var(--space-6)', padding: 'var(--space-6)' }}>
-                <h3 style={{ color: 'var(--color-success)', display: 'flex', alignItems: 'center', gap: 8 }}><ShieldCheck size={20} /> Verified Professional</h3>
+                <h3 style={{ color: 'var(--color-success)', display: 'flex', alignItems: 'center', gap: 8 }}><ShieldCheck size={20} /> Wisor Verified</h3>
                 <p style={{ color: 'var(--color-gray-700)', marginTop: 4 }}>You rank higher in search results and have the trust badge on your profile.</p>
               </div>
             )}
@@ -644,7 +644,7 @@ export default function ProDashboard() {
                 <input type="tel" value={waPhone} onChange={e => { setWaPhone(e.target.value); setWaPhoneError(''); }} placeholder="98765 43210" maxLength={10} disabled={!waEnabled} />
               </div>
               {waPhoneError && <span className="error-text" style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 6, fontSize: 12, color: 'var(--color-danger)' }}><AlertCircle size={13} /> {waPhoneError}</span>}
-              <p style={{ fontSize: 12, color: 'var(--color-gray-400)', marginTop: 6 }}>Clients will see: <em>"Hi, I found your profile on ProServe Mumbai and need help with [service]."</em></p>
+              <p style={{ fontSize: 12, color: 'var(--color-gray-400)', marginTop: 6 }}>Clients will see: <em>"Hi, I found your profile on Wisor Mumbai and need help with [service]."</em></p>
             </div>
             <div className="form-actions">
               {waSaved && <span style={{ color: '#16a34a', fontSize: 13, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 5 }}>✓ Settings saved</span>}
@@ -739,7 +739,7 @@ export default function ProDashboard() {
               <button className="modal-close" onClick={() => setShowVerifyModal(false)}><X size={24} /></button>
             </div>
             <div className="modal-body" style={{ padding: 'var(--space-6)' }}>
-              <p style={{ color: 'var(--color-gray-600)', marginBottom: 'var(--space-6)' }}>Submit your identity and professional credentials to receive the 'Verified' badge on ProServe.</p>
+              <p style={{ color: 'var(--color-gray-600)', marginBottom: 'var(--space-6)' }}>Submit your identity and professional credentials to receive the 'Verified' badge on Wisor.</p>
               <form onSubmit={handleVerifySubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
                 {['Government ID (Aadhar/PAN)', 'Professional Certificate (ICAI/ICMAI)'].map((label, i) => (
                   <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>

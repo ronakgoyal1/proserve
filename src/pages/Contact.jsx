@@ -5,8 +5,8 @@ export default function Contact() {
   return (
     <main className="static-page" style={{ padding: 'var(--space-8) 0', minHeight: '80vh' }}>
       <Helmet>
-        <title>Contact Us | ProServe</title>
-        <meta name="description" content="Get in touch with the ProServe team." />
+        <title>Contact Us | Wisor</title>
+        <meta name="description" content="Get in touch with the Wisor team." />
       </Helmet>
       
       <div className="container" style={{ maxWidth: '800px' }}>
@@ -33,7 +33,7 @@ export default function Contact() {
           <div className="contact-card" style={{ padding: 'var(--space-6)', background: 'white', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
             <MapPin size={32} style={{ color: 'var(--color-primary)', marginBottom: 'var(--space-3)' }} />
             <h3>Visit Us</h3>
-            <p>12th Floor, ProServe Tower<br/>Bandra Kurla Complex<br/>Mumbai, MH 400051</p>
+            <p>12th Floor, Wisor Tower<br/>Bandra Kurla Complex<br/>Mumbai, MH 400051</p>
           </div>
         </div>
 

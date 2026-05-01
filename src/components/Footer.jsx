@@ -12,7 +12,7 @@ export default function Footer() {
               <div className="logo-icon">
                 <Shield size={18} />
               </div>
-              Pro<span>Serve</span>
+              Wi<span>sor</span>
             </Link>
             <p>
               India's most trusted platform to find verified Chartered Accountants
@@ -59,7 +59,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} ProServe. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Wisor. All rights reserved.</p>
           <div className="footer-bottom-links">
             <Link to="/privacy">Privacy Policy</Link>
             <Link to="/terms">Terms of Service</Link>

@@ -202,7 +202,7 @@ export default function AdminDashboard() {
         <section className="dashboard-content">
           <div className="dashboard-content-header">
             <h1>Admin Control Panel</h1>
-            <p>Manage the ProServe network, users, and approvals</p>
+            <p>Manage the Wisor network, users, and approvals</p>
           </div>
 
           {renderContent()}

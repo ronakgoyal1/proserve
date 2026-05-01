@@ -55,7 +55,7 @@ export default function BookingModal({ isOpen, onClose, professional }) {
       sendEmailNotification(
         session.user.email,
         session.user.user_metadata?.name || 'User',
-        'Booking Confirmation - ProServe',
+        'Booking Confirmation - Wisor',
         `Your consultation with ${professional.name} on Nov ${selectedDate} at ${selectedTime} for ${selectedServiceObj.name} is confirmed.`
       ).catch(e => console.warn('Mock email skipped:', e));
 
@@ -159,7 +159,7 @@ export default function BookingModal({ isOpen, onClose, professional }) {
                     </div>
                     <p style={{ fontSize: '12px', color: 'var(--color-gray-700)', margin: 0, lineHeight: 1.4 }}>
                       This professional has not completed our strict verification process yet. 
-                      Proceed with caution as ProServe cannot guarantee their credentials at this time.
+                      Proceed with caution as Wisor cannot guarantee their credentials at this time.
                     </p>
                   </div>
                 )}

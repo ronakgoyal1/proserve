@@ -4,17 +4,17 @@ export default function About() {
   return (
     <main className="static-page" style={{ padding: 'var(--space-8) 0', minHeight: '80vh' }}>
       <Helmet>
-        <title>About Us | ProServe</title>
-        <meta name="description" content="Learn about ProServe's mission to connect people with India's best CA and CMA experts." />
+        <title>About Us | Wisor</title>
+        <meta name="description" content="Learn about Wisor's mission to connect people with India's best CA and CMA experts." />
       </Helmet>
       
       <div className="container" style={{ maxWidth: '800px' }}>
-        <h1 style={{ marginBottom: 'var(--space-4)' }}>About ProServe</h1>
+        <h1 style={{ marginBottom: 'var(--space-4)' }}>About Wisor</h1>
         
         <div style={{ background: 'white', padding: 'var(--space-6)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
           <h2 style={{ marginBottom: 'var(--space-3)' }}>Our Mission</h2>
           <p style={{ color: 'var(--color-gray-700)', marginBottom: 'var(--space-6)', lineHeight: 1.7 }}>
-            At ProServe, we believe that finding reliable financial and compliance expertise shouldn't be a daunting task. 
+            At Wisor, we believe that finding reliable financial and compliance expertise shouldn't be a daunting task. 
             Our mission is to bridge the gap between individuals, startups, and established businesses with India's top 
             Chartered Accountants (CAs) and Cost & Management Accountants (CMAs). We bring transparency, trust, and 
             efficiency to professional services.
@@ -23,7 +23,7 @@ export default function About() {
           <h2 style={{ marginBottom: 'var(--space-3)' }}>Why We Started</h2>
           <p style={{ color: 'var(--color-gray-700)', marginBottom: 'var(--space-6)', lineHeight: 1.7 }}>
             The financial compliance landscape in India is incredibly complex. However, discovering verified professionals 
-            who offer straightforward pricing and modern digital communication was surprisingly difficult. ProServe was 
+            who offer straightforward pricing and modern digital communication was surprisingly difficult. Wisor was 
             built to solve this. Whether it's GST filing, company incorporation, or complex tax structuring, we provide 
             a premium directory of vetted experts ready to help.
           </p>

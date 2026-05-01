@@ -4,8 +4,8 @@ export default function PrivacyPolicy() {
   return (
     <main className="static-page" style={{ padding: 'var(--space-8) 0', minHeight: '80vh' }}>
       <Helmet>
-        <title>Privacy Policy | ProServe</title>
-        <meta name="description" content="ProServe Privacy Policy and Data Handling guidelines." />
+        <title>Privacy Policy | Wisor</title>
+        <meta name="description" content="Wisor Privacy Policy and Data Handling guidelines." />
       </Helmet>
       
       <div className="container" style={{ maxWidth: '800px' }}>
@@ -21,7 +21,7 @@ export default function PrivacyPolicy() {
           <p>Data is primarily used to connect you with verified CA and CMA professionals, send booking confirmations (via EmailJS), and maintain secure access to your Dashboard.</p>
 
           <h3 style={{ margin: 'var(--space-4) 0 var(--space-2)' }}>3. Information Sharing</h3>
-          <p>We do not sell your personal data. We only share necessary booking details with the specific professional you choose to hire through ProServe.</p>
+          <p>We do not sell your personal data. We only share necessary booking details with the specific professional you choose to hire through Wisor.</p>
 
           <h3 style={{ margin: 'var(--space-4) 0 var(--space-2)' }}>4. Security</h3>
           <p>Your authentication and sensitive data are secured via Supabase using enterprise-grade encryption and Row Level Security (RLS) policies.</p>

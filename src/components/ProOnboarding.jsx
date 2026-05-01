@@ -176,7 +176,7 @@ export default function ProOnboarding() {
             </div>
             <h2>Application Approved!</h2>
             <p style={{ color: 'var(--color-gray-500)', marginTop: 'var(--space-4)', lineHeight: '1.6' }}>
-              Welcome to ProServe. Your expert registry profile has been created and you are now live.
+              Welcome to Wisor. Your expert registry profile has been created and you are now live.
             </p>
             <p style={{ color: 'var(--color-gray-500)', marginTop: 'var(--space-2)' }}>
               Redirecting to your dashboard...

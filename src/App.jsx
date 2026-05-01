@@ -48,7 +48,7 @@ export default function App() {
     <>
       <ScrollToTop />
       <Helmet>
-        <title>ProServe | Verified CA & CMA Experts in India</title>
+        <title>Wisor | Verified CA & CMA Experts in India</title>
         <meta name="description" content="Find and book premium Chartered Accountants and Cost Management Accountants for your tax, compliance, and financial needs." />
       </Helmet>
       

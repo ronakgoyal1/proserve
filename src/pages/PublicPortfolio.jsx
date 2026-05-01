@@ -107,7 +107,7 @@ function Avatar({ initials, t, size = 100 }) {
 function VerifiedBadge({ t }) {
   return (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: t.pill, color: t.pillText, border: `1px solid rgba(${t.accentRgb},0.2)`, borderRadius: 999, padding: '5px 14px', fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase' }}>
-      <ShieldCheck size={12} /> ProServe Verified
+      <ShieldCheck size={12} /> Wisor Verified
     </span>
   );
 }
@@ -300,7 +300,7 @@ function PortfolioFooter({ c, t }) {
         <div style={{ textAlign: 'right' }}>
           <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 5, textDecoration: 'none', justifyContent: 'flex-end' }}>
             <ShieldCheck size={12} style={{ color: t.accent }} />
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 600 }}>Powered by ProServe</span>
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 600 }}>Powered by Wisor</span>
           </a>
           <span style={{ fontSize: 11, color: '#1e293b' }}>© {new Date().getFullYear()} {c.name}</span>
         </div>
@@ -474,7 +474,7 @@ function LayoutSpecialist({ c, t, onBook }) {
             <div style={{ marginTop: 24, paddingTop: 20, borderTop: `1px solid ${t.cardBorder}` }}>
               <div style={{ display: 'flex', items: 'center', gap: 8 }}>
                 <ShieldCheck size={16} style={{ color: t.accent }} />
-                <span style={{ fontSize: 12.5, fontWeight: 700, color: t.accent }}>ProServe Verified Professional</span>
+                <span style={{ fontSize: 12.5, fontWeight: 700, color: t.accent }}>Wisor Verified</span>
               </div>
             </div>
           </div>
@@ -660,15 +660,15 @@ function PortfolioMain({ portfolio, expertId, navigate }) {
   return (
     <>
       <Helmet>
-        <title>{`${c.name || 'Expert'} | ${c.profession || 'Professional'} | ProServe`}</title>
-        <meta name="description" content={c.heroStatement || c.bio || `${c.name} on ProServe.`} />
+        <title>{`${c.name || 'Expert'} | ${c.profession || 'Professional'} | Wisor`}</title>
+        <meta name="description" content={c.heroStatement || c.bio || `${c.name} on Wisor.`} />
       </Helmet>
 
       {/* Sticky Navbar */}
       <header style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 500, background: 'rgba(2,6,23,0.88)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '12px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 7, textDecoration: 'none' }}>
           <ShieldCheck size={17} style={{ color: t.accent }} />
-          <span style={{ fontWeight: 800, fontSize: 14, color: 'white' }}>Pro<span style={{ color: t.accent }}>Serve</span></span>
+          <span style={{ fontWeight: 800, fontSize: 14, color: 'white' }}>Wi<span style={{ color: t.accent }}>sor</span></span>
         </a>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           {c.contactPhone && (

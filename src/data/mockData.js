@@ -222,28 +222,28 @@ export const testimonials = [
     id: 1,
     name: "Arjun Patel",
     role: "Startup Founder",
-    text: "ProServe made it incredibly easy to find a reliable CA for my startup. The entire process from discovery to booking was seamless. Highly recommended!",
+    text: "Wisor made it incredibly easy to find a reliable CA for my startup. The entire process from discovery to booking was seamless. Highly recommended!",
     rating: 5
   },
   {
     id: 2,
     name: "Meera Gupta",
     role: "Freelance Designer",
-    text: "I was always confused about tax filing. ProServe connected me with an amazing CA who explained everything clearly. Filed my ITR in just 2 days!",
+    text: "I was always confused about tax filing. Wisor connected me with an amazing CA who explained everything clearly. Filed my ITR in just 2 days!",
     rating: 5
   },
   {
     id: 3,
     name: "Rohan Nair",
     role: "Manufacturing Business Owner",
-    text: "The CMA I found through ProServe helped us reduce our production costs by 18%. The platform's verification process gave me confidence in my choice.",
+    text: "The CMA I found through Wisor helped us reduce our production costs by 18%. The platform's verification process gave me confidence in my choice.",
     rating: 5
   },
   {
     id: 4,
     name: "Sneha Kapoor",
     role: "HR Manager",
-    text: "We needed help with GST compliance urgently. Found a verified expert within hours through ProServe. The booking system is super convenient.",
+    text: "We needed help with GST compliance urgently. Found a verified expert within hours through Wisor. The booking system is super convenient.",
     rating: 4
   }
 ];
