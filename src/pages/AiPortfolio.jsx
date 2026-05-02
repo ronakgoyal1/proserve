@@ -106,7 +106,7 @@ export default function AiPortfolio() {
   };
 
   const handleCopyLink = () => {
-    const url = `${window.location.origin}/portfolio/${activePortfolio.slug}`;
+    const url = `${import.meta.env.DEV ? window.location.origin : 'https://wisor.in'}/portfolio/${activePortfolio.slug}`;
     navigator.clipboard.writeText(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -150,7 +150,7 @@ export default function AiPortfolio() {
             
             <div style={{ padding: 'var(--space-4)', background: 'rgba(255,255,255,0.05)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid rgba(255,255,255,0.1)' }}>
               <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', opacity: 0.8, fontSize: '14px', fontFamily: 'monospace' }}>
-                {window.location.origin}/portfolio/{activePortfolio.slug}
+                {import.meta.env.DEV ? window.location.origin : 'https://wisor.in'}/portfolio/{activePortfolio.slug}
               </div>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <button onClick={handleCopyLink} className="btn btn-secondary btn-sm" style={{ background: 'white', color: 'var(--color-primary)', padding: '8px 12px' }}>

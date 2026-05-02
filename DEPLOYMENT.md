@@ -37,7 +37,7 @@ A `vercel.json` file is already included in the root directory. It contains SPA 
 
 ## 3. Post-Deploy Smoke Testing Guide
 
-Once Vercel has generated the production URL (e.g., `https://proserve.vercel.app`), perform the following checks:
+Once Vercel has generated the production URL (e.g., `https://wisor.in`), perform the following checks:
 
 ### 1. Public Pages (SEO & Content)
 - [ ] **Home Page (`/`)**: Verify Hero banner, Search functionality, and featured CAs load properly.

@@ -19,14 +19,14 @@ export default function Contact() {
           <div className="contact-card" style={{ padding: 'var(--space-6)', background: 'white', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
             <Mail size={32} style={{ color: 'var(--color-primary)', marginBottom: 'var(--space-3)' }} />
             <h3>Email Us</h3>
-            <p>support@proserve.in</p>
-            <p>partners@proserve.in</p>
+            <p>support@wisor.in</p>
+            <p>partners@wisor.in</p>
           </div>
           
           <div className="contact-card" style={{ padding: 'var(--space-6)', background: 'white', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
             <Phone size={32} style={{ color: 'var(--color-primary)', marginBottom: 'var(--space-3)' }} />
             <h3>Call Us</h3>
-            <p>+91 800-PRO-SRVE</p>
+            <p>+91 800-WISOR-IN</p>
             <p>Mon-Fri, 9AM-6PM IST</p>
           </div>
           

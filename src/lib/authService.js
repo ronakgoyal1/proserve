@@ -100,7 +100,7 @@ class AuthService {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
-          redirectTo: `${window.location.origin}/login`,
+          redirectTo: `${import.meta.env.DEV ? window.location.origin : 'https://wisor.in'}/login`,
           queryParams: {
             prompt: 'select_account' // Forces the Google account chooser
           }

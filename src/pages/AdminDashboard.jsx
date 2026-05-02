@@ -47,7 +47,7 @@ export default function AdminDashboard() {
   };
 
   const fullName = user?.user_metadata?.full_name || user?.user_metadata?.name || 'Admin Node';
-  const email = user?.email || 'admin@proserve.in';
+  const email = user?.email || 'admin@wisor.in';
   const avatarUrl = user?.user_metadata?.avatar_url;
   const initials = fullName ? fullName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2) : 'A';
 
