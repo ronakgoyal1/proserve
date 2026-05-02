@@ -12,14 +12,14 @@ import { Helmet } from 'react-helmet-async';
 // ─── Theme Registry ───────────────────────────────────────────────────────────
 function resolveTheme(themeKey = '') {
   return {
-    heroBg: '#F8F8F5', heroText: '#1A1A1A', heroSubText: '#6B7280',
-    accent: '#7A9A6E', accentLight: '#92B284', accentRgb: '122,154,110',
-    pill: 'rgba(122,154,110,0.14)', pillText: '#5E7D52',
-    btnBg: '#1A1A1A', btnColor: '#ffffff',
-    glow1: 'rgba(122,154,110,0.16)', glow2: 'rgba(26,26,26,0.08)',
-    altBg: '#F2F4F0', nameGrad: 'linear-gradient(to right,#1A1A1A 40%,#7A9A6E 100%)',
-    footerBg: '#111111', cardBorder: '#E8E8E5',
-    statBg: '#ffffff', statBorder: '#E8E8E5'
+    heroBg: '#111111', heroText: '#ffffff', heroSubText: '#9CA3AF',
+    accent: '#92B284', accentLight: '#7A9A6E', accentRgb: '146,178,132',
+    pill: 'rgba(146,178,132,0.1)', pillText: '#92B284',
+    btnBg: '#92B284', btnColor: '#111111',
+    glow1: 'rgba(146,178,132,0.1)', glow2: 'rgba(255,255,255,0.02)',
+    altBg: '#1A1A1A', nameGrad: 'linear-gradient(to right,#ffffff 40%,#92B284 100%)',
+    footerBg: '#0A0A0A', cardBorder: 'rgba(255,255,255,0.08)',
+    statBg: 'rgba(255,255,255,0.02)', statBorder: 'rgba(255,255,255,0.08)'
   };
 }
 
@@ -71,11 +71,9 @@ function SectionLabel({ text, t }) {
 
 function Avatar({ initials, t, size = 100 }) {
   return (
-    <div style={{ position: 'relative', display: 'inline-flex' }}>
-      <div style={{ width: size, height: size, borderRadius: '50%', background: `radial-gradient(circle at 30% 30%, rgba(${t.accentRgb},0.5), rgba(${t.accentRgb},0.05))`, padding: 3, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `0 0 0 1px rgba(${t.accentRgb},0.3), 0 0 40px rgba(${t.accentRgb},0.2)` }}>
-        <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: 'linear-gradient(135deg,#1e293b,#0f172a)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: size * 0.35, fontWeight: 900, color: 'white', letterSpacing: '-1px', fontFamily: 'Inter,system-ui,sans-serif' }}>
-          {initials}
-        </div>
+    <div style={{ width: size, height: size, borderRadius: '50%', background: '#F8F8F5', border: '2px solid #E8E8E5', padding: 4, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: '#1A1A1A', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: size * 0.35, fontWeight: 600, color: '#fff', letterSpacing: '-0.5px' }}>
+        {initials}
       </div>
     </div>
   );
@@ -83,8 +81,8 @@ function Avatar({ initials, t, size = 100 }) {
 
 function VerifiedBadge({ t }) {
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: t.pill, color: t.pillText, border: `1px solid rgba(${t.accentRgb},0.2)`, borderRadius: 999, padding: '5px 14px', fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase' }}>
-      <ShieldCheck size={12} /> Wisor Verified
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(122,154,110,0.1)', color: '#5E7D52', border: `1px solid rgba(122,154,110,0.2)`, borderRadius: 999, padding: '6px 14px', fontSize: 13, fontWeight: 600 }}>
+      <ShieldCheck size={15} /> Wisor Verified
     </span>
   );
 }
@@ -94,7 +92,7 @@ function LuxuryBtn({ children, onClick, t, style = {} }) {
   return (
     <button onClick={onClick}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{ background: t.btnBg, color: t.btnColor, border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8, boxShadow: `0 ${hov ? 14 : 8}px ${hov ? 40 : 24}px rgba(${t.accentRgb},${hov ? 0.4 : 0.28})`, transform: hov ? 'translateY(-2px)' : 'translateY(0)', transition: 'all 0.22s', ...style }}>
+      style={{ background: t.btnBg, color: t.btnColor, border: 'none', borderRadius: 8, padding: '14px 28px', fontSize: 15, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8, transform: hov ? 'translateY(-1px)' : 'translateY(0)', transition: 'all 0.2s', ...style }}>
       {children}
     </button>
   );
@@ -104,7 +102,7 @@ function GhostBtn({ children, onClick, style = {} }) {
   const [hov, setHov] = useState(false);
   return (
     <button onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{ background: hov ? 'rgba(26,26,26,0.05)' : 'transparent', color: hov ? '#1A1A1A' : '#6B7280', border: '1px solid rgba(26,26,26,0.15)', borderRadius: 999, padding: '14px 28px', fontSize: 15, fontWeight: 500, cursor: 'pointer', transition: 'all 0.2s', ...style }}>
+      style={{ background: hov ? 'rgba(255,255,255,0.05)' : 'transparent', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 8, padding: '14px 28px', fontSize: 15, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s', ...style }}>
       {children}
     </button>
   );
@@ -115,20 +113,20 @@ function GhostBtn({ children, onClick, style = {} }) {
 function WhoIHelpSection({ items = [], t, bg = '#fff' }) {
   if (!items.length) return null;
   return (
-    <section style={{ padding: '80px 24px', background: bg }}>
+    <section style={{ padding: '100px 24px', background: bg }}>
       <div style={{ maxWidth: 1080, margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: 52 }}>
+        <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center', marginBottom: 60 }}>
           <SectionLabel text="Who I Help" t={t} />
-          <h2 style={{ fontSize: 'clamp(1.8rem,3.5vw,2.4rem)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.5px' }}>My clients</h2>
+          <h2 style={{ fontSize: 'clamp(2rem,4vw,2.5rem)', fontWeight: 700, color: '#1A1A1A', letterSpacing: '-0.5px' }}>My clients</h2>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(230px,1fr))', gap: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(230px,1fr))', gap: 24 }}>
           {items.map((item, i) => (
-            <div key={i} style={{ background: '#ffffff', border: `1px solid #e8edf5`, borderRadius: 20, padding: '28px 22px', boxShadow: '0 2px 12px rgba(0,0,0,0.04)', transition: 'all 0.22s', cursor: 'default' }}
-              onMouseEnter={e => { e.currentTarget.style.boxShadow = `0 8px 28px rgba(${t.accentRgb},0.12)`; e.currentTarget.style.borderColor = t.cardBorder; e.currentTarget.style.transform = 'translateY(-3px)'; }}
-              onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.04)'; e.currentTarget.style.borderColor = '#e8edf5'; e.currentTarget.style.transform = 'translateY(0)'; }}>
-              <div style={{ fontSize: 36, marginBottom: 14 }}>{item.icon}</div>
-              <h3 style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>{item.title}</h3>
-              <p style={{ fontSize: 13.5, color: '#64748b', lineHeight: 1.65, margin: 0 }}>{item.desc}</p>
+            <div key={i} style={{ background: t.statBg, border: `1px solid ${t.cardBorder}`, borderRadius: 16, padding: '24px', transition: 'all 0.2s', cursor: 'default' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = t.accent; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = t.cardBorder; e.currentTarget.style.transform = 'translateY(0)'; }}>
+              <div style={{ fontSize: 32, marginBottom: 14 }}>{item.icon}</div>
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: t.heroText, marginBottom: 8 }}>{item.title}</h3>
+              <p style={{ fontSize: 14, color: t.heroSubText, lineHeight: 1.6, margin: 0 }}>{item.desc}</p>
             </div>
           ))}
         </div>
@@ -154,15 +152,15 @@ function ProblemsSection({ items = [], t, name }) {
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {items.map((item, i) => (
-            <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: 20, background: '#fff', borderRadius: 16, padding: '20px 24px', border: '1px solid #e8edf5', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+            <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: 20, background: t.statBg, borderRadius: 16, padding: '20px 24px', border: `1px solid ${t.cardBorder}` }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                 <span style={{ fontSize: 18, flexShrink: 0, paddingTop: 2 }}>😣</span>
-                <span style={{ fontSize: 14, color: '#64748b', lineHeight: 1.6 }}>{item.pain}</span>
+                <span style={{ fontSize: 14, color: t.heroSubText, lineHeight: 1.6 }}>{item.pain}</span>
               </div>
               <ArrowRight size={18} style={{ color: t.accent, flexShrink: 0 }} />
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                <Check size={16} style={{ color: '#22c55e', flexShrink: 0, marginTop: 3 }} />
-                <span style={{ fontSize: 14, color: '#334155', fontWeight: 600, lineHeight: 1.6 }}>{item.fix}</span>
+                <Check size={16} style={{ color: t.accent, flexShrink: 0, marginTop: 3 }} />
+                <span style={{ fontSize: 14, color: t.heroText, fontWeight: 600, lineHeight: 1.6 }}>{item.fix}</span>
               </div>
             </div>
           ))}
@@ -180,21 +178,21 @@ function ServicesSection({ items = [], t, bg = '#fff' }) {
   );
   if (!safeItems.length) return null;
   return (
-    <section id="pp-services" style={{ padding: '80px 24px', background: bg }}>
+    <section id="pp-services" style={{ padding: '100px 24px', background: bg }}>
       <div style={{ maxWidth: 1080, margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: 52 }}>
+        <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center', marginBottom: 60 }}>
           <SectionLabel text="Services" t={t} />
-          <h2 style={{ fontSize: 'clamp(1.8rem,3.5vw,2.4rem)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.5px' }}>What I do</h2>
+          <h2 style={{ fontSize: 'clamp(2rem,4vw,2.5rem)', fontWeight: 700, color: '#1A1A1A', letterSpacing: '-0.5px' }}>What I do</h2>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 24 }}>
           {safeItems.map((svc, i) => (
-            <div key={i} style={{ background: '#fff', border: `1px solid #e8edf5`, borderRadius: 20, padding: '28px 24px', boxShadow: '0 2px 12px rgba(0,0,0,0.04)', transition: 'all 0.22s', borderTop: `3px solid transparent` }}
-              onMouseEnter={e => { e.currentTarget.style.borderTopColor = t.accent; e.currentTarget.style.boxShadow = `0 8px 28px rgba(${t.accentRgb},0.12)`; e.currentTarget.style.transform = 'translateY(-3px)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderTopColor = 'transparent'; e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.04)'; e.currentTarget.style.transform = 'translateY(0)'; }}>
-              <div style={{ fontSize: 36, marginBottom: 12 }}>{svc.icon || '⚡'}</div>
-              <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>{svc.name}</h3>
-              <p style={{ fontSize: 12, color: t.accent, fontWeight: 600, marginBottom: 12, letterSpacing: 0.3 }}>{svc.tagline || ''}</p>
-              {svc.solution && <p style={{ fontSize: 13.5, color: '#64748b', lineHeight: 1.7, margin: 0 }}>{svc.solution}</p>}
+            <div key={i} style={{ background: '#fff', border: `1px solid #E8E8E5`, borderRadius: 16, padding: '24px', transition: 'all 0.2s', display: 'flex', flexDirection: 'column', gap: 8 }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = '#D1D1CE'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = '#E8E8E5'; e.currentTarget.style.transform = 'translateY(0)'; }}>
+              <div style={{ fontSize: 32, marginBottom: 8 }}>{svc.icon || '⚡'}</div>
+              <h3 style={{ fontSize: 18, fontWeight: 700, color: '#1A1A1A', margin: 0 }}>{svc.name}</h3>
+              {svc.tagline && <p style={{ fontSize: 13, color: t.accent, fontWeight: 600, margin: 0 }}>{svc.tagline}</p>}
+              {svc.solution && <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.6, margin: '8px 0 0 0' }}>{svc.solution}</p>}
             </div>
           ))}
         </div>
@@ -214,10 +212,10 @@ function ResultsSection({ items = [], t, bg = '#f8fafc' }) {
         </h2>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, justifyContent: 'center' }}>
           {items.map((r, i) => (
-            <div key={i} style={{ flex: '1 1 200px', background: '#fff', border: `1px solid ${t.cardBorder}`, borderRadius: 20, padding: '28px 20px', boxShadow: `0 4px 16px rgba(${t.accentRgb},0.08)`, textAlign: 'center' }}>
-              <div style={{ fontSize: 'clamp(2rem,5vw,3rem)', fontWeight: 900, color: t.accent, letterSpacing: '-1px', lineHeight: 1 }}>{r.metric}</div>
-              <div style={{ fontWeight: 700, color: '#0f172a', marginTop: 8, fontSize: 14 }}>{r.label}</div>
-              <div style={{ color: '#94a3b8', fontSize: 12, marginTop: 4 }}>{r.sub}</div>
+            <div key={i} style={{ flex: '1 1 200px', background: t.statBg, border: `1px solid ${t.cardBorder}`, borderRadius: 20, padding: '28px 20px', textAlign: 'center' }}>
+              <div style={{ fontSize: 'clamp(2rem,5vw,3rem)', fontWeight: 900, fontFamily: "'Playfair Display', serif", color: t.accent, letterSpacing: '-1px', lineHeight: 1 }}>{r.metric}</div>
+              <div style={{ fontWeight: 700, color: t.heroText, marginTop: 8, fontSize: 14 }}>{r.label}</div>
+              <div style={{ color: t.heroSubText, fontSize: 12, marginTop: 4 }}>{r.sub}</div>
             </div>
           ))}
         </div>
@@ -246,7 +244,7 @@ function FooterCTA({ c, t, onBook }) {
     <section style={{ padding: '80px 24px', background: t.heroBg, position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(circle at 50% 0%, rgba(${t.accentRgb},0.14) 0%,transparent 70%)`, pointerEvents: 'none' }} />
       <div style={{ maxWidth: 640, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
-        <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.8rem)', fontWeight: 900, color: t.heroText, marginBottom: 14, letterSpacing: '-0.5px', lineHeight: 1.1 }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem,4vw,3.5rem)', fontWeight: 500, color: t.heroText, marginBottom: 14, letterSpacing: '-0.5px', lineHeight: 1.1 }}>
           {c.ctaHeadline || 'Let\'s work together.'}
         </h2>
         <p style={{ color: t.heroSubText, fontSize: 15, lineHeight: 1.75, marginBottom: 40 }}>
@@ -287,88 +285,73 @@ function PortfolioFooter({ c, t }) {
 }
 
 // ─── LAYOUT A: THE AUTHORITY ───────────────────────────────────────────────────
-// Dark full-width hero with left-aligned identity block, strong typography
+// Minimal centered editorial hero
 function LayoutAuthority({ c, t, onBook }) {
   const initials = (c.name || 'P').split(' ').filter(Boolean).map(n => n[0]).join('').toUpperCase().slice(0, 2);
   const stats = c.stats || [];
+  const ratingStat = stats.find(s => s.label.toLowerCase().includes('rating'));
+  const rating = c.rating || (ratingStat ? ratingStat.value : '5.0');
+  const reviewCount = c.reviews || '12+';
+
   return (
     <div style={{ fontFamily: 'Inter,system-ui,sans-serif', background: '#fff' }}>
       {/* HERO */}
-      <section style={{ background: t.heroBg, minHeight: '100vh', display: 'flex', alignItems: 'center', position: 'relative', overflow: 'hidden', padding: '80px 24px 60px' }}>
-        <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: '60vw', height: '60vw', borderRadius: '50%', background: `radial-gradient(circle,${t.glow1} 0%,transparent 55%)`, filter: 'blur(80px)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '-15%', left: '-5%', width: '40vw', height: '40vw', borderRadius: '50%', background: `radial-gradient(circle,${t.glow2} 0%,transparent 60%)`, filter: 'blur(100px)', pointerEvents: 'none' }} />
-
-        <div style={{ maxWidth: 1100, margin: '0 auto', width: '100%', display: 'grid', gridTemplateColumns: '1fr auto', gap: 60, alignItems: 'center', position: 'relative', zIndex: 2 }}>
-          {/* Left text */}
-          <div>
+      <section style={{ background: '#F8F8F5', padding: '120px 24px 100px', textAlign: 'center' }}>
+        <div style={{ maxWidth: 900, margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          
+          {/* Trust Signals Near Top */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 40, flexWrap: 'wrap', justifyContent: 'center' }}>
             <VerifiedBadge t={t} />
-            <h1 style={{ background: t.nameGrad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', fontSize: 'clamp(2.8rem,6vw,5rem)', fontWeight: 900, letterSpacing: '-2px', lineHeight: 1, margin: '20px 0 14px' }}>
-              {c.name}
-            </h1>
-            <p style={{ fontSize: 'clamp(1rem,2vw,1.3rem)', color: t.heroSubText, marginBottom: 12, fontWeight: 400 }}>
-              {c.profession}{c.city && c.city !== 'India' ? ` · ${c.city}` : ''}
-            </p>
-            <p style={{ fontSize: 16, color: t.heroSubText, maxWidth: 560, lineHeight: 1.75, marginBottom: 36 }}>
-              {c.heroStatement || c.bio || ''}
-            </p>
-            {c.tagline && (
-              <p style={{ fontSize: 13, letterSpacing: 1.5, color: t.accentLight, fontWeight: 600, textTransform: 'uppercase', marginBottom: 36 }}>
-                {c.tagline}
-              </p>
-            )}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-              <LuxuryBtn t={t} onClick={onBook}><MessageSquare size={16} /> Book Consultation</LuxuryBtn>
-              {c.contactPhone && (
-                <a href={`https://wa.me/${c.contactPhone.replace(/\D/g,'')}`} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(37,211,102,0.12)', color: '#25d366', border: '1px solid rgba(37,211,102,0.25)', borderRadius: 999, padding: '14px 22px', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                  WhatsApp
-                </a>
-              )}
-              <GhostBtn onClick={() => document.getElementById('pp-services')?.scrollIntoView({ behavior: 'smooth' })}>
-                View Services
-              </GhostBtn>
-            </div>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 600, color: '#1A1A1A' }}>
+              <Star size={16} fill="#F59E0B" color="#F59E0B" /> {rating} 
+              <span style={{ color: '#6B7280', fontWeight: 400 }}>• {reviewCount} reviews</span>
+            </span>
           </div>
 
-          {/* Right: Avatar + stats */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 28 }}>
-            <Avatar initials={initials} t={t} size={140} />
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, minWidth: 240 }}>
-              {stats.map((s, i) => (
-                <div key={i} style={{ background: t.statBg, border: `1px solid ${t.statBorder}`, backdropFilter: 'blur(10px)', borderRadius: 14, padding: '14px 12px', textAlign: 'center' }}>
-                  <div style={{ fontSize: 22, fontWeight: 900, color: t.heroText, letterSpacing: '-0.5px' }}>{s.value}</div>
-                  <div style={{ fontSize: 11, color: t.heroSubText, marginTop: 3 }}>{s.label}</div>
-                </div>
-              ))}
-            </div>
+          <Avatar initials={initials} t={t} size={110} />
+          
+          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 500, color: t.heroText, letterSpacing: '-1px', lineHeight: 1.1, marginTop: 32, marginBottom: 16 }}>
+            {c.name}
+          </h1>
+          <p style={{ fontSize: 'clamp(1.1rem,2vw,1.25rem)', color: '#4B5563', marginBottom: 24, fontWeight: 500 }}>
+            {c.profession}{c.city && c.city !== 'India' ? ` · ${c.city}` : ''}
+          </p>
+          <p style={{ fontSize: 16, color: '#6B7280', maxWidth: 600, lineHeight: 1.6, margin: '0 auto 48px' }}>
+            {c.heroStatement || c.bio || ''}
+          </p>
+          
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'center' }}>
+            <LuxuryBtn t={t} onClick={onBook}>Book Consultation</LuxuryBtn>
+            <GhostBtn onClick={() => document.getElementById('pp-services')?.scrollIntoView({ behavior: 'smooth' })}>
+              View Services
+            </GhostBtn>
           </div>
         </div>
       </section>
 
       {/* BODY */}
-      {/* About */}
-      <section style={{ padding: '80px 24px', background: '#fff' }}>
-        <div style={{ maxWidth: 740, margin: '0 auto' }}>
+      <section style={{ padding: '100px 24px', background: '#fff' }}>
+        <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center' }}>
           <SectionLabel text="About" t={t} />
-          <h2 style={{ fontSize: 'clamp(1.8rem,3.5vw,2.4rem)', fontWeight: 800, color: '#0f172a', marginBottom: 24, letterSpacing: '-0.5px' }}>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem,4vw,3rem)', fontWeight: 500, color: t.heroText, marginBottom: 24, letterSpacing: '-0.5px' }}>
             Who is {(c.name || '').split(' ')[0]}?
           </h2>
-          <p style={{ fontSize: 16, color: '#475569', lineHeight: 1.85, marginBottom: 36 }}>{c.bio}</p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20 }}>
-            {['Identity Verified', 'Credentials Checked', 'Background Cleared', 'Fast Response'].map((item, i) => (
-              <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600, color: '#334155' }}>
-                <Check size={15} style={{ color: '#22c55e' }} /> {item}
+          <p style={{ fontSize: 16, color: t.heroSubText, lineHeight: 1.8, marginBottom: 40 }}>{c.bio}</p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, justifyContent: 'center' }}>
+            {['Identity Verified', 'Credentials Checked', 'Fast Response'].map((item, i) => (
+              <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, fontWeight: 500, color: '#1A1A1A' }}>
+                <Check size={16} style={{ color: '#25D366' }} /> {item}
               </span>
             ))}
           </div>
         </div>
       </section>
 
-      <WhoIHelpSection items={c.whoIHelp || []} t={t} bg={t.altBg} />
+      <ServicesSection items={c.services || []} t={t} bg="#F8F8F5" />
+      <WhoIHelpSection items={c.whoIHelp || []} t={t} bg="#fff" />
       <ProblemsSection items={c.problemsSolved || []} t={t} name={c.name} />
-      <ServicesSection items={c.services || []} t={t} bg={t.altBg} />
-      <ResultsSection items={c.results || []} t={t} />
-      <FaqSection items={c.faqs || []} t={t} bg={t.altBg} />
+      <ResultsSection items={c.results || []} t={t} bg="#F8F8F5" />
+      <FaqSection items={c.faqs || []} t={t} bg="#fff" />
       <FooterCTA c={c} t={t} onBook={onBook} />
       <PortfolioFooter c={c} t={t} />
     </div>

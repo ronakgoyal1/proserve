@@ -49,65 +49,78 @@ export default function Home() {
     <main id="home-page">
       {/* Hero */}
       <section className="home-hero">
-        <div className="container">
-          <div className="hero-content animate-fade-in-up">
-            <div className="hero-badge">
+        <div className="container hero-container">
+          {/* LEFT SIDE */}
+          <div className="hero-left animate-fade-in-up" style={{ position: 'relative' }}>
+            <div className="hero-badge-new" style={{ position: 'relative', zIndex: 1 }}>
               <span className="dot" />
-              Wisor verified network 2026
+              India's verified professional network
             </div>
 
-            <h1>
-              India's Premier Network of <br/><span className="highlight">Verified CA & CMA Experts</span>
+            <div style={{ position: 'absolute', top: '10%', left: '-10%', width: '120%', height: '100%', background: 'radial-gradient(circle, rgba(122,154,110,0.06) 0%, transparent 60%)', filter: 'blur(50px)', pointerEvents: 'none', zIndex: 0 }} />
+
+            <h1 className="hero-heading-new" style={{ position: 'relative', zIndex: 1, marginBottom: '28px' }}>
+              The right professional,<br/>without the guesswork.
             </h1>
 
-            <p>
-              Elevate your business with trusted financial guidance. Discover elite, 
-              background-checked professionals for Tax, Audit, and Compliance.
+            <p className="hero-subtext-new" style={{ position: 'relative', zIndex: 1, marginBottom: '40px', fontSize: '19px' }}>
+              Discover trusted Chartered Accountants, lawyers, and architects — verified by their statutory bodies, not by anonymous reviews.
             </p>
 
-            <form className="hero-search" onSubmit={handleSearch}>
-              <div className="hero-search-input">
-                <Search size={20} />
-                <input
-                  type="text"
-                  placeholder="What service do you need?"
-                  value={searchService}
-                  onChange={(e) => setSearchService(e.target.value)}
-                />
-              </div>
-              <div className="hero-search-divider" />
-              <div className="hero-search-input">
-                <MapPin size={20} />
-                <input
-                  type="text"
-                  placeholder="City"
-                  value={searchCity}
-                  onChange={(e) => setSearchCity(e.target.value)}
-                  list="city-list"
-                />
-                <datalist id="city-list">
-                  {cities.map(c => <option key={c} value={c} />)}
-                </datalist>
-              </div>
-              <button type="submit" className="btn">
-                Find Expert
-              </button>
-            </form>
-
-            <div className="hero-ctas">
-              <Link to="/search" className="btn-hero-primary">Browse Experts</Link>
-              <Link to="/login?tab=signup&role=professional" className="btn-hero-secondary">Apply as Professional</Link>
+            <div className="hero-ctas-new" style={{ position: 'relative', zIndex: 1, marginBottom: '16px', gap: '20px' }}>
+              <Link to="/search" className="btn-hero-primary-new" style={{ fontSize: '16px', padding: '0 32px', height: '52px', boxShadow: '0 8px 20px rgba(122,154,110,0.15)' }}>Find a professional</Link>
+              <Link to="/login?tab=signup&role=professional" className="btn-hero-secondary-new" style={{ opacity: 0.7, fontWeight: 500 }}>I'm a professional</Link>
+            </div>
+            
+            <div style={{ fontSize: '13.5px', color: '#9CA3AF', marginBottom: '56px', display: 'flex', alignItems: 'center', gap: '8px', position: 'relative', zIndex: 1 }}>
+              <ShieldCheck size={16} style={{ color: '#92B284' }} /> Talk directly on WhatsApp. No platform fees.
             </div>
 
-            <div className="hero-social-proof">
-              <div className="avatars-overlap">
-                <img src="https://ui-avatars.com/api/?name=Anita+R&background=7A9A6E&color=fff" alt="User 1" />
-                <img src="https://ui-avatars.com/api/?name=David+M&background=182C4D&color=fff" alt="User 2" />
-                <img src="https://ui-avatars.com/api/?name=Sanjay+K&background=0A192F&color=fff" alt="User 3" />
+            <div className="hero-stats-new" style={{ position: 'relative', zIndex: 1 }}>
+              <div className="hero-stat-item">
+                <div className="stat-number" style={{ fontSize: '20px' }}>Growing network</div>
+                <div className="stat-label">Verified professionals</div>
               </div>
-              <div className="social-proof-text">
-                <strong>10,000+ Businesses</strong>
-                trust Wisor experts
+              <div className="hero-stat-item">
+                <div className="stat-number" style={{ fontSize: '20px' }}>Mumbai-first</div>
+                <div className="stat-label">Current focus</div>
+              </div>
+              <div className="hero-stat-item">
+                <div className="stat-number" style={{ fontSize: '20px' }}>5 min</div>
+                <div className="stat-label">To go live</div>
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT SIDE */}
+          <div className="hero-right animate-fade-in-up delay-1" style={{ transform: 'translateX(-24px)' }}>
+            <div className="featured-pro-card" style={{ boxShadow: '0 20px 40px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.05)', borderColor: 'rgba(122,154,110,0.15)' }}>
+              <div className="featured-pro-header">
+                <div className="featured-pro-avatar">
+                  PR
+                </div>
+                <div className="featured-pro-info">
+                  <div className="featured-pro-name">
+                    Priya Rao
+                    <ShieldCheck size={14} className="verified-icon" />
+                  </div>
+                  <div className="featured-pro-subtitle">CA · Mumbai · CA since 2014</div>
+                </div>
+                <div className="featured-pro-badge">
+                  <span className="dot" /> Verified
+                </div>
+              </div>
+              <div className="featured-pro-body">
+                Tax structuring for D2C startups across fashion, beauty and F&B.
+              </div>
+              <div className="featured-pro-tags">
+                <span>GST</span>
+                <span>Direct tax</span>
+                <span>Startup advisory</span>
+              </div>
+              <div className="featured-pro-footer">
+                <div className="featured-pro-langs">English · Hindi · Marathi</div>
+                <button className="btn-get-in-touch" onClick={() => navigate('/search')}>Get in touch</button>
               </div>
             </div>
           </div>

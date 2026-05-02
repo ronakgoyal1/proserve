@@ -2,19 +2,20 @@
   background: var(--color-white);
   border: 1px solid var(--color-gray-200);
   border-radius: var(--radius-xl);
-  padding: var(--space-8);
+  padding: 24px;
   transition: all var(--transition-base);
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
   height: 100%;
+  gap: 20px;
 }
 
 .pro-card:hover {
-  border-color: transparent;
-  box-shadow: var(--shadow-card-hover);
-  transform: translateY(-4px);
+  border-color: var(--color-gray-300);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  transform: translateY(-1px);
 }
 
 .pro-card-featured::before {
@@ -29,39 +30,41 @@
 
 .pro-card-header {
   display: flex;
-  gap: var(--space-4);
-  margin-bottom: var(--space-4);
+  gap: 16px;
+  align-items: flex-start;
 }
 
 .pro-card-avatar {
-  width: 64px;
-  height: 64px;
+  width: 48px;
+  height: 48px;
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  background: var(--color-gray-50);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--color-gray-900);
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--text-lg);
+  font-weight: 600;
+  font-size: 1.1rem;
   flex-shrink: 0;
+  border: 1px solid var(--color-gray-200);
 }
 
 .pro-card-info {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .pro-card-name {
   font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-weight: 700;
+  font-size: 1.15rem;
+  font-weight: 600;
   color: var(--color-gray-900);
-  margin-bottom: var(--space-1);
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
+  margin: 0;
+  letter-spacing: -0.3px;
 }
 
 .pro-card-verified {
@@ -79,13 +82,13 @@
 .pro-card-meta {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: 14px;
   flex-wrap: wrap;
-  margin-top: var(--space-1);
+  color: var(--color-gray-500);
+  font-size: 0.85rem;
 }
 
 .pro-card-meta span {
-  font-size: var(--text-xs);
   color: var(--color-gray-500);
   display: inline-flex;
   align-items: center;
@@ -96,29 +99,38 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: var(--text-xs);
   font-weight: 600;
-  color: var(--color-gray-800);
+  color: var(--color-gray-900);
 }
 
 .pro-card-rating svg {
-  color: var(--color-star);
+  color: #F59E0B;
+}
+
+.pro-card-rating-count {
+  font-weight: 400;
+  color: var(--color-gray-500);
 }
 
 .pro-card-services {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-bottom: var(--space-4);
+  gap: 6px;
 }
 
 .pro-card-service-tag {
-  padding: 3px 10px;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--color-gray-600);
-  background: var(--color-gray-100);
-  border-radius: var(--radius-full);
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--color-gray-500);
+  background: var(--color-gray-50);
+  border-radius: 6px;
+  border: 1px solid var(--color-gray-200);
+}
+
+.pro-card-service-tag.more {
+  background: transparent;
+  border-style: dashed;
 }
 
 .pro-card-footer {
@@ -126,18 +138,18 @@
   align-items: center;
   justify-content: space-between;
   margin-top: auto;
-  padding-top: var(--space-6);
-  border-top: 1px solid var(--color-gray-100);
+  padding-top: 16px;
+  border-top: 1px solid var(--color-gray-200);
 }
 
 .pro-card-price {
-  font-size: var(--text-xs);
+  font-size: 0.85rem;
   color: var(--color-gray-500);
 }
 
 .pro-card-price strong {
-  font-size: var(--text-xl);
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 600;
   color: var(--color-gray-900);
 }
 
@@ -163,15 +175,22 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: rgba(37,211,102,0.10);
-  border: 1.5px solid rgba(37,211,102,0.28);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(37, 211, 102, 0.08);
+  border: 1px solid rgba(37, 211, 102, 0.18);
   color: #25d366;
   text-decoration: none;
   flex-shrink: 0;
   transition: all 0.18s ease;
+}
+
+.btn-card {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 .btn-wa-card:hover {
   background: rgba(37,211,102,0.18);

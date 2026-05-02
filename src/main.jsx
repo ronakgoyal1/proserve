@@ -4,7 +4,10 @@ import { BrowserRouter } from 'react-router-dom';
 import { ToastProvider } from './components/ToastContext';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './components/AuthContext';
-import './index.css';
+import './styles/tokens.css';
+import './styles/base.css';
+import './styles/components.css';
+import './styles/utilities.css';
 import App from './App.jsx';
 
 createRoot(document.getElementById('root')).render(

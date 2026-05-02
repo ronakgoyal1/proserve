@@ -22,7 +22,7 @@
   max-width: 500px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: var(--shadow-2xl);
+  box-shadow: var(--shadow-xl);
   position: relative;
   display: flex;
   flex-direction: column;

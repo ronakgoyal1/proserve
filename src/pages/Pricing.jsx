@@ -3,32 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Shield, Check, X, Zap, Star, ChevronDown, ChevronUp, ArrowRight, Clock, Users, TrendingUp, Award, MapPin } from 'lucide-react';
 
-// ─── Countdown to a fixed "launch end" date ───────────────────────────────────
-function useCountdown() {
-  const target = useRef(new Date(Date.now() + 6 * 24 * 60 * 60 * 1000)); // 6 days from first load
-  const [time, setTime] = useState({ d: 0, h: 0, m: 0, s: 0 });
-  useEffect(() => {
-    const tick = () => {
-      const diff = Math.max(0, target.current - Date.now());
-      setTime({
-        d: Math.floor(diff / 86400000),
-        h: Math.floor((diff % 86400000) / 3600000),
-        m: Math.floor((diff % 3600000) / 60000),
-        s: Math.floor((diff % 60000) / 1000),
-      });
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
-  return time;
-}
-
 // ─── Animated counter ─────────────────────────────────────────────────────────
 function Counter({ target, suffix = '', prefix = '' }) {
   const [val, setVal] = useState(0);
   const ref = useRef(null);
   useEffect(() => {
+    if (target === 0) return;
     const obs = new IntersectionObserver(([e]) => {
       if (!e.isIntersecting) return;
       obs.disconnect();
@@ -73,19 +53,19 @@ function PlanCard({ plan, isHighlighted, navigate }) {
       onMouseLeave={() => setHov(false)}
       style={{
         position: 'relative',
-        borderRadius: 24,
-        padding: isHighlighted ? '40px 32px' : '32px 28px',
+        borderRadius: 16,
+        padding: isHighlighted ? '44px 32px' : '32px 28px',
         background: isHighlighted
-          ? 'linear-gradient(145deg, #1a1200 0%, #0a0800 100%)'
+          ? 'rgba(122,154,110,0.06)'
           : 'rgba(255,255,255,0.03)',
         border: isHighlighted
-          ? '1.5px solid rgba(122,154,110,0.6)'
-          : '1px solid rgba(255,255,255,0.07)',
+          ? '1px solid rgba(122,154,110,0.4)'
+          : '1px solid rgba(255,255,255,0.08)',
         boxShadow: isHighlighted
-          ? `0 ${hov ? 40 : 24}px ${hov ? 80 : 48}px rgba(122,154,110,${hov ? 0.18 : 0.1})`
-          : hov ? '0 8px 32px rgba(255,255,255,0.05)' : 'none',
-        transform: isHighlighted && hov ? 'translateY(-4px) scale(1.01)' : 'translateY(0) scale(1)',
-        transition: 'all 0.28s',
+          ? (hov ? '0 16px 40px rgba(122,154,110,0.14)' : '0 6px 18px rgba(122,154,110,0.08)')
+          : (hov ? '0 8px 24px rgba(0,0,0,0.12)' : 'none'),
+        transform: hov ? 'translateY(-1px)' : 'translateY(0)',
+        transition: 'all 0.22s cubic-bezier(0.4, 0, 0.2, 1)',
         flex: '1 1 280px',
         maxWidth: 360,
         display: 'flex',
@@ -94,7 +74,7 @@ function PlanCard({ plan, isHighlighted, navigate }) {
     >
       {isHighlighted && (
         <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg,#92B284,#7A9A6E)', color: '#1A1A1A', fontSize: 11, fontWeight: 800, letterSpacing: 1.5, textTransform: 'uppercase', padding: '5px 18px', borderRadius: 999, whiteSpace: 'nowrap', boxShadow: '0 4px 16px rgba(122,154,110,0.4)' }}>
-          ⭐ Most Popular
+          ⭐ Recommended
         </div>
       )}
 
@@ -105,19 +85,7 @@ function PlanCard({ plan, isHighlighted, navigate }) {
       </div>
 
       <div style={{ marginBottom: 24 }}>
-        {plan.offerPrice ? (
-          <>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
-              <span style={{ fontSize: 'clamp(2.2rem,5vw,3rem)', fontWeight: 900, color: 'white', letterSpacing: '-1px' }}>{plan.offerPrice}</span>
-              <span style={{ fontSize: 13, color: '#64748b', textDecoration: 'line-through' }}>{plan.originalPrice}</span>
-            </div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', color: '#22c55e', borderRadius: 999, padding: '3px 10px', fontSize: 11, fontWeight: 700, marginTop: 6 }}>
-              <Zap size={11} /> {plan.saving}
-            </div>
-          </>
-        ) : (
-          <span style={{ fontSize: 'clamp(2rem,4vw,2.6rem)', fontWeight: 900, color: plan.price === 'Free' ? '#94a3b8' : 'white', letterSpacing: '-1px' }}>{plan.price}</span>
-        )}
+        <span style={{ fontSize: 'clamp(2rem,4vw,2.6rem)', fontWeight: 600, fontFamily: "'Playfair Display', serif", color: plan.price === 'Free' ? '#94a3b8' : 'white', letterSpacing: '-1px' }}>{plan.price}</span>
         {plan.period && <div style={{ fontSize: 12, color: '#475569', marginTop: 4 }}>{plan.period}</div>}
       </div>
 
@@ -125,7 +93,7 @@ function PlanCard({ plan, isHighlighted, navigate }) {
         {plan.features.map((f, i) => (
           <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 14, color: f.included ? '#e2e8f0' : '#475569' }}>
             {f.included
-              ? <Check size={15} style={{ color: isHighlighted ? '#7A9A6E' : '#22c55e', flexShrink: 0, marginTop: 2 }} />
+              ? <Check size={15} style={{ color: isHighlighted ? '#7A9A6E' : '#7A9A6E', flexShrink: 0, marginTop: 2 }} />
               : <X size={15} style={{ color: '#334155', flexShrink: 0, marginTop: 2 }} />}
             <span style={{ textDecoration: f.included ? 'none' : 'line-through', opacity: f.included ? 1 : 0.4 }}>{f.text}</span>
           </li>
@@ -133,15 +101,15 @@ function PlanCard({ plan, isHighlighted, navigate }) {
       </ul>
 
       <button
-        onClick={() => navigate(plan.cta.href)}
-        style={{
-          width: '100%', padding: '14px', borderRadius: 999, border: 'none',
-          background: isHighlighted ? 'linear-gradient(135deg,#92B284,#7A9A6E)' : 'rgba(255,255,255,0.06)',
-          color: isHighlighted ? '#1A1A1A' : '#94a3b8',
-          fontSize: 14, fontWeight: 700, cursor: 'pointer',
-          boxShadow: isHighlighted ? '0 8px 24px rgba(122,154,110,0.3)' : 'none',
-          transition: 'all 0.2s',
+        onClick={() => {
+          if (plan.cta.href.startsWith('http') || plan.cta.href.startsWith('mailto')) {
+            window.location.href = plan.cta.href;
+          } else {
+            navigate(plan.cta.href);
+          }
         }}
+        className={`btn ${isHighlighted ? 'btn-sage' : 'btn-secondary'}`}
+        style={{ width: '100%' }}
       >
         {plan.cta.label} {isHighlighted && <ArrowRight size={15} style={{ display: 'inline', marginLeft: 4, verticalAlign: 'middle' }} />}
       </button>
@@ -154,10 +122,10 @@ const PLANS = [
   {
     label: 'Starter',
     name: 'Free',
-    tagline: 'Get started with a basic listing',
+    tagline: 'Basic directory listing',
     price: 'Free',
     period: 'forever',
-    cta: { label: 'Create Free Account', href: '/login' },
+    cta: { label: 'Get Started for Free', href: '/login?tab=signup&role=professional' },
     features: [
       { text: 'Basic directory listing', included: true },
       { text: 'Wisor profile page', included: true },
@@ -165,19 +133,15 @@ const PLANS = [
       { text: 'Client leads & WhatsApp', included: false },
       { text: 'Verified badge', included: false },
       { text: 'AI portfolio website', included: false },
-      { text: 'Analytics dashboard', included: false },
-      { text: 'Priority search ranking', included: false },
     ],
   },
   {
-    label: '🔥 Launch Offer — First 100 Only',
+    label: 'Most Popular',
     name: 'Pro',
-    tagline: '1 year access at the price of 1 month',
-    offerPrice: '₹999',
-    originalPrice: '₹11,988/yr',
-    saving: 'Save ₹10,989',
-    period: 'for 1 full year · renews at ₹999/mo',
-    cta: { label: 'Claim Founding Spot', href: '/login' },
+    tagline: 'Complete growth infrastructure',
+    price: '₹999',
+    period: 'per month · billed annually',
+    cta: { label: 'Start Pro Free Trial', href: '/login?tab=signup&role=professional&plan=pro' },
     features: [
       { text: 'Verified badge on profile', included: true },
       { text: 'Priority search ranking', included: true },
@@ -185,26 +149,21 @@ const PLANS = [
       { text: 'AI-generated portfolio website', included: true },
       { text: 'Analytics & lead dashboard', included: true },
       { text: 'Onboarding call with our team', included: true },
-      { text: 'Founding member status forever', included: true },
-      { text: 'Homepage featured listing', included: false },
     ],
   },
   {
     label: 'Agency',
     name: 'Elite',
-    tagline: 'For firms that want maximum exposure',
+    tagline: 'Maximum exposure for firms',
     price: '₹2,499',
     period: 'per month · billed annually',
-    cta: { label: 'Contact Us', href: '/contact' },
+    cta: { label: 'Contact Sales', href: 'https://wa.me/91999999999?text=Hi%2C%20I%20am%20interested%20in%20Wisor%20Elite' },
     features: [
       { text: 'Everything in Pro', included: true },
       { text: 'Homepage featured placement', included: true },
-      { text: 'Top of every search result', included: true },
       { text: 'Dedicated account manager', included: true },
-      { text: 'Priority WhatsApp support', included: true },
       { text: 'Multi-expert firm listing', included: true },
       { text: 'Custom portfolio domain', included: true },
-      { text: 'Monthly strategy call', included: true },
     ],
   },
 ];
@@ -216,61 +175,37 @@ const FAQS = [
   },
   {
     q: 'How do client leads actually work?',
-    a: 'When a potential client searches for a CA or CMA on Wisor and views your profile, they can click "Book Consultation" or message you directly on WhatsApp. You receive the lead instantly — no middleman, no commission per lead. It\'s direct contact, always.',
+    a: 'When a potential client searches for an expert on Wisor and views your profile, they can click "Book Consultation" or message you directly on WhatsApp. You receive the lead instantly — no middleman, no commission per lead. It\'s direct contact, always.',
   },
   {
     q: 'What is the AI portfolio website?',
-    a: 'Every Pro member gets an AI-generated personal website at proserve.in/portfolio/your-name. It includes your services, bio, testimonials, FAQ, and a contact CTA — designed to look like an agency built it. You can share it on your visiting card, WhatsApp status, and LinkedIn.',
-  },
-  {
-    q: 'What happens after the first 100 founding spots are filled?',
-    a: 'The ₹999/year offer closes permanently. The Pro plan will return to its standard ₹999/month price. Founding members keep their rate locked in forever, regardless of future pricing changes.',
+    a: 'Every Pro member gets an AI-generated personal website. It includes your services, bio, testimonials, FAQ, and a contact CTA — designed to look professional. You can share it on your visiting card, WhatsApp status, and LinkedIn.',
   },
   {
     q: 'Can I cancel if I don\'t see results?',
     a: 'Yes. You can cancel before renewal and you won\'t be charged again. We believe results speak for themselves — but we\'ll never hold you to a plan that isn\'t working. We also offer a 14-day refund on your first payment if you\'re completely unsatisfied.',
   },
-  {
-    q: 'Is this only for Mumbai CAs?',
-    a: 'The launch focus is Mumbai because that\'s where we\'re building the highest density of verified professionals first. However, CAs, CMAs, and financial consultants across India can join — and will benefit from national search visibility.',
-  },
 ];
 
 const TRUST_STATS = [
-  { icon: <Users size={20} />, value: 100, suffix: '', label: 'Founding Spots Available' },
-  { icon: <MapPin size={20} />, value: 0, label: 'Spots Left in Mumbai', customValue: '47' },
-  { icon: <TrendingUp size={20} />, value: 3, suffix: 'x', label: 'Avg. Profile Views vs Free' },
-  { icon: <Award size={20} />, value: 94, suffix: '%', label: 'Pro Members Got Leads in 30 Days' },
+  { icon: <Users size={20} />, value: 0, customValue: 'Growing', label: 'Community of Experts' },
+  { icon: <MapPin size={20} />, value: 0, customValue: 'Mumbai-first', label: 'Current focus' },
+  { icon: <TrendingUp size={20} />, value: 3, suffix: 'x', label: 'More Profile Views on Pro' },
+  { icon: <Award size={20} />, value: 0, customValue: 'Verified', label: 'Trust Badge' },
 ];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function Pricing() {
   const navigate = useNavigate();
-  const timer = useCountdown();
-  const [spotsLeft] = useState(47);
-
-  const pad = (n) => String(n).padStart(2, '0');
 
   return (
     <>
       <Helmet>
         <title>Pricing — Wisor | Verified Expert Listings for CAs & CMAs</title>
-        <meta name="description" content="Join Wisor as a verified expert. Launch offer: ₹999 for 1 full year. First 100 CAs and CMAs in Mumbai get founding member status forever." />
+        <meta name="description" content="Join Wisor as a verified expert." />
       </Helmet>
 
       <main style={{ background: '#1A1A1A', minHeight: '100vh', fontFamily: 'Inter,system-ui,sans-serif', paddingTop: 80 }}>
-
-        {/* ── URGENCY BANNER ─────────────────────────────────────────── */}
-        <div style={{ background: 'linear-gradient(135deg,#7A9A6E,#92B284)', padding: '10px 24px', textAlign: 'center', position: 'sticky', top: 64, zIndex: 100 }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: '#1A1A1A', margin: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, flexWrap: 'wrap' }}>
-            <Clock size={14} style={{ flexShrink: 0 }} />
-            Launch Offer Ends in:
-            <span style={{ fontFamily: 'monospace', fontSize: 14, letterSpacing: 1 }}>
-              {pad(timer.d)}d {pad(timer.h)}h {pad(timer.m)}m {pad(timer.s)}s
-            </span>
-            &nbsp;·&nbsp; <strong>{spotsLeft} founding spots remaining</strong>
-          </p>
-        </div>
 
         {/* ── HERO ───────────────────────────────────────────────────── */}
         <section style={{ position: 'relative', overflow: 'hidden', padding: 'clamp(64px,10vw,120px) 24px clamp(48px,8vw,96px)' }}>
@@ -281,29 +216,29 @@ export default function Pricing() {
           <div style={{ maxWidth: 760, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
             {/* Eyebrow */}
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(122,154,110,0.12)', border: '1px solid rgba(122,154,110,0.25)', borderRadius: 999, padding: '6px 16px', fontSize: 12, fontWeight: 700, color: '#92B284', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 28 }}>
-              <Zap size={12} /> Mumbai Launch — First 100 Experts
+              <Zap size={12} /> verified expert platform
             </div>
 
-            <h1 style={{ fontSize: 'clamp(2.4rem,6vw,4.2rem)', fontWeight: 900, color: 'white', letterSpacing: '-2px', lineHeight: 1.05, marginBottom: 20 }}>
+            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2.5rem,6vw,4.5rem)', fontWeight: 500, color: 'white', letterSpacing: '-1px', lineHeight: 1.1, marginBottom: 20 }}>
               Grow Your Practice
               <br />
-              <span style={{ background: 'linear-gradient(to right,#fff 30%,#92B284 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                in Mumbai
+              <span style={{ color: '#92B284' }}>
+                with Wisor
               </span>
             </h1>
 
-            <p style={{ fontSize: 'clamp(1rem,2.2vw,1.2rem)', color: '#94a3b8', lineHeight: 1.75, maxWidth: 600, margin: '0 auto 40px' }}>
+            <p style={{ fontSize: 'clamp(1rem,2.2vw,1.2rem)', color: '#94a3b8', lineHeight: 1.6, maxWidth: 600, margin: '0 auto 40px' }}>
               Get listed, get discovered, get your own premium website, and receive direct client inquiries — all in one place.
             </p>
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
               <button
                 onClick={() => { document.getElementById('pricing-cards')?.scrollIntoView({ behavior: 'smooth' }); }}
-                style={{ background: 'linear-gradient(135deg,#92B284,#7A9A6E)', color: '#1A1A1A', border: 'none', borderRadius: 999, padding: '15px 36px', fontSize: 15, fontWeight: 800, cursor: 'pointer', boxShadow: '0 8px 30px rgba(122,154,110,0.35)', display: 'inline-flex', alignItems: 'center', gap: 8 }}
+                className="btn btn-sage"
               >
-                Claim Founding Spot <ArrowRight size={16} />
+                View Plans <ArrowRight size={16} />
               </button>
-              <Link to="/search" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.65)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 999, padding: '15px 28px', fontSize: 15, fontWeight: 500, textDecoration: 'none' }}>
+              <Link to="/search" className="btn btn-secondary">
                 Browse Live Profiles
               </Link>
             </div>
@@ -318,7 +253,7 @@ export default function Pricing() {
                 ))}
               </div>
               <span style={{ fontSize: 13, color: '#64748b' }}>
-                <strong style={{ color: '#94a3b8' }}>53 CAs</strong> already joined this month
+                Join the fastest-growing platform for financial experts
               </span>
             </div>
           </div>
@@ -326,11 +261,11 @@ export default function Pricing() {
 
         {/* ── TRUST STATS ────────────────────────────────────────────── */}
         <section style={{ padding: '0 24px 72px' }}>
-          <div style={{ maxWidth: 900, margin: '0 auto', display: 'flex', flexWrap: 'wrap', gap: 0, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 24, overflow: 'hidden' }}>
+          <div style={{ maxWidth: 900, margin: '0 auto', display: 'flex', flexWrap: 'wrap', gap: 0, background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: 16, overflow: 'hidden' }}>
             {TRUST_STATS.map((s, i) => (
-              <div key={i} style={{ flex: '1 1 180px', padding: '28px 20px', textAlign: 'center', borderRight: i < TRUST_STATS.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
+              <div key={i} style={{ flex: '1 1 180px', padding: '36px 20px', textAlign: 'center', borderRight: i < TRUST_STATS.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none' }}>
                 <div style={{ color: '#7A9A6E', marginBottom: 8, display: 'flex', justifyContent: 'center' }}>{s.icon}</div>
-                <div style={{ fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 900, color: 'white', letterSpacing: '-0.5px', lineHeight: 1 }}>
+                <div style={{ fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 600, color: 'white', letterSpacing: '-0.5px', lineHeight: 1 }}>
                   {s.customValue ? s.customValue : <Counter target={s.value} suffix={s.suffix} />}
                 </div>
                 <div style={{ fontSize: 12, color: '#475569', marginTop: 6, fontWeight: 500 }}>{s.label}</div>
@@ -343,7 +278,7 @@ export default function Pricing() {
         <section id="pricing-cards" style={{ padding: '0 24px 96px' }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 3, textTransform: 'uppercase', color: '#7A9A6E', marginBottom: 14 }}>Pricing</p>
-            <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.8rem)', fontWeight: 900, color: 'white', letterSpacing: '-1px', marginBottom: 12 }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem,4vw,3rem)', fontWeight: 500, color: 'white', letterSpacing: '-1px', marginBottom: 12 }}>
               Simple, transparent pricing
             </h2>
             <p style={{ color: '#64748b', fontSize: 15, maxWidth: 480, margin: '0 auto' }}>
@@ -361,80 +296,30 @@ export default function Pricing() {
           <div style={{ maxWidth: 560, margin: '40px auto 0', display: 'flex', flexWrap: 'wrap', gap: 20, justifyContent: 'center' }}>
             {['14-day refund guarantee', 'No commission on leads', 'Cancel anytime'].map((item, i) => (
               <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 13, color: '#64748b', fontWeight: 600 }}>
-                <Check size={14} style={{ color: '#22c55e' }} /> {item}
+                <Check size={14} style={{ color: '#7A9A6E' }} /> {item}
               </span>
             ))}
           </div>
         </section>
 
-        {/* ── URGENCY / FOUNDING SPOTS ───────────────────────────────── */}
-        <section style={{ padding: '0 24px 96px' }}>
-          <div style={{ maxWidth: 800, margin: '0 auto', background: 'linear-gradient(145deg,rgba(122,154,110,0.08) 0%,rgba(122,154,110,0.03) 100%)', border: '1px solid rgba(122,154,110,0.2)', borderRadius: 28, padding: 'clamp(36px,6vw,60px)', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', top: '-30%', right: '-10%', width: '50%', height: '50%', borderRadius: '50%', background: 'radial-gradient(circle,rgba(122,154,110,0.1) 0%,transparent 70%)', filter: 'blur(40px)', pointerEvents: 'none' }} />
-
-            <div style={{ position: 'relative', zIndex: 2 }}>
-              <div style={{ fontSize: 40, marginBottom: 16 }}>🏆</div>
-              <h2 style={{ fontSize: 'clamp(1.6rem,4vw,2.4rem)', fontWeight: 900, color: 'white', letterSpacing: '-0.5px', marginBottom: 14 }}>
-                Only {spotsLeft} founding spots left
-              </h2>
-              <p style={{ color: '#94a3b8', fontSize: 15, lineHeight: 1.75, maxWidth: 520, margin: '0 auto 28px' }}>
-                Once all 100 spots are claimed, the ₹999/year price closes forever. Founding members keep their rate locked — even when prices increase for everyone else.
-              </p>
-
-              {/* Spot bar */}
-              <div style={{ maxWidth: 400, margin: '0 auto 32px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <span style={{ fontSize: 12, color: '#64748b' }}>53 spots claimed</span>
-                  <span style={{ fontSize: 12, color: '#7A9A6E', fontWeight: 700 }}>{spotsLeft} remaining</span>
-                </div>
-                <div style={{ height: 8, background: 'rgba(255,255,255,0.06)', borderRadius: 999, overflow: 'hidden' }}>
-                  <div style={{ height: '100%', width: '53%', background: 'linear-gradient(to right,#7A9A6E,#92B284)', borderRadius: 999, boxShadow: '0 0 12px rgba(122,154,110,0.4)', transition: 'width 1s ease' }} />
-                </div>
-              </div>
-
-              {/* Countdown */}
-              <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 32, flexWrap: 'wrap' }}>
-                {[
-                  { val: timer.d, label: 'Days' },
-                  { val: timer.h, label: 'Hours' },
-                  { val: timer.m, label: 'Mins' },
-                  { val: timer.s, label: 'Secs' },
-                ].map((t, i) => (
-                  <div key={i} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: '14px 18px', minWidth: 64 }}>
-                    <div style={{ fontSize: 'clamp(1.4rem,3vw,2rem)', fontWeight: 900, color: 'white', fontFamily: 'monospace', lineHeight: 1 }}>{String(t.val).padStart(2, '0')}</div>
-                    <div style={{ fontSize: 10, color: '#475569', marginTop: 4, letterSpacing: 1, textTransform: 'uppercase' }}>{t.label}</div>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                onClick={() => navigate('/login')}
-                style={{ background: 'linear-gradient(135deg,#92B284,#7A9A6E)', color: '#1A1A1A', border: 'none', borderRadius: 999, padding: '15px 40px', fontSize: 15, fontWeight: 800, cursor: 'pointer', boxShadow: '0 8px 30px rgba(122,154,110,0.35)', display: 'inline-flex', alignItems: 'center', gap: 8 }}
-              >
-                Claim Your Founding Spot <ArrowRight size={16} />
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* ── WHY PROSERVE ───────────────────────────────────────────── */}
+        {/* ── WHY WISOR ───────────────────────────────────────────── */}
         <section style={{ padding: '0 24px 96px' }}>
           <div style={{ maxWidth: 1080, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 56 }}>
               <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 3, textTransform: 'uppercase', color: '#7A9A6E', marginBottom: 14 }}>Why Wisor</p>
-              <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.6rem)', fontWeight: 900, color: 'white', letterSpacing: '-0.5px' }}>What you actually get</h2>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem,4vw,2.8rem)', fontWeight: 500, color: 'white', letterSpacing: '-1px' }}>What you actually get</h2>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: 20 }}>
               {[
-                { icon: '🌐', title: 'Your Own Website', desc: 'An AI-generated premium portfolio at proserve.in/portfolio/your-name — shareable on WhatsApp, LinkedIn, and visiting cards.' },
+                { icon: '🌐', title: 'Your Own Website', desc: 'An AI-generated premium portfolio — shareable on WhatsApp, LinkedIn, and visiting cards.' },
                 { icon: '📲', title: 'Direct WhatsApp Leads', desc: 'Clients tap one button and land in your WhatsApp — no form fills, no middleman, no referral fee per lead.' },
-                { icon: '🔍', title: 'Priority Visibility', desc: 'Pro members rank above free listings in every search. When someone searches "CA in Andheri", you appear first.' },
+                { icon: '🔍', title: 'Priority Visibility', desc: 'Pro members rank above free listings in every search. When someone searches, you appear first.' },
                 { icon: '✅', title: 'Verified Badge', desc: 'Wisor verification signals trust instantly. Clients filter for verified experts — and you\'ve already passed.' },
                 { icon: '📊', title: 'Analytics Dashboard', desc: 'Know how many people viewed your profile, clicked your WhatsApp, and booked a call — every week.' },
                 { icon: '🤝', title: 'Onboarding Support', desc: 'Our team personally helps you set up your profile and portfolio. You don\'t have to figure anything out alone.' },
               ].map((item, i) => (
                 <div key={i} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 20, padding: '28px 24px', transition: 'all 0.22s', cursor: 'default' }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(122,154,110,0.05)'; e.currentTarget.style.borderColor = 'rgba(122,154,110,0.2)'; e.currentTarget.style.transform = 'translateY(-3px)'; }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(122,154,110,0.05)'; e.currentTarget.style.borderColor = 'rgba(122,154,110,0.2)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
                   onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.transform = 'translateY(0)'; }}
                 >
                   <div style={{ fontSize: 36, marginBottom: 14 }}>{item.icon}</div>
@@ -451,7 +336,7 @@ export default function Pricing() {
           <div style={{ maxWidth: 720, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 48 }}>
               <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 3, textTransform: 'uppercase', color: '#7A9A6E', marginBottom: 14 }}>FAQ</p>
-              <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.4rem)', fontWeight: 900, color: 'white', letterSpacing: '-0.5px' }}>Common questions</h2>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem,4vw,2.8rem)', fontWeight: 500, color: 'white', letterSpacing: '-1px' }}>Common questions</h2>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {FAQS.map((faq, i) => <FaqItem key={i} {...faq} />)}
@@ -462,17 +347,17 @@ export default function Pricing() {
         {/* ── FINAL CTA ───────────────────────────────────────────────── */}
         <section style={{ padding: '0 24px 96px' }}>
           <div style={{ maxWidth: 640, margin: '0 auto', textAlign: 'center' }}>
-            <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.8rem)', fontWeight: 900, color: 'white', letterSpacing: '-0.5px', marginBottom: 14, lineHeight: 1.1 }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem,4vw,3rem)', fontWeight: 500, color: 'white', letterSpacing: '-1px', marginBottom: 14, lineHeight: 1.1 }}>
               Your next client is already searching.
             </h2>
             <p style={{ color: '#64748b', fontSize: 15, lineHeight: 1.75, marginBottom: 36 }}>
-              Join 53 CAs and CMAs who already claimed their founding spot. The offer closes when 100 spots are filled.
+              Join the growing community of verified experts on Wisor.
             </p>
             <button
-              onClick={() => navigate('/login')}
-              style={{ background: 'linear-gradient(135deg,#92B284,#7A9A6E)', color: '#1A1A1A', border: 'none', borderRadius: 999, padding: '16px 44px', fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 8px 36px rgba(122,154,110,0.35)', display: 'inline-flex', alignItems: 'center', gap: 10 }}
+              onClick={() => { document.getElementById('pricing-cards')?.scrollIntoView({ behavior: 'smooth' }); }}
+              className="btn btn-sage"
             >
-              Get Started — ₹999/year <ArrowRight size={18} />
+              View Plans <ArrowRight size={18} />
             </button>
             <p style={{ fontSize: 12, color: '#334155', marginTop: 16 }}>14-day refund guarantee · No contracts · Cancel anytime</p>
           </div>

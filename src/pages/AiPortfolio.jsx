@@ -135,7 +135,7 @@ export default function AiPortfolio() {
         </div>
 
         {error && (
-           <div style={{ background: 'var(--color-danger-bg)', color: 'var(--color-danger)', padding: 'var(--space-4)', borderRadius: 'var(--radius-md)', marginBottom: 'var(--space-4)' }}>
+           <div style={{ background: 'var(--color-warning-bg)', color: 'var(--color-warning)', padding: 'var(--space-4)', borderRadius: 'var(--radius-md)', marginBottom: 'var(--space-4)' }}>
              {error}
            </div>
         )}

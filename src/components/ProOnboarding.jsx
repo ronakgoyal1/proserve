@@ -193,7 +193,7 @@ export default function ProOnboarding() {
       <main style={{ minHeight: '80vh', padding: 'var(--space-8) 0', background: 'var(--color-gray-50)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div className="container" style={{ maxWidth: '500px' }}>
           <div style={{ background: 'white', padding: 'var(--space-8)', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-md)', textAlign: 'center' }}>
-            <div style={{ display: 'inline-flex', padding: 'var(--space-4)', background: 'var(--color-danger-bg)', color: 'var(--color-danger)', borderRadius: '50%', marginBottom: 'var(--space-4)' }}>
+            <div style={{ display: 'inline-flex', padding: 'var(--space-4)', background: 'var(--color-warning-bg)', color: 'var(--color-warning)', borderRadius: '50%', marginBottom: 'var(--space-4)' }}>
               <AlertCircle size={40} />
             </div>
             <h2>Application Rejected</h2>
@@ -214,7 +214,7 @@ export default function ProOnboarding() {
       <div className="container" style={{ maxWidth: '700px' }}>
         <div style={{ background: 'white', padding: 'var(--space-8)', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-md)' }}>
           <div style={{ textAlign: 'center', marginBottom: 'var(--space-8)' }}>
-            <div style={{ display: 'inline-flex', padding: 'var(--space-3)', background: 'var(--color-blue-50)', color: 'var(--color-primary)', borderRadius: '50%', marginBottom: 'var(--space-4)' }}>
+            <div style={{ display: 'inline-flex', padding: 'var(--space-3)', background: 'rgba(122,154,110,0.1)', color: 'var(--color-primary)', borderRadius: '50%', marginBottom: 'var(--space-4)' }}>
               <CheckCircle2 size={32} />
             </div>
             <h2>Complete Your Profile</h2>
@@ -222,7 +222,7 @@ export default function ProOnboarding() {
           </div>
 
           {error && (
-            <div style={{ background: 'var(--color-danger-bg)', color: 'var(--color-danger)', padding: 'var(--space-3)', borderRadius: 'var(--radius-md)', marginBottom: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)', fontSize: '14px' }}>
+            <div style={{ background: 'var(--color-warning-bg)', color: 'var(--color-warning)', padding: 'var(--space-3)', borderRadius: 'var(--radius-md)', marginBottom: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)', fontSize: '14px' }}>
               <AlertCircle size={16} /> {error}
             </div>
           )}
@@ -244,7 +244,7 @@ export default function ProOnboarding() {
             </div>
 
             {/* OTP Flow Block */}
-            <div style={{ background: 'var(--color-blue-50)', border: '1px solid var(--color-blue-200)', borderRadius: 'var(--radius-md)', padding: 'var(--space-4)' }}>
+            <div style={{ background: 'rgba(122,154,110,0.05)', border: '1px solid rgba(122,154,110,0.2)', borderRadius: 'var(--radius-md)', padding: 'var(--space-4)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-2)'}}>
                 <label style={{ display: 'block', margin: 0, fontSize: '14px', fontWeight: 600, color: 'var(--color-primary)' }}>Phone Verification (Demo Sandbox)</label>
                 <span style={{ fontSize: '12px', background: 'var(--color-primary)', color: 'white', padding: '2px 8px', borderRadius: '12px' }}>Testing Mode</span>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { 
   Star, MapPin, Check, ShieldCheck, Clock, Calendar,
   MessageCircle, Share2, Award, Briefcase, ChevronRight,
@@ -12,16 +12,22 @@ import BookingModal from '../components/BookingModal';
 import ReviewForm from '../components/ReviewForm';
 import './Profile.css';
 
-const timeSlots = ['10 AM', '11 AM', '2 PM', '3 PM', '4 PM'];
-
 export default function Profile() {
   const { id } = useParams();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('about');
   const [professional, setProfessional] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState({ average: 0, count: 0 });
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('book') === 'true') {
+      setIsBookingOpen(true);
+    }
+  }, [location.search]);
 
   useEffect(() => {
     async function load() {
@@ -92,16 +98,16 @@ export default function Profile() {
             <div className="profile-avatar">{professional.initials}</div>
             <div className="profile-info">
               <div className="profile-name-row">
-                <h1 style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                <h1 style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap', fontFamily: "'Playfair Display', serif", fontSize: '2.5rem', fontWeight: 500, letterSpacing: '-0.5px' }}>
                   {professional.name}
                   {professional.verification?.status === 'verified' && (
-                    <span className="badge badge-gold" style={{ fontSize: '12px' }}>
+                    <span className="badge badge-gold" style={{ fontSize: '13px', fontWeight: 600, fontFamily: 'Inter, sans-serif', letterSpacing: 'normal' }}>
                       <Shield size={14} /> Wisor Verified
                     </span>
                   )}
                 </h1>
               </div>
-              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
                 <span className="badge badge-primary">{professional.category}</span>
                 {professional.verification?.status === 'verified' ? (
                   <>
@@ -127,8 +133,8 @@ export default function Profile() {
                 <span><MapPin size={14} /> {professional.city}</span>
                 <span><Globe size={14} /> {professional.languages.join(', ')}</span>
               </div>
-              <div className="profile-actions">
-                <button className="btn btn-primary" onClick={() => setIsBookingOpen(true)}>
+              <div className="profile-actions" style={{ marginTop: '24px', display: 'flex', gap: '16px' }}>
+                <button className="btn" style={{ background: '#92B284', color: '#111', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600 }} onClick={() => setIsBookingOpen(true)}>
                   <Calendar size={16} /> Book Consultation
                 </button>
                 {isWhatsAppEnabled(professional) ? (
@@ -140,19 +146,20 @@ export default function Profile() {
                       professional.services
                     )}
                     onClick={() => trackWhatsAppClick(professional.id)}
-                    className="btn btn-whatsapp"
+                    className="btn"
+                    style={{ background: 'transparent', color: '#111', border: '1px solid #D1D1CE', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600 }}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     <MessageCircle size={16} /> WhatsApp
                   </a>
                 ) : (
-                  <button className="btn btn-whatsapp" style={{ opacity: 0.45, cursor: 'not-allowed' }} disabled title="WhatsApp not available for this expert">
+                  <button className="btn" style={{ background: 'transparent', color: '#9CA3AF', border: '1px solid #E8E8E5', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, cursor: 'not-allowed' }} disabled title="WhatsApp not available for this expert">
                     <MessageCircle size={16} /> WhatsApp
                   </button>
                 )}
                 {(professional.contactPhone || professional.contact_phone) && (
-                  <a href={`tel:${professional.contactPhone || professional.contact_phone}`} className="btn btn-secondary">
+                  <a href={`tel:${professional.contactPhone || professional.contact_phone}`} className="btn" style={{ background: 'transparent', color: '#111', border: '1px solid #D1D1CE', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600 }}>
                     <Phone size={16} /> Call
                   </a>
                 )}
@@ -183,22 +190,22 @@ export default function Profile() {
 
               {/* About */}
               {activeTab === 'about' && (
-                <div className="animate-fade-in">
-                  <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, marginBottom: 'var(--space-3)', fontFamily: 'var(--font-display)' }}>
+                <div className="animate-fade-in" style={{ padding: '24px 0' }}>
+                  <h2 style={{ fontSize: '1.5rem', fontWeight: 500, marginBottom: '24px', fontFamily: "'Playfair Display', serif" }}>
                     About
                   </h2>
-                  <p className="profile-bio">{professional.bio}</p>
+                  <p className="profile-bio" style={{ lineHeight: 1.7, color: '#4B5563', marginBottom: '40px' }}>{professional.bio}</p>
 
-                  <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, marginBottom: 'var(--space-3)', fontFamily: 'var(--font-display)' }}>
+                  <h2 style={{ fontSize: '1.5rem', fontWeight: 500, marginBottom: '24px', fontFamily: "'Playfair Display', serif" }}>
                     Services Offered
                   </h2>
-                  <div className="profile-services-list">
+                  <div className="profile-services-list" style={{ marginBottom: '40px' }}>
                     {professional.services.map(s => (
                       <span key={s} className="profile-service-tag">{s}</span>
                     ))}
                   </div>
 
-                  <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, marginBottom: 'var(--space-3)', fontFamily: 'var(--font-display)' }}>
+                  <h2 style={{ fontSize: '1.5rem', fontWeight: 500, marginBottom: '24px', fontFamily: "'Playfair Display', serif" }}>
                     Certifications
                   </h2>
                   <div className="profile-certs">
@@ -213,8 +220,8 @@ export default function Profile() {
 
               {/* Services & Pricing */}
               {activeTab === 'services' && (
-                <div className="animate-fade-in">
-                  <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, marginBottom: 'var(--space-4)', fontFamily: 'var(--font-display)' }}>
+                <div className="animate-fade-in" style={{ padding: '24px 0' }}>
+                  <h2 style={{ fontSize: '1.5rem', fontWeight: 500, marginBottom: '24px', fontFamily: "'Playfair Display', serif" }}>
                     Pricing Packages
                   </h2>
                   <div className="profile-packages">
@@ -242,9 +249,9 @@ export default function Profile() {
 
               {/* Reviews */}
               {activeTab === 'reviews' && (
-                <div className="animate-fade-in">
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-5)' }}>
-                    <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, fontFamily: 'var(--font-display)' }}>
+                <div className="animate-fade-in" style={{ padding: '24px 0' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 500, fontFamily: "'Playfair Display', serif" }}>
                       Client Reviews ({displayCount})
                     </h2>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--color-gray-900)' }}>
@@ -311,8 +318,8 @@ export default function Profile() {
 
               {/* Certifications */}
               {activeTab === 'certifications' && (
-                <div className="animate-fade-in">
-                  <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, marginBottom: 'var(--space-4)', fontFamily: 'var(--font-display)' }}>
+                <div className="animate-fade-in" style={{ padding: '24px 0' }}>
+                  <h2 style={{ fontSize: '1.5rem', fontWeight: 500, marginBottom: '24px', fontFamily: "'Playfair Display', serif" }}>
                     Certifications & Qualifications
                   </h2>
                   <div className="profile-certs">
@@ -337,75 +344,50 @@ export default function Profile() {
             {/* Sidebar */}
             <aside className="profile-sidebar">
               {professional.verification?.status === 'verified' ? (
-              <div className="sidebar-card" style={{ borderColor: 'var(--color-primary)', background: 'linear-gradient(180deg, rgba(26, 86, 219, 0.05) 0%, var(--color-primary-dark) 100%)' }}>
-                <h3 style={{ color: 'var(--color-primary-light)' }}><ShieldCheck size={18} style={{ verticalAlign: 'middle', marginRight: 8, marginTop: -2 }}/> Trust & Verification</h3>
+              <div className="sidebar-card" style={{ border: '1px solid #E8E8E5', background: '#FAFAF8', borderRadius: '16px', padding: '24px' }}>
+                <h3 style={{ color: '#1A1A1A', fontSize: '16px', fontWeight: 600 }}><ShieldCheck size={18} style={{ verticalAlign: 'middle', marginRight: 8, marginTop: -2, color: '#92B284' }}/> Trust & Verification</h3>
                 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginTop: 'var(--space-4)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', color: 'var(--color-gray-300)', fontSize: '13px', fontWeight: 500 }}>
-                    <div style={{ padding: 4, background: 'var(--color-success-bg)', color: 'var(--color-success)', borderRadius: '50%' }}><Check size={12} strokeWidth={3} /></div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '24px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#4B5563', fontSize: '14px', fontWeight: 500 }}>
+                    <div style={{ padding: 2, background: 'rgba(122,154,110,0.1)', color: '#7A9A6E', borderRadius: '50%' }}><Check size={14} strokeWidth={3} /></div>
                     Identity Verified
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', color: 'var(--color-gray-300)', fontSize: '13px', fontWeight: 500 }}>
-                    <div style={{ padding: 4, background: 'var(--color-success-bg)', color: 'var(--color-success)', borderRadius: '50%' }}><Check size={12} strokeWidth={3} /></div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#4B5563', fontSize: '14px', fontWeight: 500 }}>
+                    <div style={{ padding: 2, background: 'rgba(122,154,110,0.1)', color: '#7A9A6E', borderRadius: '50%' }}><Check size={14} strokeWidth={3} /></div>
                     Credentials Verified
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', color: 'var(--color-gray-300)', fontSize: '13px', fontWeight: 500 }}>
-                    <div style={{ padding: 4, background: 'var(--color-success-bg)', color: 'var(--color-success)', borderRadius: '50%' }}><Check size={12} strokeWidth={3} /></div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#4B5563', fontSize: '14px', fontWeight: 500 }}>
+                    <div style={{ padding: 2, background: 'rgba(122,154,110,0.1)', color: '#7A9A6E', borderRadius: '50%' }}><Check size={14} strokeWidth={3} /></div>
                     Documents Verified
                   </div>
                 </div>
-                <div style={{ marginTop: 'var(--space-4)', paddingTop: 'var(--space-4)', borderTop: '1px solid rgba(255,255,255,0.05)', fontSize: '12px', color: 'var(--color-gray-400)', textAlign: 'center' }}>
+                <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid #E8E8E5', fontSize: '13px', color: '#9CA3AF', textAlign: 'center' }}>
                   Verified since {professional.verification?.date}
                 </div>
               </div>
               ) : (
-              <div className="sidebar-card" style={{ borderColor: 'var(--color-warning)' }}>
-                 <h3 style={{ color: 'var(--color-warning)' }}>Verification Pending</h3>
-                 <p style={{ fontSize: '12px', color: 'var(--color-gray-400)', marginTop: '8px', lineHeight: 1.5 }}>This professional's credentials are currently unverified or under review by our trust team.</p>
+              <div className="sidebar-card" style={{ border: '1px solid #FDE68A', background: '#FFFBEB', borderRadius: '16px', padding: '24px' }}>
+                 <h3 style={{ color: '#D97706', fontSize: '16px', fontWeight: 600 }}>Verification Pending</h3>
+                 <p style={{ fontSize: '13px', color: '#92400E', marginTop: '8px', lineHeight: 1.5 }}>This professional's credentials are currently unverified or under review by our trust team.</p>
               </div>
               )}
 
-              <div className="sidebar-card">
-                <h3>Book a Consultation</h3>
-                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-gray-400)', marginBottom: 'var(--space-4)' }}>
-                  Starting at <strong style={{ color: 'var(--color-white)', fontSize: 'var(--text-xl)' }}>₹{professional.startingPrice.toLocaleString()}</strong>
+              <div className="sidebar-card" style={{ border: '1px solid #E8E8E5', borderRadius: '16px', padding: '24px', marginTop: '24px' }}>
+                <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '8px' }}>Book a Consultation</h3>
+                <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '24px' }}>
+                  Starting at <strong style={{ color: '#1A1A1A', fontSize: '20px' }}>₹{professional.startingPrice.toLocaleString()}</strong>
                 </p>
-                <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-success)', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: 'var(--space-4)' }}>
-                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--color-success)', display: 'inline-block' }} />
-                  {professional.availability}
-                </p>
-                <div className="sidebar-cta-buttons">
-                  <button className="btn btn-primary btn-lg" onClick={() => setIsBookingOpen(true)}>
+                <div className="sidebar-cta-buttons" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <button className="btn" style={{ background: '#92B284', color: '#111', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, width: '100%', display: 'flex', justifyContent: 'center' }} onClick={() => setIsBookingOpen(true)}>
                     <Calendar size={18} /> Book Now
                   </button>
-                  <button className="btn btn-whatsapp">
+                  <button className="btn" style={{ background: 'transparent', color: '#111', border: '1px solid #D1D1CE', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, width: '100%', display: 'flex', justifyContent: 'center' }}>
                     <MessageCircle size={18} /> Chat on WhatsApp
                   </button>
                 </div>
               </div>
 
-              <div className="sidebar-card">
-                <h3>Availability This Week</h3>
-                <div className="availability-grid">
-                  {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => (
-                    <div key={d} className="availability-day">{d}</div>
-                  ))}
-                  {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d, di) =>
-                    timeSlots.slice(0, 1).map((t, ti) => (
-                      <div
-                        key={`${d}-${t}`}
-                        className={`availability-slot ${di < 5 ? 'available' : 'unavailable'}`}
-                      >
-                        {di < 5 ? '✓' : '—'}
-                      </div>
-                    ))
-                  )}
-                </div>
-                <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-gray-500)', textAlign: 'center' }}>
-                  Click on a slot to book
-                </p>
-              </div>
-            </aside>
+              </aside>
           </div>
         </div>
       </section>

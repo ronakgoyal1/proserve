@@ -2,7 +2,7 @@
   padding-top: calc(80px + var(--space-6));
   padding-bottom: var(--space-16);
   min-height: 100vh;
-  background: var(--color-gray-50);
+  background: var(--color-primary-dark);
 }
 
 .dashboard-layout {
@@ -109,8 +109,8 @@
 .dashboard-content-header h1 {
   font-family: var(--font-display);
   font-size: var(--text-2xl);
-  font-weight: 700;
-  color: var(--color-gray-900);
+  font-weight: 500;
+  color: var(--color-white);
   margin-bottom: var(--space-1);
 }
 
@@ -128,8 +128,8 @@
 }
 
 .stat-card {
-  background: var(--color-white);
-  border: 1px solid var(--color-gray-200);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-xl);
   padding: var(--space-6);
   display: flex;
@@ -159,21 +159,21 @@
 .stat-info .stat-value {
   font-family: var(--font-display);
   font-size: var(--text-xl);
-  font-weight: 700;
-  color: var(--color-gray-900);
+  font-weight: 500;
+  color: var(--color-white);
 }
 
 /* Content Cards */
 .dashboard-section {
-  background: var(--color-white);
-  border: 1px solid var(--color-gray-200);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-xl);
   overflow: hidden;
 }
 
 .dashboard-section-header {
   padding: var(--space-5) var(--space-6);
-  border-bottom: 1px solid var(--color-gray-100);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -182,8 +182,8 @@
 .dashboard-section-header h3 {
   font-family: var(--font-display);
   font-size: var(--text-lg);
-  font-weight: 700;
-  color: var(--color-gray-900);
+  font-weight: 500;
+  color: var(--color-white);
 }
 
 /* Tables */
@@ -200,25 +200,25 @@
 .dashboard-table td {
   padding: var(--space-4) var(--space-6);
   text-align: left;
-  border-bottom: 1px solid var(--color-gray-100);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .dashboard-table th {
   font-size: var(--text-xs);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--color-gray-500);
+  color: var(--color-gray-400);
   font-weight: 600;
-  background: var(--color-gray-50);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .dashboard-table td {
   font-size: var(--text-sm);
-  color: var(--color-gray-800);
+  color: var(--color-gray-300);
 }
 
 .dashboard-table tr:hover td {
-  background: var(--color-gray-50);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .table-main-col {
@@ -257,7 +257,7 @@
   width: 64px;
   height: 64px;
   border-radius: var(--radius-full);
-  background: var(--color-gray-100);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--color-gray-400);
   display: flex;
   align-items: center;
@@ -268,7 +268,7 @@
 .empty-state h3 {
   font-size: var(--text-lg);
   font-weight: 600;
-  color: var(--color-gray-900);
+  color: var(--color-white);
   margin-bottom: var(--space-2);
 }
 
@@ -291,8 +291,8 @@
 
 .form-actions {
   padding: var(--space-5) var(--space-6);
-  border-top: 1px solid var(--color-gray-100);
-  background: var(--color-gray-50);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
   display: flex;
   justify-content: flex-end;
   gap: var(--space-3);

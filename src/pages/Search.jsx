@@ -244,7 +244,7 @@ export default function SearchPage() {
       {/* Search Header */}
       <section className="search-hero">
         <div className="container">
-          <h1>Find the Right Expert</h1>
+          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem, 5vw, 2.8rem)', fontWeight: 500, letterSpacing: '-0.5px' }}>Find the Right Expert</h1>
           <div className="search-top-bar">
             <div className="search-top-input">
               <Search size={18} />
