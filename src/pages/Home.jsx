@@ -237,7 +237,7 @@ export default function Home() {
         <div className="container">
           <div className="section-header">
             <h2>Top-Rated Professionals</h2>
-            <p>Handpicked experts trusted by thousands of clients</p>
+            <p>Handpicked experts with verified credentials</p>
           </div>
 
           <div className="pros-grid">
@@ -306,7 +306,7 @@ export default function Home() {
           <div className="container">
             <div className="section-header">
               <h2 style={{color: 'var(--color-white)'}}>What Our Clients Say</h2>
-              <p style={{color: 'var(--color-gray-400)'}}>Trusted by 10,000+ individuals and businesses across India</p>
+              <p style={{color: 'var(--color-gray-400)'}}>Real feedback from verified clients across India</p>
             </div>
 
             <div className="testimonials-grid">
@@ -363,7 +363,7 @@ export default function Home() {
               Ready to secure your financial future?
             </h2>
             <p style={{ color: 'var(--color-gray-300)', fontSize: 'var(--text-xl)', marginBottom: 'var(--space-10)', maxWidth: '600px', margin: '0 auto var(--space-8)' }}>
-              Join thousands of smart businesses who trust our verified CA and CMA network to handle compliance seamlessly.
+              Join the growing community of businesses who trust our verified CA and CMA network to handle compliance seamlessly.
             </p>
             <div style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link to="/search" className="btn-hero-primary btn-lg">Find an Expert Now</Link>

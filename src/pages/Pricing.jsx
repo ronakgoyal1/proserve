@@ -157,7 +157,7 @@ const PLANS = [
     tagline: 'Maximum exposure for firms',
     price: '₹2,499',
     period: 'per month · billed annually',
-    cta: { label: 'Contact Sales', href: 'https://wa.me/91999999999?text=Hi%2C%20I%20am%20interested%20in%20Wisor%20Elite' },
+    cta: { label: 'Contact Sales', href: 'mailto:partners@wisor.in?subject=Wisor%20Elite%20Plan%20Inquiry' },
     features: [
       { text: 'Everything in Pro', included: true },
       { text: 'Homepage featured placement', included: true },

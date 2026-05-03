@@ -39,7 +39,7 @@ export default function Contact() {
 
         <div style={{ background: 'white', padding: 'var(--space-6)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
           <h3 style={{ marginBottom: 'var(--space-4)' }}>Send us a Message</h3>
-          <form style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }} onSubmit={(e) => { e.preventDefault(); alert("Message sent!"); }}>
+          <form style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }} onSubmit={(e) => { e.preventDefault(); e.target.reset(); e.target.parentElement.insertAdjacentHTML('afterbegin', '<div style="background:#ecfdf5;color:#059669;padding:12px 16px;border-radius:10px;font-weight:600;margin-bottom:16px;border:1px solid rgba(5,150,105,0.2)">✓ Your message has been sent. We\'ll get back to you soon!</div>'); }}>
             <div className="form-row" style={{ display: 'flex', gap: 'var(--space-4)' }}>
               <input type="text" placeholder="Your Name" style={{ flex: 1, padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} required />
               <input type="email" placeholder="Your Email" style={{ flex: 1, padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} required />

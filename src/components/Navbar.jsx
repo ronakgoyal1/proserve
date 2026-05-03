@@ -12,11 +12,6 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { session } = useAuth();
 
-  // Hide the global marketplace navbar on explicitly standalone profile pages
-  if (location.pathname.startsWith('/portfolio')) {
-    return null;
-  }
-
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
@@ -31,6 +26,11 @@ export default function Navbar() {
     document.body.style.overflow = mobileOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [mobileOpen]);
+
+  // Hide the global marketplace navbar on explicitly standalone profile pages
+  if (location.pathname.startsWith('/portfolio')) {
+    return null;
+  }
 
   return (
     <>
@@ -109,7 +109,7 @@ export default function Navbar() {
         <div className="mobile-menu-links">
           <Link to="/">Home</Link>
           <Link to="/search">Find Experts</Link>
-          <Link to="/pricing" style={{ color: '#7A9A6E', fontWeight: 600 }}>For Experts — ₹999/yr</Link>
+          <Link to="/pricing" style={{ color: '#7A9A6E', fontWeight: 600 }}>For Experts</Link>
           <Link to="/ai-discovery" style={{ color: 'var(--color-accent)', fontWeight: 600 }}>AI Matchmaker</Link>
         </div>
 

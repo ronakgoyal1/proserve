@@ -590,7 +590,7 @@ export default function PublicPortfolio() {
       <ShieldCheck size={64} style={{ color: '#334155', marginBottom: 24 }} />
       <h1 style={{ fontSize: 'clamp(1.4rem,4vw,2.4rem)', marginBottom: 12 }}>Portfolio Not Found</h1>
       <p style={{ color: '#475569', marginBottom: 32, maxWidth: 400 }}>This link is inactive or doesn't exist. Browse verified experts instead.</p>
-      <Link to="/experts" style={{ padding: '12px 32px', background: '#7A9A6E', color: '#1A1A1A', borderRadius: 999, fontWeight: 700, textDecoration: 'none' }}>Browse Experts</Link>
+      <Link to="/search" style={{ padding: '12px 32px', background: '#7A9A6E', color: '#1A1A1A', borderRadius: 999, fontWeight: 700, textDecoration: 'none' }}>Browse Experts</Link>
     </div>
   );
 

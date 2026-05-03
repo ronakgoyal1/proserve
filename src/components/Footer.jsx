@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Shield, Globe, Play } from 'lucide-react';
+import { Shield, Globe } from 'lucide-react';
 import './Footer.css';
 
 export default function Footer() {
@@ -19,8 +19,7 @@ export default function Footer() {
               and Cost & Management Accountants for all your finance and compliance needs.
             </p>
             <div className="footer-social">
-              <a href="#" aria-label="Instagram"><Globe size={18} /></a>
-              <a href="#" aria-label="YouTube"><Play size={18} /></a>
+              <a href="/contact" aria-label="Contact"><Globe size={18} /></a>
             </div>
           </div>
 
@@ -39,7 +38,7 @@ export default function Footer() {
             <h4>For Professionals</h4>
             <ul>
               <li><Link to="/login?tab=signup&role=professional">Join as Expert</Link></li>
-              <li><Link to="/login?tab=signup&role=professional">Pricing Plans</Link></li>
+              <li><Link to="/pricing">Pricing Plans</Link></li>
               <li><Link to="/about">Partner Program</Link></li>
               <li><Link to="/about">Success Stories</Link></li>
               <li><Link to="/contact">Help Center</Link></li>

@@ -381,9 +381,27 @@ export default function Profile() {
                   <button className="btn" style={{ background: '#92B284', color: '#111', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, width: '100%', display: 'flex', justifyContent: 'center' }} onClick={() => setIsBookingOpen(true)}>
                     <Calendar size={18} /> Book Now
                   </button>
-                  <button className="btn" style={{ background: 'transparent', color: '#111', border: '1px solid #D1D1CE', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, width: '100%', display: 'flex', justifyContent: 'center' }}>
-                    <MessageCircle size={18} /> Chat on WhatsApp
-                  </button>
+                  {isWhatsAppEnabled(professional) ? (
+                    <a
+                      href={buildWhatsAppUrl(
+                        professional.contactPhone || professional.contact_phone ||
+                        professional.settings?.whatsappNumber || '',
+                        professional.name,
+                        professional.services
+                      )}
+                      onClick={() => trackWhatsAppClick(professional.id)}
+                      className="btn"
+                      style={{ background: 'transparent', color: '#111', border: '1px solid #D1D1CE', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, width: '100%', display: 'flex', justifyContent: 'center', textDecoration: 'none' }}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <MessageCircle size={18} /> Chat on WhatsApp
+                    </a>
+                  ) : (
+                    <button className="btn" style={{ background: 'transparent', color: '#9CA3AF', border: '1px solid #E8E8E5', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, width: '100%', display: 'flex', justifyContent: 'center', cursor: 'not-allowed' }} disabled title="WhatsApp not available for this expert">
+                      <MessageCircle size={18} /> Chat on WhatsApp
+                    </button>
+                  )}
                 </div>
               </div>
 
