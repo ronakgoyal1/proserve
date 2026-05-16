@@ -60,26 +60,16 @@ export default function Home() {
             <div style={{ position: 'absolute', top: '10%', left: '-10%', width: '120%', height: '100%', background: 'radial-gradient(circle, rgba(122,154,110,0.06) 0%, transparent 60%)', filter: 'blur(50px)', pointerEvents: 'none', zIndex: 0 }} />
 
             <h1 className="hero-heading-new" style={{ position: 'relative', zIndex: 1, marginBottom: '28px' }}>
-              Find & Chat with Trusted CAs in Mumbai.
+              The right professional,<br/>without the guesswork.
             </h1>
 
             <p className="hero-subtext-new" style={{ position: 'relative', zIndex: 1, marginBottom: '40px', fontSize: '19px' }}>
-              Direct WhatsApp access. No middlemen. No commissions.
+              Discover trusted Chartered Accountants, lawyers, and architects — verified by their statutory bodies, not by anonymous reviews.
             </p>
 
-            <div className="hero-ctas-new" style={{ position: 'relative', zIndex: 1, marginBottom: '16px', gap: '10px', display: 'flex', flexWrap: 'wrap' }}>
-              <div style={{ flex: 1, minWidth: '250px', background: '#fff', padding: '6px 6px 6px 16px', borderRadius: '50px', display: 'flex', alignItems: 'center', boxShadow: '0 8px 20px rgba(0,0,0,0.1)' }}>
-                <Search size={20} style={{ color: '#9CA3AF', flexShrink: 0 }} />
-                <input 
-                  type="text" 
-                  placeholder="Search by name or service..." 
-                  value={searchService} 
-                  onChange={(e) => setSearchService(e.target.value)} 
-                  style={{ border: 'none', background: 'transparent', outline: 'none', padding: '10px 12px', flex: 1, fontSize: '16px', color: '#111' }}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSearch(e)}
-                />
-                <button onClick={handleSearch} style={{ background: '#7A9A6E', color: '#fff', border: 'none', borderRadius: '50px', padding: '12px 24px', fontSize: '16px', fontWeight: 600, cursor: 'pointer' }}>Search</button>
-              </div>
+            <div className="hero-ctas-new" style={{ position: 'relative', zIndex: 1, marginBottom: '16px', gap: '20px' }}>
+              <Link to="/search" className="btn-hero-primary-new" style={{ fontSize: '16px', padding: '0 32px', height: '52px', boxShadow: '0 8px 20px rgba(122,154,110,0.15)' }}>Find a professional</Link>
+              <Link to="/login?tab=signup&role=professional" className="btn-hero-secondary-new" style={{ opacity: 0.7, fontWeight: 500 }}>I'm a professional</Link>
             </div>
             
             <div style={{ fontSize: '13.5px', color: '#9CA3AF', marginBottom: '56px', display: 'flex', alignItems: 'center', gap: '8px', position: 'relative', zIndex: 1 }}>
@@ -219,24 +209,24 @@ export default function Home() {
               <div className="step-number">
                 <Search size={28} />
               </div>
-              <h3>Step 1: Search</h3>
-              <p>Find trusted Chartered Accountants in Mumbai tailored to your specific needs.</p>
+              <h3>Search & Compare</h3>
+              <p>Browse verified CA & CMA experts. Filter by service, city, price, and ratings.</p>
             </div>
 
             <div className="step-card animate-fade-in-up delay-2">
               <div className="step-number">
                 <BadgeCheck size={28} />
               </div>
-              <h3>Step 2: View</h3>
-              <p>Review their verified profiles, experience, and specialized services.</p>
+              <h3>Choose & Book</h3>
+              <p>Review profiles, compare packages, and book a consultation in seconds.</p>
             </div>
 
             <div className="step-card animate-fade-in-up delay-3">
               <div className="step-number">
-                <MessageSquare size={28} />
+                <Zap size={28} />
               </div>
-              <h3>Step 3: Chat</h3>
-              <p>Connect directly on WhatsApp to discuss your requirements instantly.</p>
+              <h3>Get It Done</h3>
+              <p>Receive expert assistance, track progress, and stay compliant effortlessly.</p>
             </div>
           </div>
         </div>

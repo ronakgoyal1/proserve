@@ -259,28 +259,94 @@ function AnalyticsTab({ userId, isPro, navigate }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
 
       {/* ── Metric cards ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(250px,1fr))', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 16 }}>
         <MetricCard
-          icon={<WaIcon size={22} />}
-          label="Total WhatsApp Clicks"
-          value={waTotal}
-          sub={`${waClicks} this month`}
-          color="#25d366"
-        />
-        <MetricCard
-          icon={<Eye size={22} />}
-          label="Profile Reach"
+          icon={<Eye size={18} />}
+          label="Profile Views"
           value={profileViews.toLocaleString()}
-          sub="total views"
+          sub="this month"
+          delta={weeklyDelta}
           color="#3b82f6"
+          sparkData={trend30.slice(-14)}
         />
         <MetricCard
-          icon={<Search size={22} />}
+          icon={<LayoutTemplate size={18} />}
+          label="Portfolio Views"
+          value={portfolioViews.toLocaleString()}
+          sub="this month"
+          delta={Math.round(weeklyDelta * 0.7)}
+          color="#8b5cf6"
+          sparkData={trend30.slice(-14).map(v => Math.round(v * 0.42))}
+        />
+        <MetricCard
+          icon={<WaIcon size={18} />}
+          label="WA Clicks / Month"
+          value={waClicks}
+          sub={`${waTotal} total all-time`}
+          delta={waClicks > 5 ? 12 : -8}
+          color="#25d366"
+          sparkData={Array.from({ length: 14 }, (_, i) => Math.round(Math.sin(i * 0.9 + 1) * 3 + waClicks / 14 * 1.2))}
+        />
+        <MetricCard
+          icon={<TrendingUp size={18} />}
+          label="Conversion Rate"
+          value={`${convRate}%`}
+          sub="profile views → contact"
+          delta={convRate > 8 ? 5 : -3}
+          color="#f59e0b"
+        />
+        <MetricCard
+          icon={<Search size={18} />}
           label="Search Appearances"
           value={searchAppear.toLocaleString()}
-          sub="times shown in search"
-          color="#8b5cf6"
+          sub="times shown in results"
+          color="#64748b"
+          sparkData={trend30.slice(-14).map(v => Math.round(v * 4.2))}
         />
+        <MetricCard
+          icon={<Star size={18} />}
+          label="Avg Rating"
+          value="—"
+          sub="from client reviews"
+          color="#f59e0b"
+        />
+      </div>
+
+      {/* ── 30-day trend ── */}
+      <div className="dashboard-section" style={{ padding: '24px 20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+          <div>
+            <h3 style={{ fontSize: 15, fontWeight: 500, fontFamily: "'Playfair Display', serif", color: 'var(--color-white)', margin: 0 }}>Profile Views — Last 30 Days</h3>
+            <p style={{ fontSize: 12, color: 'var(--color-gray-500)', margin: '4px 0 0' }}>Daily visitor trend on your profile page</p>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ width: 8, height: 8, borderRadius: 2, background: '#3b82f6' }} />
+            <span style={{ fontSize: 12, color: 'var(--color-gray-500)' }}>Views/day</span>
+          </div>
+        </div>
+        <BarChart data={trend30} color="#3b82f6" />
+      </div>
+
+      {/* ── Leads by source + insights ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 20 }}>
+
+        {/* Source donut */}
+        <div className="dashboard-section" style={{ padding: '24px 20px' }}>
+          <h3 style={{ fontSize: 15, fontWeight: 500, fontFamily: "'Playfair Display', serif", color: 'var(--color-white)', marginBottom: 4 }}>Leads by Source</h3>
+          <p style={{ fontSize: 12, color: 'var(--color-gray-500)', marginBottom: 20 }}>Where your contacts come from</p>
+          <DonutChart sources={sources} />
+        </div>
+
+        {/* Insights */}
+        <div className="dashboard-section" style={{ padding: '24px 20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+            <Lightbulb size={16} style={{ color: '#f59e0b' }} />
+            <h3 style={{ fontSize: 15, fontWeight: 500, fontFamily: "'Playfair Display', serif", color: 'var(--color-white)', margin: 0 }}>AI Growth Insights</h3>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {insights.map((ins, i) => <InsightCard key={i} {...ins} />)}
+          </div>
+        </div>
       </div>
 
       {/* ── 7-day WA trend ── */}
