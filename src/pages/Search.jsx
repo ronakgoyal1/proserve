@@ -112,15 +112,11 @@ export default function SearchPage() {
 
     results.sort((a, b) => {
       if (sortBy === 'relevance') {
-        const getScore = (pro) => {
-          let score = 0;
-          if (pro.verification?.status === 'verified') score += 50;
-          if (pro.featured) score += 10;
-          score += (pro.rating || 0) * 5;
-          score += Math.min((pro.reviews || 0) * 0.1, 10);
-          return score;
-        };
-        return getScore(b) - getScore(a);
+        if (b.featured !== a.featured) return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
+        if ((b.rating || 0) !== (a.rating || 0)) return (b.rating || 0) - (a.rating || 0);
+        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return dateB - dateA;
       }
       if (sortBy === 'rating') return (b.rating || 0) - (a.rating || 0);
       if (sortBy === 'price-low') return (a.startingPrice || 0) - (b.startingPrice || 0);

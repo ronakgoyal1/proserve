@@ -38,11 +38,14 @@ export default function ProfessionalCard({ professional }) {
       <div className="pro-card-header">
         <div className="pro-card-avatar">{initials}</div>
         <div className="pro-card-info">
-          <h3 className="pro-card-name">{name}</h3>
+          <h3 className="pro-card-name" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            {name}
+            {professional.is_verified && <ShieldCheck size={16} style={{ color: '#3b82f6', fill: 'currentColor', stroke: '#fff', strokeWidth: 1.5 }} title="Verified" />}
+          </h3>
 
           <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
             <span className="badge badge-primary">{category}</span>
-            {verification?.status === 'verified' && (
+            {verification?.status === 'verified' && !professional.is_verified && (
               <span className="badge badge-gold" title={`Identity & Credentials Verified since ${verification.date}`}>
                 <Check size={12} strokeWidth={3} /> Wisor Verified
               </span>
@@ -52,7 +55,7 @@ export default function ProfessionalCard({ professional }) {
                 Verification Pending
               </span>
             )}
-            {verification?.status === 'unverified' && (
+            {verification?.status === 'unverified' && !professional.is_verified && (
               <span className="badge" style={{ background: 'var(--color-gray-100)', color: 'var(--color-gray-500)' }}>
                 Unverified
               </span>
@@ -63,19 +66,20 @@ export default function ProfessionalCard({ professional }) {
               <Star size={14} fill="currentColor" />
               {rating} <span className="pro-card-rating-count">• {reviews} reviews</span>
             </span>
-            <span><Briefcase size={14} /> {experience} yrs</span>
-            <span><MapPin size={14} /> {city}</span>
           </div>
         </div>
       </div>
 
       <div className="pro-card-services">
-        {services.slice(0, 3).map((s) => (
+        <span className="pro-card-service-tag" style={{ background: '#f3f4f6', color: '#4b5563', border: '1px solid #e5e7eb' }}>
+          <Briefcase size={12} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />{experience} yrs exp
+        </span>
+        <span className="pro-card-service-tag" style={{ background: '#f3f4f6', color: '#4b5563', border: '1px solid #e5e7eb' }}>
+          <MapPin size={12} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />{city}
+        </span>
+        {services.slice(0, 1).map((s) => (
           <span key={s} className="pro-card-service-tag">{s}</span>
         ))}
-        {services.length > 3 && (
-          <span className="pro-card-service-tag more">+{services.length - 3} more</span>
-        )}
       </div>
 
       <div className="pro-card-footer">
@@ -85,20 +89,21 @@ export default function ProfessionalCard({ professional }) {
           </div>
           <div className="pro-card-availability">{availability}</div>
         </div>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', width: '100%' }}>
           {waEnabled && (
             <a
               href={waUrl}
               onClick={handleWaClick}
-              className="btn-wa-card"
+              className="btn"
+              style={{ flex: 2, background: '#25D366', color: '#fff', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '10px', borderRadius: '8px', textDecoration: 'none', fontWeight: 600, boxShadow: '0 4px 10px rgba(37,211,102,0.2)' }}
               title={`WhatsApp ${name}`}
               aria-label={`Message ${name} on WhatsApp`}
             >
-              <WaIcon />
+              <WaIcon /> Chat on WhatsApp
             </a>
           )}
-          <Link to={`/professional/${id}`} className="btn btn-secondary btn-card">
-            View Profile &rarr;
+          <Link to={`/professional/${id}`} className="btn" style={{ flex: 1, background: 'transparent', border: '1px solid var(--color-gray-300)', color: 'var(--color-gray-700)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px', borderRadius: '8px', textDecoration: 'none', fontWeight: 600 }}>
+            View Profile
           </Link>
         </div>
       </div>

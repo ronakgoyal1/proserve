@@ -15,12 +15,8 @@ const SEARCH_APPEAR_KEY = 'proserve_search_appear';
 export function buildWhatsAppUrl(phone, expertName = '', services = []) {
   const clean = String(phone || '').replace(/\D/g, '');
   const intl   = clean.startsWith('91') ? clean : `91${clean}`;
-  const svc    = Array.isArray(services) && services.length > 0
-    ? services[0]
-    : 'financial advisory';
-  const svcRaw = typeof svc === 'string' ? svc : (svc?.name || 'financial advisory');
   const msg    = encodeURIComponent(
-    `Hi, I found your profile on Wisor Mumbai and need help with ${svcRaw}. Can we connect?`
+    `Hi ${expertName}, I found your profile on Wisor. I'd like to inquire about your professional services.`
   );
   return `https://wa.me/${intl}?text=${msg}`;
 }
