@@ -121,51 +121,34 @@ function PlanCard({ plan, isHighlighted, navigate }) {
 const PLANS = [
   {
     label: 'Starter',
-    name: 'Free',
-    tagline: 'Basic directory listing',
+    name: 'Free Listing',
+    tagline: 'Basic directory visibility',
     price: 'Free',
     period: 'forever',
     cta: { label: 'Get Started for Free', href: '/login?tab=signup&role=professional' },
     features: [
       { text: 'Basic directory listing', included: true },
       { text: 'Wisor profile page', included: true },
-      { text: 'Limited search visibility', included: true },
-      { text: 'Client leads & WhatsApp', included: false },
+      { text: 'Client leads via WhatsApp', included: false },
+      { text: 'Priority search ranking', included: false },
       { text: 'Verified badge', included: false },
-      { text: 'AI portfolio website', included: false },
     ],
   },
   {
     label: 'Most Popular',
-    name: 'Pro',
-    tagline: 'Complete growth infrastructure',
+    name: 'Featured Listing',
+    tagline: 'Get more client inquiries',
     price: '₹999',
     period: 'per month · billed annually',
-    cta: { label: 'Start Pro Free Trial', href: '/login?tab=signup&role=professional&plan=pro' },
+    cta: { label: 'Get Featured', href: '/login?tab=signup&role=professional&plan=pro' },
     features: [
-      { text: 'Verified badge on profile', included: true },
       { text: 'Priority search ranking', included: true },
-      { text: 'WhatsApp & direct leads', included: true },
-      { text: 'AI-generated portfolio website', included: true },
+      { text: 'Direct WhatsApp inquiries', included: true },
+      { text: 'Verified badge on profile', included: true },
       { text: 'Analytics & lead dashboard', included: true },
-      { text: 'Onboarding call with our team', included: true },
+      { text: 'AI-generated portfolio website', included: true },
     ],
-  },
-  {
-    label: 'Agency',
-    name: 'Elite',
-    tagline: 'Maximum exposure for firms',
-    price: '₹2,499',
-    period: 'per month · billed annually',
-    cta: { label: 'Contact Sales', href: 'mailto:partners@wisor.in?subject=Wisor%20Elite%20Plan%20Inquiry' },
-    features: [
-      { text: 'Everything in Pro', included: true },
-      { text: 'Homepage featured placement', included: true },
-      { text: 'Dedicated account manager', included: true },
-      { text: 'Multi-expert firm listing', included: true },
-      { text: 'Custom portfolio domain', included: true },
-    ],
-  },
+  }
 ];
 
 const FAQS = [

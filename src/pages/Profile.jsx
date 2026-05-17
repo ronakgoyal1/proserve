@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { 
   Star, MapPin, Check, ShieldCheck, Clock, Calendar,
   MessageCircle, Share2, Award, Briefcase, ChevronRight,
   Globe, Phone, Shield
 } from 'lucide-react';
-import { services } from '../data/mockData';
 import { dbService } from '../lib/dbService';
 import { buildWhatsAppUrl, trackWhatsAppClick, isWhatsAppEnabled } from '../lib/whatsapp';
 import BookingModal from '../components/BookingModal';
@@ -134,9 +133,6 @@ export default function Profile() {
                 <span><Globe size={14} /> {professional.languages.join(', ')}</span>
               </div>
               <div className="profile-actions" style={{ marginTop: '24px', display: 'flex', gap: '16px' }}>
-                <button className="btn" style={{ background: '#92B284', color: '#111', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600 }} onClick={() => setIsBookingOpen(true)}>
-                  <Calendar size={16} /> Book Consultation
-                </button>
                 {isWhatsAppEnabled(professional) ? (
                   <a
                     href={buildWhatsAppUrl(
@@ -147,17 +143,20 @@ export default function Profile() {
                     )}
                     onClick={() => trackWhatsAppClick(professional.id)}
                     className="btn"
-                    style={{ background: 'transparent', color: '#111', border: '1px solid #D1D1CE', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600 }}
+                    style={{ background: '#25d366', color: 'white', border: '1px solid #25d366', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600 }}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <MessageCircle size={16} /> WhatsApp
+                    <MessageCircle size={16} /> Chat on WhatsApp
                   </a>
                 ) : (
-                  <button className="btn" style={{ background: 'transparent', color: '#9CA3AF', border: '1px solid #E8E8E5', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, cursor: 'not-allowed' }} disabled title="WhatsApp not available for this expert">
-                    <MessageCircle size={16} /> WhatsApp
+                  <button className="btn" style={{ background: '#f3f4f6', color: '#9CA3AF', border: '1px solid #E8E8E5', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, cursor: 'not-allowed' }} disabled title="WhatsApp not available for this expert">
+                    <MessageCircle size={16} /> Chat on WhatsApp
                   </button>
                 )}
+                <button className="btn" style={{ background: 'transparent', color: '#111', border: '1px solid #D1D1CE', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600 }} onClick={() => setIsBookingOpen(true)}>
+                  <Calendar size={16} /> Book Consultation
+                </button>
                 {(professional.contactPhone || professional.contact_phone) && (
                   <a href={`tel:${professional.contactPhone || professional.contact_phone}`} className="btn" style={{ background: 'transparent', color: '#111', border: '1px solid #D1D1CE', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600 }}>
                     <Phone size={16} /> Call
@@ -373,14 +372,11 @@ export default function Profile() {
               )}
 
               <div className="sidebar-card" style={{ border: '1px solid #E8E8E5', borderRadius: '16px', padding: '24px', marginTop: '24px' }}>
-                <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '8px' }}>Book a Consultation</h3>
+                <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '8px' }}>Get in Touch</h3>
                 <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '24px' }}>
                   Starting at <strong style={{ color: '#1A1A1A', fontSize: '20px' }}>₹{professional.startingPrice.toLocaleString()}</strong>
                 </p>
                 <div className="sidebar-cta-buttons" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <button className="btn" style={{ background: '#92B284', color: '#111', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, width: '100%', display: 'flex', justifyContent: 'center' }} onClick={() => setIsBookingOpen(true)}>
-                    <Calendar size={18} /> Book Now
-                  </button>
                   {isWhatsAppEnabled(professional) ? (
                     <a
                       href={buildWhatsAppUrl(
@@ -391,17 +387,20 @@ export default function Profile() {
                       )}
                       onClick={() => trackWhatsAppClick(professional.id)}
                       className="btn"
-                      style={{ background: 'transparent', color: '#111', border: '1px solid #D1D1CE', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, width: '100%', display: 'flex', justifyContent: 'center', textDecoration: 'none' }}
+                      style={{ background: '#25d366', color: 'white', border: '1px solid #25d366', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, width: '100%', display: 'flex', justifyContent: 'center', textDecoration: 'none' }}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       <MessageCircle size={18} /> Chat on WhatsApp
                     </a>
                   ) : (
-                    <button className="btn" style={{ background: 'transparent', color: '#9CA3AF', border: '1px solid #E8E8E5', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, width: '100%', display: 'flex', justifyContent: 'center', cursor: 'not-allowed' }} disabled title="WhatsApp not available for this expert">
+                    <button className="btn" style={{ background: '#f3f4f6', color: '#9CA3AF', border: '1px solid #E8E8E5', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, width: '100%', display: 'flex', justifyContent: 'center', cursor: 'not-allowed' }} disabled title="WhatsApp not available for this expert">
                       <MessageCircle size={18} /> Chat on WhatsApp
                     </button>
                   )}
+                  <button className="btn" style={{ background: 'transparent', color: '#111', border: '1px solid #D1D1CE', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, width: '100%', display: 'flex', justifyContent: 'center' }} onClick={() => setIsBookingOpen(true)}>
+                    <Calendar size={18} /> Request Callback
+                  </button>
                 </div>
               </div>
 

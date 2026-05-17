@@ -10,7 +10,7 @@ import {
 import { Helmet } from 'react-helmet-async';
 
 // ─── Theme Registry ───────────────────────────────────────────────────────────
-function resolveTheme(themeKey = '') {
+function resolveTheme() {
   return {
     heroBg: '#111111', heroText: '#ffffff', heroSubText: '#9CA3AF',
     accent: '#92B284', accentLight: '#7A9A6E', accentRgb: '146,178,132',
@@ -69,7 +69,7 @@ function SectionLabel({ text, t }) {
   return <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 3, textTransform: 'uppercase', color: t.accent, marginBottom: 14 }}>{text}</p>;
 }
 
-function Avatar({ initials, t, size = 100 }) {
+function Avatar({ initials, size = 100 }) {
   return (
     <div style={{ width: size, height: size, borderRadius: '50%', background: '#F8F8F5', border: '2px solid #E8E8E5', padding: 4, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: '#1A1A1A', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: size * 0.35, fontWeight: 600, color: '#fff', letterSpacing: '-0.5px' }}>
@@ -79,7 +79,7 @@ function Avatar({ initials, t, size = 100 }) {
   );
 }
 
-function VerifiedBadge({ t }) {
+function VerifiedBadge() {
   return (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(122,154,110,0.1)', color: '#5E7D52', border: `1px solid rgba(122,154,110,0.2)`, borderRadius: 999, padding: '6px 14px', fontSize: 13, fontWeight: 600 }}>
       <ShieldCheck size={15} /> Wisor Verified
@@ -301,14 +301,14 @@ function LayoutAuthority({ c, t, onBook }) {
           
           {/* Trust Signals Near Top */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 40, flexWrap: 'wrap', justifyContent: 'center' }}>
-            <VerifiedBadge t={t} />
+            <VerifiedBadge />
             <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 600, color: '#1A1A1A' }}>
               <Star size={16} fill="#F59E0B" color="#F59E0B" /> {rating} 
               <span style={{ color: '#6B7280', fontWeight: 400 }}>• {reviewCount} reviews</span>
             </span>
           </div>
 
-          <Avatar initials={initials} t={t} size={110} />
+          <Avatar initials={initials} size={110} />
           
           <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 500, color: t.heroText, letterSpacing: '-1px', lineHeight: 1.1, marginTop: 32, marginBottom: 16 }}>
             {c.name}
@@ -369,9 +369,9 @@ function LayoutSpecialist({ c, t, onBook }) {
       <section style={{ background: t.heroBg, padding: '90px 24px 80px', position: 'relative', overflow: 'hidden', textAlign: 'center' }}>
         <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '80vw', height: '80vh', borderRadius: '0 0 50% 50%', background: `radial-gradient(ellipse at center top,${t.glow1} 0%,transparent 65%)`, pointerEvents: 'none' }} />
         <div style={{ maxWidth: 760, margin: '0 auto', position: 'relative', zIndex: 2 }}>
-          <Avatar initials={initials} t={t} size={90} />
+          <Avatar initials={initials} size={90} />
           <div style={{ marginTop: 20, marginBottom: 20 }}>
-            <VerifiedBadge t={t} />
+            <VerifiedBadge />
           </div>
           <h1 style={{ background: t.nameGrad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', fontSize: 'clamp(2.6rem,6vw,4.5rem)', fontWeight: 900, letterSpacing: '-2px', lineHeight: 1.05, marginBottom: 16 }}>
             {c.name}
@@ -470,7 +470,7 @@ function LayoutAdvisor({ c, t, onBook }) {
           <div>
             {/* Eyebrow */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
-              <VerifiedBadge t={t} />
+              <VerifiedBadge />
               {c.city && c.city !== 'India' && (
                 <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#475569', fontWeight: 500 }}>
                   <MapPin size={12} /> {c.city}
@@ -502,7 +502,7 @@ function LayoutAdvisor({ c, t, onBook }) {
 
           {/* Right: card */}
           <div style={{ background: t.statBg, border: `1px solid ${t.statBorder}`, backdropFilter: 'blur(20px)', borderRadius: 28, padding: '36px 28px', display: 'flex', flexDirection: 'column', gap: 24 }}>
-            <Avatar initials={initials} t={t} size={80} />
+            <Avatar initials={initials} size={80} />
             <div>
               <p style={{ fontSize: 13, fontWeight: 600, color: t.accent, marginBottom: 4, letterSpacing: 0.5 }}>{c.profession}</p>
               <p style={{ fontSize: 12, color: t.heroSubText }}>{c.languages?.join(' · ')}</p>
@@ -603,7 +603,7 @@ function PortfolioMain({ portfolio, expertId, navigate }) {
   // Normalize services — support both old string format and new enriched object format
   const services = Array.isArray(c.services) ? c.services : [];
 
-  const t = resolveTheme(c.themeKey || c.profession || '');
+  const t = resolveTheme();
   const layout = typeof c.layout === 'number' ? c.layout : 0;
   const onBook = () => expertId ? navigate(`/professional/${expertId}?book=true`) : navigate('/login');
 

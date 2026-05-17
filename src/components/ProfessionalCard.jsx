@@ -78,27 +78,28 @@ export default function ProfessionalCard({ professional }) {
         )}
       </div>
 
-      <div className="pro-card-footer">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+      <div className="pro-card-footer" style={{ flexDirection: 'column', alignItems: 'stretch', gap: '16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div className="pro-card-price">
             From <strong>₹{startingPrice.toLocaleString()}</strong>
           </div>
           <div className="pro-card-availability">{availability}</div>
         </div>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           {waEnabled && (
             <a
               href={waUrl}
               onClick={handleWaClick}
-              className="btn-wa-card"
+              className="btn btn-primary btn-card"
+              style={{ flex: 1, background: '#25d366', borderColor: '#25d366', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
               title={`WhatsApp ${name}`}
               aria-label={`Message ${name} on WhatsApp`}
             >
-              <WaIcon />
+              <WaIcon /> Chat on WhatsApp
             </a>
           )}
-          <Link to={`/professional/${id}`} className="btn btn-secondary btn-card">
-            View Profile &rarr;
+          <Link to={`/professional/${id}`} className="btn btn-secondary btn-card" style={{ flex: 1, textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            View Profile
           </Link>
         </div>
       </div>

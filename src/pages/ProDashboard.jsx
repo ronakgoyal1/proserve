@@ -485,20 +485,12 @@ export default function ProDashboard() {
 
             <div className="dashboard-stats">
               <div className="stat-card">
-                <div className="stat-icon" style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--color-white)' }}><UserCheck size={24} /></div>
-                <div className="stat-info"><h4>Total Leads</h4><div className="stat-value">{proLeads.length}</div></div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-icon" style={{ background: 'rgba(5, 150, 105, 0.1)', color: 'var(--color-success)' }}><DollarSign size={24} /></div>
-                <div className="stat-info"><h4>Earnings</h4><div className="stat-value">—</div></div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-icon" style={{ background: 'rgba(217, 119, 6, 0.1)', color: 'var(--color-warning)' }}><Star size={24} /></div>
-                <div className="stat-info"><h4>Rating</h4><div className="stat-value">—</div></div>
-              </div>
-              <div className="stat-card">
                 <div className="stat-icon" style={{ background: 'rgba(139, 92, 246, 0.1)', color: '#8b5cf6' }}><BarChart3 size={24} /></div>
                 <div className="stat-info"><h4>Profile Views</h4><div className="stat-value">—</div></div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon" style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--color-white)' }}><UserCheck size={24} /></div>
+                <div className="stat-info"><h4>Platform Inquiries</h4><div className="stat-value">{proLeads.length}</div></div>
               </div>
               <div className="stat-card" style={{ gridColumn: 'span 2' }}>
                 <div className="stat-icon" style={{ background: 'rgba(37,211,102,0.10)', color: '#25d366' }}><WaIcon size={24} /></div>

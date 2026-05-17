@@ -68,8 +68,8 @@ export default function Home() {
             </p>
 
             <div className="hero-ctas-new" style={{ position: 'relative', zIndex: 1, marginBottom: '16px', gap: '20px' }}>
-              <Link to="/search" className="btn-hero-primary-new" style={{ fontSize: '16px', padding: '0 32px', height: '52px', boxShadow: '0 8px 20px rgba(122,154,110,0.15)' }}>Find a professional</Link>
-              <Link to="/login?tab=signup&role=professional" className="btn-hero-secondary-new" style={{ opacity: 0.7, fontWeight: 500 }}>I'm a professional</Link>
+              <Link to="/search" className="btn-hero-primary-new" style={{ fontSize: '16px', padding: '0 32px', height: '52px', boxShadow: '0 8px 20px rgba(122,154,110,0.15)' }}>Find a CA</Link>
+              <Link to="/login?tab=signup&role=professional" className="btn-hero-secondary-new" style={{ opacity: 0.7, fontWeight: 500 }}>List Your Practice</Link>
             </div>
             
             <div style={{ fontSize: '13.5px', color: '#9CA3AF', marginBottom: '56px', display: 'flex', alignItems: 'center', gap: '8px', position: 'relative', zIndex: 1 }}>
@@ -366,8 +366,8 @@ export default function Home() {
               Join the growing community of businesses who trust our verified CA and CMA network to handle compliance seamlessly.
             </p>
             <div style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Link to="/search" className="btn-hero-primary btn-lg">Find an Expert Now</Link>
-              <Link to="/login?tab=signup&role=professional" className="btn-hero-secondary btn-lg">Apply as Professional</Link>
+              <Link to="/search" className="btn-hero-primary btn-lg">Find a CA</Link>
+              <Link to="/login?tab=signup&role=professional" className="btn-hero-secondary btn-lg">List Your Practice</Link>
             </div>
           </div>
           <div style={{ position: 'absolute', top: '10%', right: '15%', width: '40vw', height: '40vw', background: 'radial-gradient(circle, rgba(197, 160, 89, 0.15) 0%, transparent 60%)', borderRadius: '50%', pointerEvents: 'none' }} />
