@@ -437,3 +437,39 @@
     order: -1;
   }
 }
+
+@media (max-width: 480px) {
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+    font-size: 1.8rem;
+  }
+  
+  .profile-name-row h1 {
+    font-size: 1.8rem;
+  }
+  
+  .profile-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .profile-actions .btn {
+    width: 100%;
+  }
+  
+  .profile-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  .profile-tabs::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+  }
+  
+  .package-card {
+    padding: var(--space-6);
+  }
+}

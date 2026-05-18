@@ -317,3 +317,23 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 480px) {
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  
+  .stat-card {
+    padding: var(--space-4);
+  }
+  
+  .dashboard-section-header {
+    padding: var(--space-4);
+  }
+  
+  .dashboard-table th,
+  .dashboard-table td {
+    padding: var(--space-3) var(--space-4);
+  }
+}

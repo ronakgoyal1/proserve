@@ -829,3 +829,43 @@
     padding: var(--space-8);
   }
 }
+
+@media (max-width: 480px) {
+  .home-hero {
+    padding-top: calc(80px + var(--space-6));
+    padding-bottom: var(--space-6);
+  }
+
+  .hero-heading-new {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+  }
+
+  .hero-subtext-new {
+    font-size: 16px;
+    margin-bottom: 24px;
+  }
+
+  .hero-ctas-new {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .hero-ctas-new a {
+    width: 100%;
+  }
+
+  .hero-stats-new {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .hero-features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .featured-pro-card {
+    padding: 20px;
+  }
+}

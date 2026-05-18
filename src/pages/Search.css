@@ -339,3 +339,27 @@
     flex-direction: column;
   }
 }
+
+@media (max-width: 480px) {
+  .search-results-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .sort-select {
+    width: 100%;
+  }
+  
+  .sort-select select {
+    width: 100%;
+  }
+  
+  .search-hero {
+    padding: var(--space-6) 0;
+  }
+  
+  .mobile-filter-toggle {
+    padding: var(--space-4); /* Larger tap target */
+  }
+}

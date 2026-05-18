@@ -232,3 +232,19 @@
     display: flex;
   }
 }
+
+@media (max-width: 480px) {
+  .mobile-menu {
+    width: 100%;
+  }
+  
+  .mobile-menu-links a {
+    padding: var(--space-4);
+    font-size: var(--text-lg);
+  }
+  
+  .mobile-menu-actions .btn {
+    padding: var(--space-4);
+    font-size: var(--text-base);
+  }
+}
