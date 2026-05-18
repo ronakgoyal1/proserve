@@ -28,28 +28,16 @@
 .navbar-logo {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
   font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: 800;
+  font-size: 1.75rem; /* Larger, more elegant size */
+  font-weight: 600; /* Less bold for serif elegance */
   color: var(--color-white);
   letter-spacing: -0.5px;
+  text-decoration: none;
 }
 
-.navbar-logo .logo-icon {
-  width: 40px;
-  height: 40px;
-  background: transparent;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-accent);
-  border: 1px solid rgba(146, 178, 132, 0.3);
-}
-
-.navbar-logo span {
-  color: var(--color-accent);
+.navbar-logo .logo-accent {
+  color: var(--color-accent); /* Sage green accent */
 }
 
 .navbar-links {
@@ -234,6 +222,10 @@
 }
 
 @media (max-width: 480px) {
+  .navbar-logo {
+    font-size: 1.5rem;
+  }
+  
   .mobile-menu {
     width: 100%;
   }

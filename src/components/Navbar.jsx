@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Shield, LogOut, LayoutDashboard } from 'lucide-react';
+import { Menu, X, LogOut, LayoutDashboard } from 'lucide-react';
 import { useAuth } from './AuthContext';
 import { authService } from '../lib/authService';
 import './Navbar.css';
@@ -37,10 +37,7 @@ export default function Navbar() {
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`} id="main-navbar">
         <div className="container navbar-inner">
           <Link to="/" className="navbar-logo">
-            <div className="logo-icon">
-              <Shield size={20} />
-            </div>
-            Wi<span>sor</span>
+            Wis<span className="logo-accent">or</span>
           </Link>
 
           <div className="navbar-links">
@@ -92,10 +89,7 @@ export default function Navbar() {
       <div className={`mobile-menu ${mobileOpen ? 'open' : ''}`}>
         <div className="mobile-menu-header">
           <Link to="/" className="navbar-logo">
-            <div className="logo-icon">
-              <Shield size={18} />
-            </div>
-            Wi<span>sor</span>
+            Wis<span className="logo-accent">or</span>
           </Link>
           <button
             className="mobile-menu-close"

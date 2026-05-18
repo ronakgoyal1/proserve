@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Shield, Globe } from 'lucide-react';
+import { Globe } from 'lucide-react';
 import './Footer.css';
 
 export default function Footer() {
@@ -9,10 +9,7 @@ export default function Footer() {
         <div className="footer-grid">
           <div className="footer-brand">
             <Link to="/" className="navbar-logo" style={{ color: 'white' }}>
-              <div className="logo-icon">
-                <Shield size={18} />
-              </div>
-              Wi<span>sor</span>
+              Wis<span className="logo-accent">or</span>
             </Link>
             <p>
               India's most trusted platform to find verified Chartered Accountants
