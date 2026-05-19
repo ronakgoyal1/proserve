@@ -1,26 +1,56 @@
 :root {
-  /* Semantic Theme Tokens - Light Mode (Default) */
-  --bg-primary: #F8F8F5;       /* Warm ivory / bone */
+  /* ══════════════════════════════════════════════
+     LIGHT MODE — DEFAULT (Warm Ivory / Editorial)
+     ══════════════════════════════════════════════ */
+
+  /* Page backgrounds */
+  --bg-primary: #F8F8F5;        /* Warm ivory / bone */
   --bg-secondary: #FAFAF8;
   --surface-base: #FFFFFF;
   --surface-card: #FFFFFF;
-  --surface-elevated: #FFFFFF;
-  --surface-overlay: rgba(255, 255, 255, 0.95);
-  
-  --text-primary: #1A1A1A;     /* Charcoal */
+  --surface-elevated: #F3F3F0;
+  --surface-overlay: rgba(248, 248, 245, 0.95);
+
+  /* Typography */
+  --text-primary: #1A1A1A;      /* Charcoal */
   --text-secondary: #4B5563;
   --text-muted: #6B7280;
-  
-  --border-subtle: #E8E8E5;    /* Soft elegant borders */
+
+  /* Borders */
+  --border-subtle: #E8E8E5;     /* Soft elegant borders */
   --border-strong: #D1D1CE;
-  
-  --accent-primary: #7A9A6E;   /* Subtle sage */
+
+  /* Sage accents */
+  --accent-primary: #7A9A6E;
   --accent-muted: #92B284;
-  
+
+  /* Card aliases */
   --card-bg: #FFFFFF;
   --card-border: #E8E8E5;
 
-  /* Utility Colors */
+  /* ── Legacy aliases (used by older Home/components CSS) ── */
+  --color-primary: #7A9A6E;
+  --color-primary-dark: #5E7D52;
+  --color-primary-bg: rgba(122, 154, 110, 0.08);
+  --color-primary-bg-hover: rgba(122, 154, 110, 0.14);
+  --color-accent: #7A9A6E;
+  --color-accent-dark: #5E7D52;
+  --color-white: #FFFFFF;
+  --color-black: #1A1A1A;
+
+  /* Gray scale aliases */
+  --color-gray-50:  #F9F9F7;
+  --color-gray-100: #F2F2EF;
+  --color-gray-200: #E8E8E5;
+  --color-gray-300: #D1D1CE;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #2D2D2D;
+  --color-gray-900: #1A1A1A;
+
+  /* Status colors */
   --color-success: #059669;
   --color-success-bg: #ecfdf5;
   --color-warning: #d97706;
@@ -31,55 +61,90 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Semantic Theme Tokens - Dark Mode */
-    --bg-primary: #161616;       /* Warm charcoal */
+    /* ══════════════════════════════════════════════
+       DARK MODE — Only when system requests it
+       ══════════════════════════════════════════════ */
+
+    /* Page backgrounds */
+    --bg-primary: #161616;        /* Warm charcoal */
     --bg-secondary: #1C1C1C;
     --surface-base: #222222;
-    --surface-card: rgba(255, 255, 255, 0.03);
-    --surface-elevated: rgba(255, 255, 255, 0.06);
+    --surface-card: rgba(255, 255, 255, 0.04);
+    --surface-elevated: rgba(255, 255, 255, 0.07);
     --surface-overlay: rgba(22, 22, 22, 0.95);
-    
-    --text-primary: #F3F3F0;     /* Soft off-white */
+
+    /* Typography */
+    --text-primary: #F3F3F0;      /* Soft off-white */
     --text-secondary: #D1D1CE;
     --text-muted: #9CA3AF;
-    
+
+    /* Borders */
     --border-subtle: rgba(255, 255, 255, 0.08);
     --border-strong: rgba(255, 255, 255, 0.15);
-    
-    --accent-primary: #92B284;   /* Muted sage */
+
+    /* Sage accents (slightly brighter in dark) */
+    --accent-primary: #92B284;
     --accent-muted: #7A9A6E;
-    
-    --card-bg: rgba(255, 255, 255, 0.03);
+
+    /* Card aliases */
+    --card-bg: rgba(255, 255, 255, 0.04);
     --card-border: rgba(255, 255, 255, 0.08);
 
-    --color-success-bg: rgba(5, 150, 105, 0.1);
-    --color-warning-bg: rgba(217, 119, 6, 0.1);
+    /* ── Legacy aliases — dark overrides ── */
+    --color-primary: #92B284;
+    --color-primary-dark: #7A9A6E;
+    --color-primary-bg: rgba(146, 178, 132, 0.1);
+    --color-primary-bg-hover: rgba(146, 178, 132, 0.16);
+    --color-accent: #92B284;
+    --color-accent-dark: #7A9A6E;
+    --color-white: #F3F3F0;
+    --color-black: #161616;
+
+    /* Gray scale aliases — warm dark */
+    --color-gray-50:  #1C1C1C;
+    --color-gray-100: #242424;
+    --color-gray-200: rgba(255, 255, 255, 0.08);
+    --color-gray-300: rgba(255, 255, 255, 0.15);
+    --color-gray-400: #9CA3AF;
+    --color-gray-500: #6B7280;
+    --color-gray-600: #D1D1CE;
+    --color-gray-700: #E5E5E2;
+    --color-gray-800: #F0F0ED;
+    --color-gray-900: #F3F3F0;
+
+    /* Status colors — dark-adapted */
+    --color-success-bg: rgba(5, 150, 105, 0.12);
+    --color-warning-bg: rgba(217, 119, 6, 0.12);
   }
 }
 
 :root {
+  /* ══════════════════════════════════════════════
+     STATIC TOKENS — Same in both modes
+     ══════════════════════════════════════════════ */
+
   /* Typography */
   --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Playfair Display', serif;
-  --text-xs: 0.75rem;     /* 12px */
-  --text-sm: 0.875rem;    /* 14px */
-  --text-base: 1rem;      /* 16px */
-  --text-lg: 1.125rem;    /* 18px */
-  --text-xl: 1.25rem;     /* 20px */
-  --text-2xl: 1.5rem;     /* 24px */
-  --text-3xl: 2rem;       /* 32px */
-  --text-4xl: 2.5rem;     /* 40px */
-  --text-5xl: 3.5rem;     /* 56px */
-  --text-6xl: 4.5rem;     /* 72px */
+  --text-xs:   0.75rem;    /* 12px */
+  --text-sm:   0.875rem;   /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg:   1.125rem;   /* 18px */
+  --text-xl:   1.25rem;    /* 20px */
+  --text-2xl:  1.5rem;     /* 24px */
+  --text-3xl:  2rem;       /* 32px */
+  --text-4xl:  2.5rem;     /* 40px */
+  --text-5xl:  3.5rem;     /* 56px */
+  --text-6xl:  4.5rem;     /* 72px */
 
   /* Spacing */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.25rem;
-  --space-6: 1.5rem;
-  --space-8: 2rem;
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
   --space-10: 2.5rem;
   --space-12: 3rem;
   --space-16: 4rem;
@@ -87,28 +152,27 @@
   --space-24: 6rem;
 
   /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.08);
-  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.10);
+  --shadow-sm:   0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-md:   0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg:   0 10px 24px rgba(0, 0, 0, 0.08);
+  --shadow-xl:   0 20px 40px rgba(0, 0, 0, 0.10);
   --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.04);
   --shadow-card-hover: 0 8px 24px rgba(122, 154, 110, 0.10), 0 4px 12px rgba(0, 0, 0, 0.05);
 
   /* Gradients */
-  --bg-gradient-premium: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
   --text-gradient-gold: linear-gradient(90deg, #92B284 0%, #7A9A6E 100%);
 
   /* Border Radius */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
-  --radius-2xl: 24px;
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-xl:   20px;
+  --radius-2xl:  24px;
   --radius-full: 9999px;
 
   /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-base: 250ms ease;
-  --transition-slow: 400ms ease;
+  --transition-fast:   150ms ease;
+  --transition-base:   250ms ease;
+  --transition-slow:   400ms ease;
   --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }

@@ -282,17 +282,18 @@ export default function Profile() {
                         </div>
                       ))}
                     </div>
-                  {reviews.length === 0 && (
+                  ) : (
                     <div style={{ textAlign: 'center', padding: 'var(--space-8)', color: 'var(--text-muted)' }}>
                       <MessageSquare size={32} style={{ margin: '0 auto var(--space-3)', opacity: 0.3 }} />
                       <p>No testimonials yet. Be the first to share your experience!</p>
                     </div>
                   )}
 
-                  {/* Review Form */}
+                  {/* Testimonial Form */}
                   <ReviewForm professionalId={id} onReviewSubmitted={handleReviewSubmitted} />
                 </div>
               )}
+
 
               {/* Certifications */}
               {activeTab === 'certifications' && (
