@@ -1,6 +1,6 @@
 .review-form {
-  background: var(--color-white);
-  border: 1px solid var(--color-gray-200);
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-xl);
   padding: var(--space-6);
   margin-top: var(--space-6);
@@ -10,41 +10,20 @@
   font-family: var(--font-display);
   font-size: var(--text-lg);
   font-weight: 700;
-  color: var(--color-gray-900);
+  color: var(--text-primary);
   margin-bottom: var(--space-4);
 }
 
-.star-rating-selector {
-  display: flex;
-  gap: var(--space-1);
-  margin-bottom: var(--space-4);
-}
-
-.star-rating-selector button {
-  background: none;
-  border: none;
-  padding: var(--space-1);
-  cursor: pointer;
-  color: var(--color-gray-300);
-  transition: all var(--transition-fast);
-}
-
-.star-rating-selector button.filled {
-  color: #f59e0b; /* Amber 500 */
-}
-
-.star-rating-selector button:hover {
-  transform: scale(1.1);
-}
 
 .review-textarea {
   width: 100%;
-  border: 1.5px solid var(--color-gray-200);
+  border: 1.5px solid var(--border-strong);
   border-radius: var(--radius-md);
   padding: var(--space-3);
   font-family: inherit;
   font-size: var(--text-sm);
-  color: var(--color-gray-900);
+  color: var(--text-primary);
+  background: var(--surface-base);
   margin-bottom: var(--space-4);
   resize: vertical;
   min-height: 100px;
@@ -53,26 +32,27 @@
 
 .review-textarea:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(122, 154, 110, 0.1);
 }
 
 .review-input {
   width: 100%;
-  border: 1.5px solid var(--color-gray-200);
+  border: 1.5px solid var(--border-strong);
   border-radius: var(--radius-md);
   padding: var(--space-3);
   font-family: inherit;
   font-size: var(--text-sm);
-  color: var(--color-gray-900);
+  color: var(--text-primary);
+  background: var(--surface-base);
   margin-bottom: var(--space-2);
   transition: border-color var(--transition-fast);
 }
 
 .review-input:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(122, 154, 110, 0.1);
 }
 
 .review-error {
@@ -85,8 +65,8 @@
 
 /* Review List overrides */
 .review-card {
-  background: var(--color-white);
-  border: 1px solid var(--color-gray-200);
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   padding: var(--space-5);
   margin-bottom: var(--space-4);
@@ -109,33 +89,28 @@
   width: 40px;
   height: 40px;
   border-radius: var(--radius-full);
-  background: var(--color-gray-100);
+  background: var(--surface-elevated);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  color: var(--color-gray-600);
+  color: var(--text-primary);
 }
 
 .review-author h5 {
   font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--color-gray-900);
+  color: var(--text-primary);
 }
 
 .review-date {
   font-size: var(--text-xs);
-  color: var(--color-gray-400);
+  color: var(--text-muted);
 }
 
-.review-stars {
-  display: flex;
-  color: #f59e0b;
-  gap: 2px;
-}
 
 .review-text {
   font-size: var(--text-sm);
-  color: var(--color-gray-600);
+  color: var(--text-secondary);
   line-height: 1.6;
 }

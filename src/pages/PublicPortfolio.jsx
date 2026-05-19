@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { dbService } from '../lib/dbService';
 import {
   Loader2, ShieldCheck, AlertCircle, MessageSquare,
-  Mail, Phone, Check, MapPin, Globe, Star,
+  Mail, Phone, Check, MapPin, Globe,
   ChevronDown, ChevronUp, ExternalLink, ArrowRight,
   Users, Briefcase, Clock, TrendingUp, Award, Zap
 } from 'lucide-react';
@@ -288,10 +288,6 @@ function PortfolioFooter({ c, t }) {
 // Minimal centered editorial hero
 function LayoutAuthority({ c, t, onBook }) {
   const initials = (c.name || 'P').split(' ').filter(Boolean).map(n => n[0]).join('').toUpperCase().slice(0, 2);
-  const stats = c.stats || [];
-  const ratingStat = stats.find(s => s.label.toLowerCase().includes('rating'));
-  const rating = c.rating || (ratingStat ? ratingStat.value : '5.0');
-  const reviewCount = c.reviews || '12+';
 
   return (
     <div style={{ fontFamily: 'Inter,system-ui,sans-serif', background: '#fff' }}>
@@ -302,10 +298,6 @@ function LayoutAuthority({ c, t, onBook }) {
           {/* Trust Signals Near Top */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 40, flexWrap: 'wrap', justifyContent: 'center' }}>
             <VerifiedBadge />
-            <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 600, color: '#1A1A1A' }}>
-              <Star size={16} fill="#F59E0B" color="#F59E0B" /> {rating} 
-              <span style={{ color: '#6B7280', fontWeight: 400 }}>• {reviewCount} reviews</span>
-            </span>
           </div>
 
           <Avatar initials={initials} size={110} />

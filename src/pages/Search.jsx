@@ -258,12 +258,12 @@ export default function SearchPage() {
             <div className="search-top-input" style={{ maxWidth: 200 }}>
               <MapPin size={18} />
               <select
-                style={{ width: '100%', background: 'none', border: 'none', color: 'var(--color-white)', cursor: 'pointer' }}
+                style={{ width: '100%', background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer' }}
                 value={cityFilter}
                 onChange={(e) => setCityFilter(e.target.value)}
               >
-                <option value="" style={{ color: 'var(--color-gray-900)' }}>All Cities</option>
-                {cities.map(c => <option key={c} value={c} style={{ color: 'var(--color-gray-900)' }}>{c}</option>)}
+                <option value="" style={{ color: 'var(--text-primary)' }}>All Cities</option>
+                {cities.map(c => <option key={c} value={c} style={{ color: 'var(--text-primary)' }}>{c}</option>)}
               </select>
             </div>
             <button className="btn btn-primary">
@@ -350,8 +350,8 @@ export default function SearchPage() {
             <div className="search-results-grid">
               {isLoading ? (
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4rem', gridColumn: '1 / -1' }}>
-                  <Loader2 size={40} className="spin" style={{ color: 'var(--color-primary)' }} />
-                  <p style={{ marginTop: '1rem', color: 'var(--color-gray-500)' }}>Loading professionals...</p>
+                  <Loader2 size={40} className="spin" style={{ color: 'var(--accent-primary)' }} />
+                  <p style={{ marginTop: '1rem', color: 'var(--text-secondary)' }}>Loading professionals...</p>
                 </div>
               ) : error ? (
                 <div className="search-no-results" style={{ gridColumn: '1 / -1', border: '1px solid var(--color-error)' }}>
@@ -366,7 +366,7 @@ export default function SearchPage() {
               ) : professionals.length > 0 ? (
                 // Data was fetched but active filters removed everything
                 <div className="search-no-results">
-                  <Search size={48} style={{ color: 'var(--color-gray-300)', margin: '0 auto var(--space-4)' }} />
+                  <Search size={48} style={{ color: 'var(--text-muted)', margin: '0 auto var(--space-4)' }} />
                   <h3>No matches for current filters</h3>
                   <p>{professionals.length} expert{professionals.length !== 1 ? 's are' : ' is'} registered — try broadening your search.</p>
                   <button className="btn btn-secondary" onClick={clearFilters} style={{ marginTop: 'var(--space-4)' }}>
@@ -376,7 +376,7 @@ export default function SearchPage() {
               ) : (
                 // Registry is genuinely empty
                 <div className="search-no-results">
-                  <Search size={48} style={{ color: 'var(--color-gray-300)', margin: '0 auto var(--space-4)' }} />
+                  <Search size={48} style={{ color: 'var(--text-muted)', margin: '0 auto var(--space-4)' }} />
                   <h3>No experts yet</h3>
                   <p>The expert registry is empty. Approved professionals will appear here automatically.</p>
                 </div>

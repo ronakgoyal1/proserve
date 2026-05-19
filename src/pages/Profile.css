@@ -5,9 +5,9 @@
 
 /* Profile Header */
 .profile-header {
-  background: var(--color-primary-dark);
+  background: var(--bg-primary);
   padding: var(--space-10) 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .profile-header-inner {
@@ -20,11 +20,11 @@
   width: 100px;
   height: 100px;
   border-radius: var(--radius-xl);
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-muted));
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: #111;
   font-family: var(--font-display);
   font-weight: 800;
   font-size: var(--text-3xl);
@@ -48,7 +48,7 @@
   font-family: var(--font-display);
   font-size: var(--text-2xl);
   font-weight: 800;
-  color: var(--color-white);
+  color: var(--text-primary);
 }
 
 .profile-verified {
@@ -76,12 +76,12 @@
   align-items: center;
   gap: 4px;
   font-size: var(--text-sm);
-  color: var(--color-gray-400);
+  color: var(--text-secondary);
 }
 
 .profile-meta .rating-text {
   font-weight: 600;
-  color: var(--color-white);
+  color: var(--text-primary);
 }
 
 .profile-actions {
@@ -116,7 +116,7 @@
 .profile-tabs {
   display: flex;
   gap: var(--space-2);
-  border-bottom: 2px solid var(--color-gray-200);
+  border-bottom: 2px solid var(--border-subtle);
   margin-bottom: var(--space-6);
   overflow-x: auto;
 }
@@ -125,7 +125,7 @@
   padding: var(--space-3) var(--space-5);
   font-size: var(--text-sm);
   font-weight: 500;
-  color: var(--color-gray-500);
+  color: var(--text-secondary);
   border-bottom: 2px solid transparent;
   margin-bottom: -2px;
   transition: all var(--transition-fast);
@@ -134,19 +134,19 @@
 }
 
 .profile-tab:hover {
-  color: var(--color-gray-700);
+  color: var(--text-primary);
 }
 
 .profile-tab.active {
-  color: var(--color-primary);
-  border-bottom-color: var(--color-primary);
+  color: var(--accent-primary);
+  border-bottom-color: var(--accent-primary);
   font-weight: 600;
 }
 
 /* Bio */
 .profile-bio {
   font-size: var(--text-sm);
-  color: var(--color-gray-600);
+  color: var(--text-secondary);
   line-height: 1.8;
   margin-bottom: var(--space-6);
 }
@@ -163,8 +163,8 @@
   padding: var(--space-2) var(--space-4);
   font-size: var(--text-sm);
   font-weight: 500;
-  color: var(--color-primary);
-  background: var(--color-primary-bg);
+  color: var(--accent-primary);
+  background: var(--surface-elevated);
   border-radius: var(--radius-full);
 }
 
@@ -181,8 +181,8 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-4);
-  background: var(--color-gray-100);
-  color: var(--color-gray-700);
+  background: var(--surface-elevated);
+  color: var(--text-primary);
   font-size: var(--text-sm);
   font-weight: 500;
   border-radius: var(--radius-md);
@@ -197,7 +197,7 @@
 }
 
 .package-card {
-  border: 1px solid var(--color-gray-200);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-xl);
   padding: var(--space-8);
   transition: all var(--transition-base);
@@ -206,13 +206,13 @@
 }
 
 .package-card:hover {
-  border-color: var(--color-primary);
+  border-color: var(--accent-primary);
   box-shadow: var(--shadow-card-hover);
 }
 
 .package-card.featured-package {
-  border-color: var(--color-primary);
-  background: var(--color-primary-bg);
+  border-color: var(--accent-primary);
+  background: var(--surface-elevated);
   position: relative;
 }
 
@@ -221,8 +221,8 @@
   top: -10px;
   right: var(--space-4);
   padding: 2px 10px;
-  background: var(--color-primary);
-  color: white;
+  background: var(--accent-primary);
+  color: #111;
   font-size: 11px;
   font-weight: 600;
   border-radius: var(--radius-full);
@@ -232,20 +232,20 @@
   font-family: var(--font-display);
   font-size: var(--text-lg);
   font-weight: 700;
-  color: var(--color-gray-900);
+  color: var(--text-primary);
   margin-bottom: var(--space-1);
 }
 
 .package-price {
   font-size: var(--text-2xl);
   font-weight: 800;
-  color: var(--color-primary);
+  color: var(--accent-primary);
   margin-bottom: var(--space-2);
 }
 
 .package-desc {
   font-size: var(--text-sm);
-  color: var(--color-gray-500);
+  color: var(--text-secondary);
   margin-bottom: var(--space-4);
   line-height: 1.5;
 }
@@ -263,7 +263,7 @@
   align-items: center;
   gap: var(--space-2);
   font-size: var(--text-sm);
-  color: var(--color-gray-600);
+  color: var(--text-secondary);
 }
 
 .package-feature svg {
@@ -280,7 +280,7 @@
 
 .profile-review {
   padding: var(--space-6);
-  border: 1px solid var(--color-gray-200);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-xl);
 }
 
@@ -301,11 +301,11 @@
   width: 36px;
   height: 36px;
   border-radius: var(--radius-full);
-  background: var(--color-primary-bg);
+  background: var(--surface-elevated);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-primary);
+  color: var(--accent-primary);
   font-weight: 700;
   font-size: var(--text-xs);
 }
@@ -313,17 +313,17 @@
 .review-author-info h4 {
   font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--color-gray-900);
+  color: var(--text-primary);
 }
 
 .review-date {
   font-size: var(--text-xs);
-  color: var(--color-gray-400);
+  color: var(--text-muted);
 }
 
 .review-text {
   font-size: var(--text-sm);
-  color: var(--color-gray-600);
+  color: var(--text-secondary);
   line-height: 1.7;
 }
 
@@ -335,12 +335,12 @@
 }
 
 .sidebar-card {
-  background: var(--color-primary-dark);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-xl);
   padding: var(--space-6);
   margin-bottom: var(--space-4);
-  color: var(--color-gray-300);
+  color: var(--text-primary);
   box-shadow: var(--shadow-lg);
 }
 
@@ -348,7 +348,7 @@
   font-family: var(--font-display);
   font-size: var(--text-base);
   font-weight: 700;
-  color: var(--color-white);
+  color: var(--text-primary);
   margin-bottom: var(--space-4);
 }
 
@@ -362,7 +362,7 @@
 .availability-day {
   text-align: center;
   font-size: 11px;
-  color: var(--color-gray-400);
+  color: var(--text-muted);
   padding: var(--space-1) 0;
 }
 
@@ -387,8 +387,8 @@
 }
 
 .availability-slot.unavailable {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--color-gray-500);
+  background: var(--surface-elevated);
+  color: var(--text-muted);
 }
 
 .sidebar-cta-buttons {

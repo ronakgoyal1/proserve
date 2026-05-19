@@ -72,8 +72,8 @@ export default function Home() {
               <Link to="/login?tab=signup&role=professional" className="btn-hero-secondary-new" style={{ opacity: 0.7, fontWeight: 500 }}>List Your Practice</Link>
             </div>
             
-            <div style={{ fontSize: '13.5px', color: '#9CA3AF', marginBottom: '56px', display: 'flex', alignItems: 'center', gap: '8px', position: 'relative', zIndex: 1 }}>
-              <ShieldCheck size={16} style={{ color: '#92B284' }} /> Talk directly on WhatsApp. No platform fees.
+            <div style={{ fontSize: '13.5px', color: 'var(--text-muted)', marginBottom: '56px', display: 'flex', alignItems: 'center', gap: '8px', position: 'relative', zIndex: 1 }}>
+              <ShieldCheck size={16} style={{ color: 'var(--accent-primary)' }} /> Talk directly on WhatsApp. No platform fees.
             </div>
 
             <div className="hero-stats-new" style={{ position: 'relative', zIndex: 1 }}>
@@ -131,25 +131,25 @@ export default function Home() {
       <div className="hero-features-wrapper">
         <div className="container">
           <div className="hero-features-grid">
-            <div className="card-premium dark-card hero-feature-card animate-fade-in-up delay-1">
+            <div className="card-premium hero-feature-card animate-fade-in-up delay-1">
               <div className="feature-icon-wrapper"><ShieldCheck size={24} /></div>
               <div className="feature-content">
-                <h4 style={{ color: 'var(--color-white)' }}>Verified Profiles</h4>
-                <p style={{ color: 'var(--color-gray-400)' }}>100% background and credential checked experts.</p>
+                <h4 style={{ color: 'var(--text-primary)' }}>Verified Profiles</h4>
+                <p style={{ color: 'var(--text-secondary)' }}>100% background and credential checked experts.</p>
               </div>
             </div>
-            <div className="card-premium dark-card hero-feature-card animate-fade-in-up delay-2">
+            <div className="card-premium hero-feature-card animate-fade-in-up delay-2">
               <div className="feature-icon-wrapper"><Zap size={24} /></div>
               <div className="feature-content">
-                <h4 style={{ color: 'var(--color-white)' }}>AI Matching</h4>
-                <p style={{ color: 'var(--color-gray-400)' }}>Smart algorithms to find the perfect professional for your needs.</p>
+                <h4 style={{ color: 'var(--text-primary)' }}>AI Matching</h4>
+                <p style={{ color: 'var(--text-secondary)' }}>Smart algorithms to find the perfect professional for your needs.</p>
               </div>
             </div>
-            <div className="card-premium dark-card hero-feature-card animate-fade-in-up delay-3">
+            <div className="card-premium hero-feature-card animate-fade-in-up delay-3">
               <div className="feature-icon-wrapper"><Clock size={24} /></div>
               <div className="feature-content">
-                <h4 style={{ color: 'var(--color-white)' }}>Instant Booking</h4>
-                <p style={{ color: 'var(--color-gray-400)' }}>Secure available time slots effortlessly in seconds.</p>
+                <h4 style={{ color: 'var(--text-primary)' }}>Instant Booking</h4>
+                <p style={{ color: 'var(--text-secondary)' }}>Secure available time slots effortlessly in seconds.</p>
               </div>
             </div>
           </div>
@@ -254,48 +254,48 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CONTINUOUS DARK SECTION (Premium Footer Lead-in) */}
-      <div className="bg-dark text-white" style={{ paddingTop: 'var(--space-20)' }}>
+      {/* CONTINUOUS BACKGROUND SECTION */}
+      <div className="bg-primary-auto" style={{ paddingTop: 'var(--space-20)' }}>
         
         {/* Why Choose */}
         <section className="section-sm" id="why-choose">
           <div className="container">
             <div className="section-header">
-              <h2 style={{color: 'var(--color-white)'}}>Why Choose Wisor?</h2>
-              <p style={{color: 'var(--color-gray-400)'}}>Built for trust, transparency, and high-end convenience</p>
+              <h2 style={{color: 'var(--text-primary)'}}>Why Choose Wisor?</h2>
+              <p style={{color: 'var(--text-secondary)'}}>Built for trust, transparency, and high-end convenience</p>
             </div>
 
             <div className="why-grid">
-              <div className="card-premium dark-card why-card animate-fade-in-up delay-1">
+              <div className="card-premium why-card animate-fade-in-up delay-1">
                 <div className="why-card-icon">
                   <ShieldCheck size={24} />
                 </div>
-                <h3 style={{color: 'var(--color-white)'}}>Verified Experts</h3>
-                <p style={{color: 'var(--color-gray-400)'}}>Every professional is verified with valid credentials and checks.</p>
+                <h3 style={{color: 'var(--text-primary)'}}>Verified Experts</h3>
+                <p style={{color: 'var(--text-secondary)'}}>Every professional is verified with valid credentials and checks.</p>
               </div>
 
-              <div className="card-premium dark-card why-card animate-fade-in-up delay-2">
+              <div className="card-premium why-card animate-fade-in-up delay-2">
                 <div className="why-card-icon">
                   <CreditCard size={24} />
                 </div>
-                <h3>Transparent Pricing</h3>
-                <p>Compare packages and prices upfront. No hidden fees, ever.</p>
+                <h3 style={{color: 'var(--text-primary)'}}>Transparent Pricing</h3>
+                <p style={{color: 'var(--text-secondary)'}}>Compare packages and prices upfront. No hidden fees, ever.</p>
               </div>
 
-              <div className="card-premium dark-card why-card animate-fade-in-up delay-3">
+              <div className="card-premium why-card animate-fade-in-up delay-3">
                 <div className="why-card-icon">
                   <Clock size={24} />
                 </div>
-                <h3>Easy Booking</h3>
-                <p>Book consultations instantly. Get matched with an expert in minutes.</p>
+                <h3 style={{color: 'var(--text-primary)'}}>Easy Booking</h3>
+                <p style={{color: 'var(--text-secondary)'}}>Book consultations instantly. Get matched with an expert in minutes.</p>
               </div>
 
-              <div className="card-premium dark-card why-card animate-fade-in-up delay-4">
+              <div className="card-premium why-card animate-fade-in-up delay-4">
                 <div className="why-card-icon">
                   <Star size={24} />
                 </div>
-                <h3 style={{color: 'var(--color-white)'}}>Rated & Reviewed</h3>
-                <p style={{color: 'var(--color-gray-400)'}}>Read genuine reviews from real clients before making a choice.</p>
+                <h3 style={{color: 'var(--text-primary)'}}>Rated & Reviewed</h3>
+                <p style={{color: 'var(--text-secondary)'}}>Read genuine reviews from real clients before making a choice.</p>
               </div>
             </div>
           </div>
@@ -305,13 +305,13 @@ export default function Home() {
         <section className="section-sm" id="testimonials">
           <div className="container">
             <div className="section-header">
-              <h2 style={{color: 'var(--color-white)'}}>What Our Clients Say</h2>
-              <p style={{color: 'var(--color-gray-400)'}}>Real feedback from verified clients across India</p>
+              <h2 style={{color: 'var(--text-primary)'}}>What Our Clients Say</h2>
+              <p style={{color: 'var(--text-secondary)'}}>Real feedback from verified clients across India</p>
             </div>
 
             <div className="testimonials-grid">
               {testimonials.map(t => (
-                <div key={t.id} className="card-premium dark-card testimonial-card animate-fade-in-up">
+                <div key={t.id} className="card-premium testimonial-card animate-fade-in-up">
                   <div className="testimonial-stars">
                     {Array.from({ length: t.rating }, (_, i) => (
                       <Star key={i} size={16} fill="currentColor" />
@@ -323,8 +323,8 @@ export default function Home() {
                       {t.name.split(' ').map(n => n[0]).join('')}
                     </div>
                     <div className="testimonial-author-info">
-                      <h4 style={{color: 'var(--color-white)'}}>{t.name}</h4>
-                      <p style={{color: 'var(--color-gray-400)'}}>{t.role}</p>
+                      <h4 style={{color: 'var(--text-primary)'}}>{t.name}</h4>
+                      <p style={{color: 'var(--text-secondary)'}}>{t.role}</p>
                     </div>
                   </div>
                 </div>
@@ -337,12 +337,12 @@ export default function Home() {
         <section className="section-sm" id="faq">
           <div className="container" style={{ maxWidth: '800px' }}>
             <div className="section-header">
-              <h2 style={{color: 'var(--color-white)'}}>Frequently Asked Questions</h2>
-              <p style={{color: 'var(--color-gray-400)'}}>Everything you need to know about navigating Wisor.</p>
+              <h2 style={{color: 'var(--text-primary)'}}>Frequently Asked Questions</h2>
+              <p style={{color: 'var(--text-secondary)'}}>Everything you need to know about navigating Wisor.</p>
             </div>
             <div className="faq-list">
               {faqs.map((faq, index) => (
-                <div key={index} className={`faq-item dark-card ${openFaq === index ? 'open' : ''}`} onClick={() => toggleFaq(index)}>
+                <div key={index} className={`faq-item ${openFaq === index ? 'open' : ''}`} onClick={() => toggleFaq(index)}>
                   <div className="faq-question">
                     <h4>{faq.q}</h4>
                     <ChevronDown size={20} className="faq-icon" />
@@ -359,10 +359,10 @@ export default function Home() {
         {/* Final Massive CTA */}
         <section className="section text-center" id="final-cta" style={{ position: 'relative', overflow: 'hidden' }}>
           <div className="container" style={{ position: 'relative', zIndex: 10 }}>
-            <h2 style={{ color: 'white', fontFamily: 'var(--font-display)', fontSize: 'var(--text-5xl)', marginBottom: 'var(--space-4)' }}>
+            <h2 style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontSize: 'var(--text-5xl)', marginBottom: 'var(--space-4)' }}>
               Ready to secure your financial future?
             </h2>
-            <p style={{ color: 'var(--color-gray-300)', fontSize: 'var(--text-xl)', marginBottom: 'var(--space-10)', maxWidth: '600px', margin: '0 auto var(--space-8)' }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-xl)', marginBottom: 'var(--space-10)', maxWidth: '600px', margin: '0 auto var(--space-8)' }}>
               Join the growing community of businesses who trust our verified CA and CMA network to handle compliance seamlessly.
             </p>
             <div style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>

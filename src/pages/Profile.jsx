@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import { 
-  Star, MapPin, Check, ShieldCheck, Clock, Calendar,
+  MapPin, Check, ShieldCheck, Clock, Calendar,
   MessageCircle, Share2, Award, Briefcase, ChevronRight,
-  Globe, Phone, Shield
+  Globe, Phone, Shield, MessageSquare, Users
 } from 'lucide-react';
 import { dbService } from '../lib/dbService';
 import { buildWhatsAppUrl, trackWhatsAppClick, isWhatsAppEnabled } from '../lib/whatsapp';
@@ -19,7 +19,6 @@ export default function Profile() {
   const [isLoading, setIsLoading] = useState(true);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [reviews, setReviews] = useState([]);
-  const [avgRating, setAvgRating] = useState({ average: 0, count: 0 });
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -33,11 +32,8 @@ export default function Profile() {
       try {
         const data = await dbService.getProfessionalById(id);
         setProfessional(data);
-        // Load reviews
         const proReviews = dbService.getReviewsForProfessional(id);
         setReviews(proReviews);
-        const avg = dbService.getAverageRating(id);
-        setAvgRating(avg);
       } catch (e) {
         console.error(e);
       } finally {
@@ -48,14 +44,7 @@ export default function Profile() {
   }, [id]);
 
   const handleReviewSubmitted = (newReview) => {
-    // Prepend the new review and recalculate average
     setReviews(prev => [newReview, ...prev]);
-    const updatedReviews = [newReview, ...reviews];
-    const sum = updatedReviews.reduce((acc, r) => acc + Number(r.rating), 0);
-    setAvgRating({
-      average: Math.round((sum / updatedReviews.length) * 10) / 10,
-      count: updatedReviews.length,
-    });
   };
 
   if (isLoading) {
@@ -82,11 +71,7 @@ export default function Profile() {
     );
   }
 
-  // Use live review count if we have reviews, otherwise fall back to professional.reviews
-  const displayRating = avgRating.count > 0 ? avgRating.average : professional.rating;
-  const displayCount = avgRating.count > 0 ? avgRating.count : professional.reviews;
-
-  const tabs = ['about', 'services', 'reviews', 'certifications'];
+  const tabs = ['about', 'services', 'testimonials', 'certifications'];
 
   return (
     <main className="profile-page" id="profile-page">
@@ -113,7 +98,7 @@ export default function Profile() {
                     <span className="badge badge-success">
                       <ShieldCheck size={12} /> Documents Verified
                     </span>
-                    <span className="badge" style={{ background: 'var(--color-gray-100)', color: 'var(--color-gray-600)'}}>
+                    <span className="badge" style={{ background: 'var(--surface-elevated)', color: 'var(--text-secondary)'}}>
                       Verified {professional.verification.date}
                     </span>
                   </>
@@ -124,10 +109,12 @@ export default function Profile() {
                 )}
               </div>
               <div className="profile-meta">
-                <span className="rating-text">
-                  <Star size={14} fill="var(--color-star)" color="var(--color-star)" />
-                  {displayRating} ({displayCount} reviews)
-                </span>
+                {reviews.length > 0 && (
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <MessageSquare size={14} style={{ color: 'var(--accent-primary)' }} />
+                    {reviews.length} client {reviews.length === 1 ? 'testimonial' : 'testimonials'}
+                  </span>
+                )}
                 <span><Briefcase size={14} /> {professional.experience} years</span>
                 <span><MapPin size={14} /> {professional.city}</span>
                 <span><Globe size={14} /> {professional.languages.join(', ')}</span>
@@ -150,15 +137,15 @@ export default function Profile() {
                     <MessageCircle size={16} /> Chat on WhatsApp
                   </a>
                 ) : (
-                  <button className="btn" style={{ background: '#f3f4f6', color: '#9CA3AF', border: '1px solid #E8E8E5', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, cursor: 'not-allowed' }} disabled title="WhatsApp not available for this expert">
+                  <button className="btn" style={{ background: 'var(--surface-elevated)', color: 'var(--text-muted)', border: '1px solid var(--border-subtle)', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, cursor: 'not-allowed' }} disabled title="WhatsApp not available for this expert">
                     <MessageCircle size={16} /> Chat on WhatsApp
                   </button>
                 )}
-                <button className="btn" style={{ background: 'transparent', color: '#111', border: '1px solid #D1D1CE', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600 }} onClick={() => setIsBookingOpen(true)}>
+                <button className="btn" style={{ background: 'transparent', color: 'var(--text-primary)', border: '1px solid var(--border-strong)', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600 }} onClick={() => setIsBookingOpen(true)}>
                   <Calendar size={16} /> Book Consultation
                 </button>
                 {(professional.contactPhone || professional.contact_phone) && (
-                  <a href={`tel:${professional.contactPhone || professional.contact_phone}`} className="btn" style={{ background: 'transparent', color: '#111', border: '1px solid #D1D1CE', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600 }}>
+                  <a href={`tel:${professional.contactPhone || professional.contact_phone}`} className="btn" style={{ background: 'transparent', color: 'var(--text-primary)', border: '1px solid var(--border-strong)', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600 }}>
                     <Phone size={16} /> Call
                   </a>
                 )}
@@ -193,7 +180,7 @@ export default function Profile() {
                   <h2 style={{ fontSize: '1.5rem', fontWeight: 500, marginBottom: '24px', fontFamily: "'Playfair Display', serif" }}>
                     About
                   </h2>
-                  <p className="profile-bio" style={{ lineHeight: 1.7, color: '#4B5563', marginBottom: '40px' }}>{professional.bio}</p>
+                  <p className="profile-bio" style={{ lineHeight: 1.7, color: 'var(--text-secondary)', marginBottom: '40px' }}>{professional.bio}</p>
 
                   <h2 style={{ fontSize: '1.5rem', fontWeight: 500, marginBottom: '24px', fontFamily: "'Playfair Display', serif" }}>
                     Services Offered
@@ -246,17 +233,13 @@ export default function Profile() {
                 </div>
               )}
 
-              {/* Reviews */}
-              {activeTab === 'reviews' && (
+              {/* Testimonials */}
+              {activeTab === 'testimonials' && (
                 <div className="animate-fade-in" style={{ padding: '24px 0' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
                     <h2 style={{ fontSize: '1.5rem', fontWeight: 500, fontFamily: "'Playfair Display', serif" }}>
-                      Client Reviews ({displayCount})
+                      Client Testimonials {reviews.length > 0 && <span style={{ fontSize: '1rem', fontWeight: 400, color: 'var(--text-muted)' }}>({reviews.length})</span>}
                     </h2>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--color-gray-900)' }}>
-                      <Star size={20} fill="var(--color-star)" color="var(--color-star)" />
-                      {displayRating}
-                    </div>
                   </div>
 
                   {reviews.length > 0 ? (
@@ -282,31 +265,27 @@ export default function Profile() {
                                     </span>
                                   )}
                                 </h4>
-                                <div style={{ display: 'flex', gap: '2px', marginTop: '2px' }}>
-                                  {Array.from({ length: r.rating }, (_, i) => (
-                                    <Star key={i} size={12} fill="var(--color-star)" color="var(--color-star)" />
-                                  ))}
-                                </div>
+                                {r.service_used && (
+                                  <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                                    {r.service_used}
+                                  </div>
+                                )}
                               </div>
                             </div>
                             <div>
                               <span className="review-date">
                                 {new Date(r.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}
                               </span>
-                              {r.service_used && (
-                                <div style={{ fontSize: '11px', color: 'var(--color-gray-400)', marginTop: '2px' }}>
-                                  Service: {r.service_used}
-                                </div>
-                              )}
                             </div>
                           </div>
                           <p className="review-text">{r.text}</p>
                         </div>
                       ))}
                     </div>
-                  ) : (
-                    <div style={{ textAlign: 'center', padding: 'var(--space-8)', color: 'var(--color-gray-400)' }}>
-                      <p>No reviews yet. Be the first to leave a review!</p>
+                  {reviews.length === 0 && (
+                    <div style={{ textAlign: 'center', padding: 'var(--space-8)', color: 'var(--text-muted)' }}>
+                      <MessageSquare size={32} style={{ margin: '0 auto var(--space-3)', opacity: 0.3 }} />
+                      <p>No testimonials yet. Be the first to share your experience!</p>
                     </div>
                   )}
 
@@ -343,24 +322,24 @@ export default function Profile() {
             {/* Sidebar */}
             <aside className="profile-sidebar">
               {professional.verification?.status === 'verified' ? (
-              <div className="sidebar-card" style={{ border: '1px solid #E8E8E5', background: '#FAFAF8', borderRadius: '16px', padding: '24px' }}>
-                <h3 style={{ color: '#1A1A1A', fontSize: '16px', fontWeight: 600 }}><ShieldCheck size={18} style={{ verticalAlign: 'middle', marginRight: 8, marginTop: -2, color: '#92B284' }}/> Trust & Verification</h3>
+              <div className="sidebar-card" style={{ border: '1px solid var(--border-subtle)', background: 'var(--surface-elevated)', borderRadius: '16px', padding: '24px' }}>
+                <h3 style={{ color: 'var(--text-primary)', fontSize: '16px', fontWeight: 600 }}><ShieldCheck size={18} style={{ verticalAlign: 'middle', marginRight: 8, marginTop: -2, color: 'var(--accent-primary)' }}/> Trust & Verification</h3>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '24px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#4B5563', fontSize: '14px', fontWeight: 500 }}>
-                    <div style={{ padding: 2, background: 'rgba(122,154,110,0.1)', color: '#7A9A6E', borderRadius: '50%' }}><Check size={14} strokeWidth={3} /></div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--text-secondary)', fontSize: '14px', fontWeight: 500 }}>
+                    <div style={{ padding: 2, background: 'var(--surface-base)', color: 'var(--accent-primary)', borderRadius: '50%' }}><Check size={14} strokeWidth={3} /></div>
                     Identity Verified
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#4B5563', fontSize: '14px', fontWeight: 500 }}>
-                    <div style={{ padding: 2, background: 'rgba(122,154,110,0.1)', color: '#7A9A6E', borderRadius: '50%' }}><Check size={14} strokeWidth={3} /></div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--text-secondary)', fontSize: '14px', fontWeight: 500 }}>
+                    <div style={{ padding: 2, background: 'var(--surface-base)', color: 'var(--accent-primary)', borderRadius: '50%' }}><Check size={14} strokeWidth={3} /></div>
                     Credentials Verified
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#4B5563', fontSize: '14px', fontWeight: 500 }}>
-                    <div style={{ padding: 2, background: 'rgba(122,154,110,0.1)', color: '#7A9A6E', borderRadius: '50%' }}><Check size={14} strokeWidth={3} /></div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--text-secondary)', fontSize: '14px', fontWeight: 500 }}>
+                    <div style={{ padding: 2, background: 'var(--surface-base)', color: 'var(--accent-primary)', borderRadius: '50%' }}><Check size={14} strokeWidth={3} /></div>
                     Documents Verified
                   </div>
                 </div>
-                <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid #E8E8E5', fontSize: '13px', color: '#9CA3AF', textAlign: 'center' }}>
+                <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid var(--border-subtle)', fontSize: '13px', color: 'var(--text-muted)', textAlign: 'center' }}>
                   Verified since {professional.verification?.date}
                 </div>
               </div>
@@ -371,10 +350,10 @@ export default function Profile() {
               </div>
               )}
 
-              <div className="sidebar-card" style={{ border: '1px solid #E8E8E5', borderRadius: '16px', padding: '24px', marginTop: '24px' }}>
-                <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '8px' }}>Get in Touch</h3>
-                <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '24px' }}>
-                  Starting at <strong style={{ color: '#1A1A1A', fontSize: '20px' }}>₹{professional.startingPrice.toLocaleString()}</strong>
+              <div className="sidebar-card" style={{ border: '1px solid var(--border-subtle)', borderRadius: '16px', padding: '24px', marginTop: '24px' }}>
+                <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '8px', color: 'var(--text-primary)' }}>Get in Touch</h3>
+                <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '24px' }}>
+                  Starting at <strong style={{ color: 'var(--text-primary)', fontSize: '20px' }}>₹{professional.startingPrice.toLocaleString()}</strong>
                 </p>
                 <div className="sidebar-cta-buttons" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {isWhatsAppEnabled(professional) ? (
@@ -394,11 +373,11 @@ export default function Profile() {
                       <MessageCircle size={18} /> Chat on WhatsApp
                     </a>
                   ) : (
-                    <button className="btn" style={{ background: '#f3f4f6', color: '#9CA3AF', border: '1px solid #E8E8E5', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, width: '100%', display: 'flex', justifyContent: 'center', cursor: 'not-allowed' }} disabled title="WhatsApp not available for this expert">
+                    <button className="btn" style={{ background: 'var(--surface-elevated)', color: 'var(--text-muted)', border: '1px solid var(--border-subtle)', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, width: '100%', display: 'flex', justifyContent: 'center', cursor: 'not-allowed' }} disabled title="WhatsApp not available for this expert">
                       <MessageCircle size={18} /> Chat on WhatsApp
                     </button>
                   )}
-                  <button className="btn" style={{ background: 'transparent', color: '#111', border: '1px solid #D1D1CE', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, width: '100%', display: 'flex', justifyContent: 'center' }} onClick={() => setIsBookingOpen(true)}>
+                  <button className="btn" style={{ background: 'transparent', color: 'var(--text-primary)', border: '1px solid var(--border-strong)', padding: '0 24px', height: '48px', borderRadius: '8px', fontWeight: 600, width: '100%', display: 'flex', justifyContent: 'center' }} onClick={() => setIsBookingOpen(true)}>
                     <Calendar size={18} /> Request Callback
                   </button>
                 </div>

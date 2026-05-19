@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Star, Check, MapPin, Briefcase } from 'lucide-react';
+import { Check, MapPin, Briefcase } from 'lucide-react';
 import { buildWhatsAppUrl, trackWhatsAppClick, isWhatsAppEnabled } from '../lib/whatsapp';
 import './ProfessionalCard.css';
 
@@ -12,7 +12,7 @@ const WaIcon = () => (
 
 export default function ProfessionalCard({ professional }) {
   const {
-    id, name, category, initials, rating, reviews,
+    id, name, category, initials,
     experience, city, startingPrice, verification, featured,
     availability, services
   } = professional;
@@ -53,17 +53,13 @@ export default function ProfessionalCard({ professional }) {
               </span>
             )}
             {verification?.status === 'unverified' && (
-              <span className="badge" style={{ background: 'var(--color-gray-100)', color: 'var(--color-gray-500)' }}>
+              <span className="badge" style={{ background: 'var(--surface-elevated)', color: 'var(--text-secondary)' }}>
                 Unverified
               </span>
             )}
           </div>
           <div className="pro-card-meta">
-            <span className="pro-card-rating">
-              <Star size={14} fill="currentColor" />
-              {rating} <span className="pro-card-rating-count">• {reviews} reviews</span>
-            </span>
-            <span><Briefcase size={14} /> {experience} yrs</span>
+            <span><Briefcase size={14} /> {experience} yrs exp</span>
             <span><MapPin size={14} /> {city}</span>
           </div>
         </div>

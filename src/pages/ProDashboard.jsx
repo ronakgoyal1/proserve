@@ -139,7 +139,7 @@ function BarChart({ data = [], color = '#3b82f6' }) {
 // ─── Metric Card ──────────────────────────────────────────────────────────────
 function MetricCard({ icon, label, value, sub, delta, color = '#3b82f6', sparkData, locked }) {
   return (
-    <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: 20, padding: '20px 22px', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: 8 }}>
+    <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 20, padding: '20px 22px', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: 8 }}>
       {locked && (
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(17, 17, 17, 0.88)', backdropFilter: 'blur(3px)', borderRadius: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
           <div style={{ textAlign: 'center' }}>
@@ -153,7 +153,7 @@ function MetricCard({ icon, label, value, sub, delta, color = '#3b82f6', sparkDa
           <div style={{ width: 36, height: 36, borderRadius: 10, background: `rgba(${hexToRgb(color)},0.1)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color }}>
             {icon}
           </div>
-          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-gray-400)' }}>{label}</span>
+          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)' }}>{label}</span>
         </div>
         {delta !== undefined && (
           <span style={{ fontSize: 11, fontWeight: 700, color: delta >= 0 ? '#16a34a' : '#ef4444', background: delta >= 0 ? 'rgba(22,163,74,0.1)' : 'rgba(239,68,68,0.1)', borderRadius: 999, padding: '2px 8px' }}>
@@ -162,8 +162,8 @@ function MetricCard({ icon, label, value, sub, delta, color = '#3b82f6', sparkDa
         )}
       </div>
       <div>
-        <div style={{ fontSize: 'clamp(1.6rem,3vw,2rem)', fontWeight: 500, fontFamily: "'Playfair Display', serif", color: 'var(--color-white)', letterSpacing: '-0.5px', lineHeight: 1 }}>{value}</div>
-        {sub && <div style={{ fontSize: 12, color: 'var(--color-gray-400)', marginTop: 4 }}>{sub}</div>}
+        <div style={{ fontSize: 'clamp(1.6rem,3vw,2rem)', fontWeight: 500, fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)', letterSpacing: '-0.5px', lineHeight: 1 }}>{value}</div>
+        {sub && <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4 }}>{sub}</div>}
       </div>
       {sparkData && (
         <div style={{ marginTop: 4, opacity: 0.7 }}>
@@ -190,7 +190,7 @@ function InsightCard({ type, text }) {
   return (
     <div style={{ background: s.bg, border: `1px solid ${s.border}`, borderRadius: 14, padding: '14px 16px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
       <div style={{ color: s.color, flexShrink: 0, marginTop: 1 }}>{s.icon}</div>
-      <p style={{ fontSize: 13.5, color: 'var(--color-gray-300)', lineHeight: 1.6, margin: 0 }}>{text}</p>
+      <p style={{ fontSize: 13.5, color: 'var(--text-primary)', lineHeight: 1.6, margin: 0 }}>{text}</p>
     </div>
   );
 }
@@ -203,13 +203,13 @@ function LockedAnalytics({ navigate }) {
       <div style={{ filter: 'blur(6px)', opacity: 0.4, pointerEvents: 'none' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 16, marginBottom: 24 }}>
           {['Profile Views', 'WhatsApp Clicks', 'Conversion Rate', 'Search Appearances'].map((l, i) => (
-            <div key={i} style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: 20, padding: '20px 22px' }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-gray-400)', marginBottom: 8 }}>{l}</div>
-              <div style={{ fontSize: 32, fontWeight: 500, fontFamily: "'Playfair Display', serif", color: 'var(--color-white)' }}>—</div>
+            <div key={i} style={{ background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 20, padding: '20px 22px' }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>{l}</div>
+              <div style={{ fontSize: 32, fontWeight: 500, fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)' }}>—</div>
             </div>
           ))}
         </div>
-        <div style={{ height: 160, background: 'rgba(255, 255, 255, 0.02)', borderRadius: 20, border: '1px solid rgba(255, 255, 255, 0.08)' }} />
+        <div style={{ height: 160, background: 'var(--surface-card)', borderRadius: 20, border: '1px solid var(--border-subtle)' }} />
       </div>
       {/* Lock overlay */}
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
@@ -316,12 +316,12 @@ function AnalyticsTab({ userId, isPro, navigate }) {
       <div className="dashboard-section" style={{ padding: '24px 20px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
           <div>
-            <h3 style={{ fontSize: 15, fontWeight: 500, fontFamily: "'Playfair Display', serif", color: 'var(--color-white)', margin: 0 }}>Profile Views — Last 30 Days</h3>
-            <p style={{ fontSize: 12, color: 'var(--color-gray-500)', margin: '4px 0 0' }}>Daily visitor trend on your profile page</p>
+            <h3 style={{ fontSize: 15, fontWeight: 500, fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)', margin: 0 }}>Profile Views — Last 30 Days</h3>
+            <p style={{ fontSize: 12, color: 'var(--text-secondary)', margin: '4px 0 0' }}>Daily visitor trend on your profile page</p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <div style={{ width: 8, height: 8, borderRadius: 2, background: '#3b82f6' }} />
-            <span style={{ fontSize: 12, color: 'var(--color-gray-500)' }}>Views/day</span>
+            <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Views/day</span>
           </div>
         </div>
         <BarChart data={trend30} color="#3b82f6" />
@@ -332,8 +332,8 @@ function AnalyticsTab({ userId, isPro, navigate }) {
 
         {/* Source donut */}
         <div className="dashboard-section" style={{ padding: '24px 20px' }}>
-          <h3 style={{ fontSize: 15, fontWeight: 500, fontFamily: "'Playfair Display', serif", color: 'var(--color-white)', marginBottom: 4 }}>Leads by Source</h3>
-          <p style={{ fontSize: 12, color: 'var(--color-gray-500)', marginBottom: 20 }}>Where your contacts come from</p>
+          <h3 style={{ fontSize: 15, fontWeight: 500, fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)', marginBottom: 4 }}>Leads by Source</h3>
+          <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 20 }}>Where your contacts come from</p>
           <DonutChart sources={sources} />
         </div>
 
@@ -341,7 +341,7 @@ function AnalyticsTab({ userId, isPro, navigate }) {
         <div className="dashboard-section" style={{ padding: '24px 20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
             <Lightbulb size={16} style={{ color: '#f59e0b' }} />
-            <h3 style={{ fontSize: 15, fontWeight: 500, fontFamily: "'Playfair Display', serif", color: 'var(--color-white)', margin: 0 }}>AI Growth Insights</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 500, fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)', margin: 0 }}>AI Growth Insights</h3>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {insights.map((ins, i) => <InsightCard key={i} {...ins} />)}
@@ -353,10 +353,10 @@ function AnalyticsTab({ userId, isPro, navigate }) {
       <div className="dashboard-section" style={{ padding: '24px 20px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
           <div>
-            <h3 style={{ fontSize: 15, fontWeight: 500, fontFamily: "'Playfair Display', serif", color: 'var(--color-white)', margin: 0 }}>WhatsApp Activity</h3>
-            <p style={{ fontSize: 12, color: 'var(--color-gray-500)', margin: '4px 0 0' }}>Daily WA button clicks from your profile</p>
+            <h3 style={{ fontSize: 15, fontWeight: 500, fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)', margin: 0 }}>WhatsApp Activity</h3>
+            <p style={{ fontSize: 12, color: 'var(--text-secondary)', margin: '4px 0 0' }}>Daily WA button clicks from your profile</p>
           </div>
-          <span style={{ fontSize: 22, fontWeight: 500, fontFamily: "'Playfair Display', serif", color: '#25d366' }}>{waClicks} <span style={{ fontSize: 12, fontWeight: 500, fontFamily: "var(--font-primary)", color: 'var(--color-gray-400)' }}>this month</span></span>
+          <span style={{ fontSize: 22, fontWeight: 500, fontFamily: "'Playfair Display', serif", color: '#25d366' }}>{waClicks} <span style={{ fontSize: 12, fontWeight: 500, fontFamily: "var(--font-primary)", color: 'var(--text-secondary)' }}>this month</span></span>
         </div>
         <SparkLine
           data={Array.from({ length: 30 }, (_, i) => Math.max(0, Math.round(Math.sin(i * 0.7 + 2) * 2 + waClicks / 30 * 1.5)))}
@@ -462,10 +462,10 @@ export default function ProDashboard() {
         return (
           <>
             {verificationStatus === 'unverified' && (
-              <div className="dashboard-section animate-fade-in" style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'rgba(255,255,255,0.08)', marginBottom: 'var(--space-6)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-6)', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
+              <div className="dashboard-section animate-fade-in" style={{ marginBottom: 'var(--space-6)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-6)', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
                 <div>
-                  <h3 style={{ color: 'var(--color-white)' }}>Level up your profile</h3>
-                  <p style={{ color: 'var(--color-gray-400)', marginTop: 4 }}>Verified professionals get 3× more bookings.</p>
+                  <h3 style={{ color: 'var(--text-primary)' }}>Level up your profile</h3>
+                  <p style={{ color: 'var(--text-secondary)', marginTop: 4 }}>Verified professionals get 3× more bookings.</p>
                 </div>
                 <button className="btn btn-primary" onClick={() => setShowVerifyModal(true)}>Submit Documents</button>
               </div>
@@ -473,13 +473,13 @@ export default function ProDashboard() {
             {verificationStatus === 'pending' && (
               <div className="dashboard-section animate-fade-in" style={{ background: 'rgba(217, 119, 6, 0.1)', borderColor: 'rgba(217, 119, 6, 0.2)', marginBottom: 'var(--space-6)', padding: 'var(--space-6)' }}>
                 <h3 style={{ color: 'var(--color-warning)', display: 'flex', alignItems: 'center', gap: 8 }}><ShieldCheck size={20} /> Verification Under Review</h3>
-                <p style={{ color: 'var(--color-gray-300)', marginTop: 4 }}>Our trust team is reviewing your documents. You'll be notified within 24-48 hours.</p>
+                <p style={{ color: 'var(--text-secondary)', marginTop: 4 }}>Our trust team is reviewing your documents. You'll be notified within 24-48 hours.</p>
               </div>
             )}
             {verificationStatus === 'verified' && (
               <div className="dashboard-section animate-fade-in" style={{ background: 'rgba(5, 150, 105, 0.1)', borderColor: 'rgba(5, 150, 105, 0.2)', marginBottom: 'var(--space-6)', padding: 'var(--space-6)' }}>
                 <h3 style={{ color: 'var(--color-success)', display: 'flex', alignItems: 'center', gap: 8 }}><ShieldCheck size={20} /> Wisor Verified</h3>
-                <p style={{ color: 'var(--color-gray-300)', marginTop: 4 }}>You rank higher in search results and have the trust badge on your profile.</p>
+                <p style={{ color: 'var(--text-secondary)', marginTop: 4 }}>You rank higher in search results and have the trust badge on your profile.</p>
               </div>
             )}
 
@@ -497,7 +497,7 @@ export default function ProDashboard() {
                 <div className="stat-info">
                   <h4>WhatsApp Leads</h4>
                   <div className="stat-value" style={{ color: '#25d366' }}>{waClicksMonth}</div>
-                  <div style={{ fontSize: 12, color: 'var(--color-gray-400)', marginTop: 2 }}>this month · {waClicksTotal} total</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>this month · {waClicksTotal} total</div>
                 </div>
                 {!waSettings.phone && (
                   <button className="btn btn-sm" style={{ marginLeft: 'auto', background: 'rgba(37,211,102,0.1)', color: '#25d366', border: '1px solid rgba(37,211,102,0.25)', fontSize: 12, fontWeight: 600 }} onClick={() => setActiveTab('settings')}>
@@ -512,7 +512,7 @@ export default function ProDashboard() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
                 <div>
                   <h3 style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}><BarChart3 size={18} style={{ color: '#7A9A6E' }} /> ROI Analytics</h3>
-                  <p style={{ fontSize: 13, color: 'var(--color-gray-500)' }}>See profile trends, lead sources, and AI growth insights.</p>
+                  <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>See profile trends, lead sources, and AI growth insights.</p>
                 </div>
                 <button className="btn btn-primary btn-sm" onClick={() => setActiveTab('analytics')} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'linear-gradient(135deg,#92B284,#7A9A6E)', color: '#1A1A1A', border: 'none', fontWeight: 700 }}>
                   View Analytics <ArrowRight size={14} />
@@ -534,7 +534,7 @@ export default function ProDashboard() {
                     <tbody>
                       {proLeads.map(lead => (
                         <tr key={lead.id}>
-                          <td style={{ fontSize: 'var(--text-xs)', color: 'var(--color-gray-500)' }}>{lead.id}</td>
+                          <td style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>{lead.id}</td>
                           <td style={{ fontWeight: 600 }}>{lead.client}</td>
                           <td>{lead.service}</td>
                           <td>{lead.budget}</td>
@@ -615,15 +615,15 @@ export default function ProDashboard() {
               <WaIcon size={18} />
               <div>
                 <p style={{ fontWeight: 700, color: '#16a34a', fontSize: 14, marginBottom: 4 }}>WhatsApp Leads — Pro Feature</p>
-                <p style={{ fontSize: 13, color: 'var(--color-gray-600)', lineHeight: 1.6 }}>When your number is set and leads are enabled, a WhatsApp button appears on your search card, profile, and portfolio. Clients tap once and message you directly.</p>
+                <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>When your number is set and leads are enabled, a WhatsApp button appears on your search card, profile, and portfolio. Clients tap once and message you directly.</p>
               </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 20px', background: 'rgba(255,255,255,0.02)', borderRadius: 12, marginBottom: 20, border: '1px solid rgba(255,255,255,0.08)' }}>
               <div>
-                <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--color-white)', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 8 }}>
                   <MessageCircle size={16} style={{ color: '#25d366' }} /> Enable WhatsApp Leads
                 </div>
-                <div style={{ fontSize: 13, color: 'var(--color-gray-400)', marginTop: 3 }}>Show WhatsApp button to clients</div>
+                <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 3 }}>Show WhatsApp button to clients</div>
               </div>
               <button onClick={() => setWaEnabled(e => !e)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
                 {waEnabled ? <ToggleRight size={36} style={{ color: '#25d366' }} /> : <ToggleLeft size={36} style={{ color: 'var(--color-gray-300)' }} />}
@@ -632,11 +632,11 @@ export default function ProDashboard() {
             <div className="form-field" style={{ marginBottom: 24 }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Phone size={14} /> WhatsApp Number</label>
               <div className={`form-input${waPhoneError ? ' form-input-error' : ''}`} style={{ opacity: waEnabled ? 1 : 0.5 }}>
-                <span style={{ fontSize: 14, color: 'var(--color-gray-400)', fontWeight: 500, paddingRight: 4 }}>+91</span>
+                <span style={{ fontSize: 14, color: 'var(--text-secondary)', fontWeight: 500, paddingRight: 4 }}>+91</span>
                 <input type="tel" value={waPhone} onChange={e => { setWaPhone(e.target.value); setWaPhoneError(''); }} placeholder="98765 43210" maxLength={10} disabled={!waEnabled} />
               </div>
               {waPhoneError && <span className="error-text" style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 6, fontSize: 12, color: 'var(--color-danger)' }}><AlertCircle size={13} /> {waPhoneError}</span>}
-              <p style={{ fontSize: 12, color: 'var(--color-gray-400)', marginTop: 6 }}>Clients will see: <em>"Hi, I found your profile on Wisor Mumbai and need help with [service]."</em></p>
+              <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 6 }}>Clients will see: <em>"Hi, I found your profile on Wisor Mumbai and need help with [service]."</em></p>
             </div>
             <div className="form-actions">
               {waSaved && <span style={{ color: '#16a34a', fontSize: 13, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 5 }}>✓ Settings saved</span>}
@@ -645,15 +645,15 @@ export default function ProDashboard() {
               </button>
             </div>
             <div style={{ marginTop: 32, paddingTop: 28, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-              <h4 style={{ fontWeight: 500, fontFamily: "'Playfair Display', serif", color: 'var(--color-white)', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}><BarChart3 size={16} /> WhatsApp Analytics</h4>
+              <h4 style={{ fontWeight: 500, fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}><BarChart3 size={16} /> WhatsApp Analytics</h4>
               <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
                 <div style={{ flex: '1 1 160px', background: 'rgba(37,211,102,0.06)', border: '1px solid rgba(37,211,102,0.16)', borderRadius: 14, padding: '20px 16px', textAlign: 'center' }}>
                   <div style={{ fontSize: 36, fontWeight: 500, fontFamily: "'Playfair Display', serif", color: '#25d366', lineHeight: 1 }}>{waClicksMonth}</div>
-                  <div style={{ fontSize: 12, color: 'var(--color-gray-400)', marginTop: 6, fontWeight: 500 }}>Clicks This Month</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 6, fontWeight: 500 }}>Clicks This Month</div>
                 </div>
-                <div style={{ flex: '1 1 160px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: '20px 16px', textAlign: 'center' }}>
-                  <div style={{ fontSize: 36, fontWeight: 500, fontFamily: "'Playfair Display', serif", color: 'var(--color-white)', lineHeight: 1 }}>{waClicksTotal}</div>
-                  <div style={{ fontSize: 12, color: 'var(--color-gray-400)', marginTop: 6, fontWeight: 500 }}>Total All-Time</div>
+                <div style={{ flex: '1 1 160px', background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '20px 16px', textAlign: 'center' }}>
+                  <div style={{ fontSize: 36, fontWeight: 500, fontFamily: "'Playfair Display', serif", color: 'var(--text-primary)', lineHeight: 1 }}>{waClicksTotal}</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 6, fontWeight: 500 }}>Total All-Time</div>
                 </div>
               </div>
             </div>
@@ -697,7 +697,7 @@ export default function ProDashboard() {
                 <span style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', width: 7, height: 7, borderRadius: '50%', background: '#25d366' }} />
               )}
             </div>
-            <div style={{ margin: 'var(--space-4) 0', borderTop: '1px solid rgba(255,255,255,0.1)' }} />
+            <div style={{ margin: 'var(--space-4) 0', borderTop: '1px solid var(--border-subtle)' }} />
             <a href="#" className="sidebar-nav-item" style={{ color: 'var(--color-danger)' }} onClick={handleLogout}>
               <LogOut size={18} /> Log Out
             </a>

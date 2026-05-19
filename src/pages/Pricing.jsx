@@ -32,11 +32,11 @@ function FaqItem({ q, a }) {
   return (
     <div style={{ borderRadius: 16, border: `1px solid ${open ? '#7A9A6E' : 'rgba(255,255,255,0.08)'}`, overflow: 'hidden', transition: 'border-color 0.2s, box-shadow 0.2s', boxShadow: open ? '0 0 0 1px rgba(122,154,110,0.15)' : 'none' }}>
       <button onClick={() => setOpen(o => !o)} style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px', background: open ? 'rgba(122,154,110,0.06)' : 'rgba(255,255,255,0.02)', border: 'none', cursor: 'pointer', gap: 16, textAlign: 'left' }}>
-        <span style={{ fontSize: 15, fontWeight: 700, color: 'white', lineHeight: 1.4 }}>{q}</span>
+        <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.4 }}>{q}</span>
         {open ? <ChevronUp size={18} style={{ color: '#7A9A6E', flexShrink: 0 }} /> : <ChevronDown size={18} style={{ color: '#64748b', flexShrink: 0 }} />}
       </button>
       {open && (
-        <div style={{ padding: '0 24px 20px', color: '#94a3b8', lineHeight: 1.75, fontSize: 14.5, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ padding: '0 24px 20px', color: 'var(--text-secondary)', lineHeight: 1.75, fontSize: 14.5, borderTop: '1px solid var(--border-subtle)' }}>
           {a}
         </div>
       )}
@@ -80,13 +80,13 @@ function PlanCard({ plan, isHighlighted, navigate }) {
 
       <div style={{ marginBottom: 20 }}>
         <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: isHighlighted ? '#7A9A6E' : '#475569', marginBottom: 8 }}>{plan.label}</div>
-        <h3 style={{ fontSize: 22, fontWeight: 800, color: 'white', margin: '0 0 4px' }}>{plan.name}</h3>
-        <p style={{ fontSize: 13, color: '#64748b', margin: 0 }}>{plan.tagline}</p>
+        <h3 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-primary)', margin: '0 0 4px' }}>{plan.name}</h3>
+        <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: 0 }}>{plan.tagline}</p>
       </div>
 
       <div style={{ marginBottom: 24 }}>
-        <span style={{ fontSize: 'clamp(2rem,4vw,2.6rem)', fontWeight: 600, fontFamily: "'Playfair Display', serif", color: plan.price === 'Free' ? '#94a3b8' : 'white', letterSpacing: '-1px' }}>{plan.price}</span>
-        {plan.period && <div style={{ fontSize: 12, color: '#475569', marginTop: 4 }}>{plan.period}</div>}
+        <span style={{ fontSize: 'clamp(2rem,4vw,2.6rem)', fontWeight: 600, fontFamily: "'Playfair Display', serif", color: plan.price === 'Free' ? 'var(--text-muted)' : 'var(--text-primary)', letterSpacing: '-1px' }}>{plan.price}</span>
+        {plan.period && <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4 }}>{plan.period}</div>}
       </div>
 
       <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 28px', display: 'flex', flexDirection: 'column', gap: 10, flex: 1 }}>
@@ -188,7 +188,7 @@ export default function Pricing() {
         <meta name="description" content="Join Wisor as a verified expert." />
       </Helmet>
 
-      <main style={{ background: '#1A1A1A', minHeight: '100vh', fontFamily: 'Inter,system-ui,sans-serif', paddingTop: 80 }}>
+      <main style={{ background: 'var(--bg-primary)', minHeight: '100vh', fontFamily: 'Inter,system-ui,sans-serif', paddingTop: 80 }}>
 
         {/* ── HERO ───────────────────────────────────────────────────── */}
         <section style={{ position: 'relative', overflow: 'hidden', padding: 'clamp(64px,10vw,120px) 24px clamp(48px,8vw,96px)' }}>
@@ -202,7 +202,7 @@ export default function Pricing() {
               <Zap size={12} /> verified expert platform
             </div>
 
-            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2.5rem,6vw,4.5rem)', fontWeight: 500, color: 'white', letterSpacing: '-1px', lineHeight: 1.1, marginBottom: 20 }}>
+            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2.5rem,6vw,4.5rem)', fontWeight: 500, color: 'var(--text-primary)', letterSpacing: '-1px', lineHeight: 1.1, marginBottom: 20 }}>
               Grow Your Practice
               <br />
               <span style={{ color: '#92B284' }}>
@@ -210,7 +210,7 @@ export default function Pricing() {
               </span>
             </h1>
 
-            <p style={{ fontSize: 'clamp(1rem,2.2vw,1.2rem)', color: '#94a3b8', lineHeight: 1.6, maxWidth: 600, margin: '0 auto 40px' }}>
+            <p style={{ fontSize: 'clamp(1rem,2.2vw,1.2rem)', color: 'var(--text-secondary)', lineHeight: 1.6, maxWidth: 600, margin: '0 auto 40px' }}>
               Get listed, get discovered, get your own premium website, and receive direct client inquiries — all in one place.
             </p>
 
@@ -244,14 +244,14 @@ export default function Pricing() {
 
         {/* ── TRUST STATS ────────────────────────────────────────────── */}
         <section style={{ padding: '0 24px 72px' }}>
-          <div style={{ maxWidth: 900, margin: '0 auto', display: 'flex', flexWrap: 'wrap', gap: 0, background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: 16, overflow: 'hidden' }}>
+          <div style={{ maxWidth: 900, margin: '0 auto', display: 'flex', flexWrap: 'wrap', gap: 0, background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', borderRadius: 16, overflow: 'hidden' }}>
             {TRUST_STATS.map((s, i) => (
-              <div key={i} style={{ flex: '1 1 180px', padding: '36px 20px', textAlign: 'center', borderRight: i < TRUST_STATS.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none' }}>
+              <div key={i} style={{ flex: '1 1 180px', padding: '36px 20px', textAlign: 'center', borderRight: i < TRUST_STATS.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
                 <div style={{ color: '#7A9A6E', marginBottom: 8, display: 'flex', justifyContent: 'center' }}>{s.icon}</div>
-                <div style={{ fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 600, color: 'white', letterSpacing: '-0.5px', lineHeight: 1 }}>
+                <div style={{ fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.5px', lineHeight: 1 }}>
                   {s.customValue ? s.customValue : <Counter target={s.value} suffix={s.suffix} />}
                 </div>
-                <div style={{ fontSize: 12, color: '#475569', marginTop: 6, fontWeight: 500 }}>{s.label}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 6, fontWeight: 500 }}>{s.label}</div>
               </div>
             ))}
           </div>
@@ -261,7 +261,7 @@ export default function Pricing() {
         <section id="pricing-cards" style={{ padding: '0 24px 96px' }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 3, textTransform: 'uppercase', color: '#7A9A6E', marginBottom: 14 }}>Pricing</p>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem,4vw,3rem)', fontWeight: 500, color: 'white', letterSpacing: '-1px', marginBottom: 12 }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem,4vw,3rem)', fontWeight: 500, color: 'var(--text-primary)', letterSpacing: '-1px', marginBottom: 12 }}>
               Simple, transparent pricing
             </h2>
             <p style={{ color: '#64748b', fontSize: 15, maxWidth: 480, margin: '0 auto' }}>
@@ -290,7 +290,7 @@ export default function Pricing() {
           <div style={{ maxWidth: 1080, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 56 }}>
               <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 3, textTransform: 'uppercase', color: '#7A9A6E', marginBottom: 14 }}>Why Wisor</p>
-              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem,4vw,2.8rem)', fontWeight: 500, color: 'white', letterSpacing: '-1px' }}>What you actually get</h2>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem,4vw,2.8rem)', fontWeight: 500, color: 'var(--text-primary)', letterSpacing: '-1px' }}>What you actually get</h2>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: 20 }}>
               {[
@@ -306,8 +306,8 @@ export default function Pricing() {
                   onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.transform = 'translateY(0)'; }}
                 >
                   <div style={{ fontSize: 36, marginBottom: 14 }}>{item.icon}</div>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, color: 'white', marginBottom: 8 }}>{item.title}</h3>
-                  <p style={{ fontSize: 13.5, color: '#64748b', lineHeight: 1.7, margin: 0 }}>{item.desc}</p>
+                  <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>{item.title}</h3>
+                  <p style={{ fontSize: 13.5, color: 'var(--text-secondary)', lineHeight: 1.7, margin: 0 }}>{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -319,7 +319,7 @@ export default function Pricing() {
           <div style={{ maxWidth: 720, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 48 }}>
               <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 3, textTransform: 'uppercase', color: '#7A9A6E', marginBottom: 14 }}>FAQ</p>
-              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem,4vw,2.8rem)', fontWeight: 500, color: 'white', letterSpacing: '-1px' }}>Common questions</h2>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem,4vw,2.8rem)', fontWeight: 500, color: 'var(--text-primary)', letterSpacing: '-1px' }}>Common questions</h2>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {FAQS.map((faq, i) => <FaqItem key={i} {...faq} />)}
@@ -330,10 +330,10 @@ export default function Pricing() {
         {/* ── FINAL CTA ───────────────────────────────────────────────── */}
         <section style={{ padding: '0 24px 96px' }}>
           <div style={{ maxWidth: 640, margin: '0 auto', textAlign: 'center' }}>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem,4vw,3rem)', fontWeight: 500, color: 'white', letterSpacing: '-1px', marginBottom: 14, lineHeight: 1.1 }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem,4vw,3rem)', fontWeight: 500, color: 'var(--text-primary)', letterSpacing: '-1px', marginBottom: 14, lineHeight: 1.1 }}>
               Your next client is already searching.
             </h2>
-            <p style={{ color: '#64748b', fontSize: 15, lineHeight: 1.75, marginBottom: 36 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 15, lineHeight: 1.75, marginBottom: 36 }}>
               Join the growing community of verified experts on Wisor.
             </p>
             <button

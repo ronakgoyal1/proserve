@@ -73,7 +73,7 @@ export default function AdminDashboard() {
           <>
             <div className="dashboard-stats">
               <div className="stat-card">
-                <div className="stat-icon" style={{ background: 'var(--color-primary-bg)', color: 'var(--color-primary)' }}>
+                <div className="stat-icon" style={{ background: 'var(--surface-elevated)', color: 'var(--accent-primary)' }}>
                   <Users size={24} />
                 </div>
                 <div className="stat-info">
@@ -100,7 +100,7 @@ export default function AdminDashboard() {
                 </div>
               </div>
               <div className="stat-card">
-                <div className="stat-icon" style={{ background: '#f5f3ff', color: '#8b5cf6' }}>
+                <div className="stat-icon" style={{ background: 'rgba(139,92,246,0.08)', color: '#8b5cf6' }}>
                   <TrendingUp size={24} />
                 </div>
                 <div className="stat-info">
@@ -130,14 +130,14 @@ export default function AdminDashboard() {
                   <tbody>
                     {queue.length > 0 ? queue.map(pro => (
                       <tr key={pro.id}>
-                        <td style={{ fontSize: 'var(--text-xs)', color: 'var(--color-gray-500)' }}>{pro.id}</td>
+                        <td style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>{pro.id}</td>
                         <td style={{ fontWeight: 600 }}>
                           {pro.name} <br/>
-                          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--color-gray-500)', fontWeight: 400 }}>{pro.category} - {pro.specialties || 'General'}</span>
+                          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', fontWeight: 400 }}>{pro.category} - {pro.specialties || 'General'}</span>
                         </td>
                         <td>{pro.experience} Yrs</td>
                         <td>{pro.city}</td>
-                        <td style={{ color: 'var(--color-gray-500)' }}>{pro.date}</td>
+                        <td style={{ color: 'var(--text-secondary)' }}>{pro.date}</td>
                         <td>
                           <div className="table-actions">
                             <button className="btn btn-primary btn-sm" onClick={() => handleAction(pro.id, 'approve')}><CheckCircle size={16}/> Approve</button>
@@ -148,9 +148,9 @@ export default function AdminDashboard() {
                     )) : (
                       <tr>
                         <td colSpan="6" style={{ textAlign: 'center', padding: 'var(--space-12)' }}>
-                          <div className="empty-state-icon" style={{ background: '#f5f3ff', color: '#8b5cf6', margin: '0 auto var(--space-4)' }}><ShieldCheck size={28} /></div>
+                          <div className="empty-state-icon" style={{ background: 'rgba(139,92,246,0.08)', color: '#8b5cf6', margin: '0 auto var(--space-4)' }}><ShieldCheck size={28} /></div>
                           <h3>{loadingQueue ? 'Loading Queue...' : 'Queue Empty'}</h3>
-                          <p style={{ color: 'var(--color-gray-500)', maxWidth: '300px', margin: '0 auto' }}>{loadingQueue ? 'Fetching pending profiles.' : 'All professional profiles have been reviewed.'}</p>
+                          <p style={{ color: 'var(--text-secondary)', maxWidth: '300px', margin: '0 auto' }}>{loadingQueue ? 'Fetching pending profiles.' : 'All professional profiles have been reviewed.'}</p>
                         </td>
                       </tr>
                     )}
@@ -174,7 +174,7 @@ export default function AdminDashboard() {
             {avatarUrl ? (
               <img src={avatarUrl} alt="Avatar" className="sidebar-avatar" style={{ objectFit: 'cover' }} />
             ) : (
-              <div className="sidebar-avatar" style={{ background: '#0f172a' }}>{initials}</div>
+              <div className="sidebar-avatar">{initials}</div>
             )}
             <div className="sidebar-user-info">
               <h3>{fullName}</h3>
@@ -191,7 +191,7 @@ export default function AdminDashboard() {
               {queue.length > 0 && <span className="sidebar-badge">{queue.length}</span>}
             </div>
 
-            <div style={{ margin: 'var(--space-4) 0', borderTop: '1px solid var(--color-gray-100)' }} />
+            <div style={{ margin: 'var(--space-4) 0', borderTop: '1px solid var(--border-subtle)' }} />
             
             <a href="#" className="sidebar-nav-item" style={{ color: 'var(--color-danger)' }} onClick={handleLogout}>
               <LogOut size={18} /> Log Out

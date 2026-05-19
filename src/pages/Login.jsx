@@ -254,8 +254,8 @@ export default function Login() {
         <div className="login-container">
           <div className="login-card animate-scale-in" style={{ textAlign: 'center' }}>
             <CheckCircle2 size={56} style={{ color: 'var(--color-success)', margin: '0 auto var(--space-4)' }} />
-            <h2 style={{ fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--color-gray-900)', marginBottom: 'var(--space-2)' }}>Check your inbox</h2>
-            <p style={{ color: 'var(--color-gray-500)', marginBottom: 'var(--space-6)' }}>
+            <h2 style={{ fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 'var(--space-2)' }}>Check your inbox</h2>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-6)' }}>
               We've sent a verification link to <strong>{formData.email}</strong>. Click it to activate your account.
             </p>
             <button className="btn btn-ghost btn-sm" onClick={() => setScreen('entry')}>Back to Sign In</button>
@@ -274,8 +274,8 @@ export default function Login() {
         <div className="login-container" style={{ maxWidth: '520px' }}>
           <div className="login-card animate-scale-in">
             <div className="login-header">
-              <div style={{ display: 'inline-flex', padding: '12px', background: 'var(--color-primary-bg)', borderRadius: '50%', marginBottom: 'var(--space-4)' }}>
-                <Shield size={28} style={{ color: 'var(--color-primary)' }} />
+              <div style={{ display: 'inline-flex', padding: '12px', background: 'var(--surface-elevated)', borderRadius: '50%', marginBottom: 'var(--space-4)' }}>
+                <Shield size={28} style={{ color: 'var(--accent-primary)' }} />
               </div>
               <h1>How will you use Wisor?</h1>
               <p>Choose your account type. You can always change this later.</p>
@@ -425,10 +425,10 @@ export default function Login() {
         <div className="login-card animate-scale-in">
           <div className="login-header">
             <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', marginBottom: 'var(--space-5)' }}>
-              <div style={{ background: 'var(--color-primary)', borderRadius: '10px', padding: '8px', display: 'flex' }}>
-                <Shield size={20} style={{ color: 'white' }} />
+              <div style={{ background: 'var(--accent-primary)', borderRadius: '10px', padding: '8px', display: 'flex' }}>
+                <Shield size={20} style={{ color: '#111' }} />
               </div>
-              <span style={{ fontWeight: 800, fontSize: 'var(--text-lg)', color: 'var(--color-gray-900)' }}>Wi<span style={{ color: 'var(--color-accent)' }}>sor</span></span>
+              <span style={{ fontWeight: 800, fontSize: 'var(--text-lg)', color: 'var(--text-primary)' }}>Wi<span style={{ color: 'var(--accent-primary)' }}>sor</span></span>
             </Link>
             <h1>Welcome</h1>
             <p>Sign in or create your account in seconds</p>
@@ -464,26 +464,26 @@ export default function Login() {
               disabled={isSubmitting}
               style={{
                 width: '100%', padding: '14px 20px',
-                background: 'var(--color-gray-50)',
-                border: '1.5px solid var(--color-gray-200)',
+                background: 'var(--surface-elevated)',
+                border: '1.5px solid var(--border-subtle)',
                 borderRadius: 'var(--radius-lg)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
                 fontSize: 'var(--text-sm)', fontWeight: 600,
-                color: 'var(--color-gray-700)',
+                color: 'var(--text-secondary)',
                 cursor: 'pointer', transition: 'all 0.15s ease'
               }}
-              onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--color-primary)'}
-              onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--color-gray-200)'}
+              onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent-primary)'}
+              onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-subtle)'}
             >
               <Mail size={20} />
               <span>Continue with Email</span>
             </button>
           </div>
 
-          <p style={{ textAlign: 'center', fontSize: 'var(--text-xs)', color: 'var(--color-gray-400)', marginTop: 'var(--space-5)', lineHeight: 1.6 }}>
+          <p style={{ textAlign: 'center', fontSize: 'var(--text-xs)', color: 'var(--text-muted)', marginTop: 'var(--space-5)', lineHeight: 1.6 }}>
             By continuing, you agree to our{' '}
-            <Link to="/terms" style={{ color: 'var(--color-primary)' }}>Terms</Link> and{' '}
-            <Link to="/privacy" style={{ color: 'var(--color-primary)' }}>Privacy Policy</Link>.
+            <Link to="/terms" style={{ color: 'var(--accent-primary)' }}>Terms</Link> and{' '}
+            <Link to="/privacy" style={{ color: 'var(--accent-primary)' }}>Privacy Policy</Link>.
           </p>
 
           {/* Dev tools on entry screen too */}

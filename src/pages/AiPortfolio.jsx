@@ -114,18 +114,18 @@ export default function AiPortfolio() {
 
   if (loading) return (
     <div style={{ display: 'flex', height: '60vh', alignItems: 'center', justifyContent: 'center' }}>
-      <Loader2 size={32} className="spin" style={{ color: 'var(--color-accent)' }} />
+      <Loader2 size={32} className="spin" style={{ color: 'var(--accent-primary)' }} />
     </div>
   );
 
   return (
-    <main style={{ minHeight: '100vh', background: 'var(--color-gray-50)', padding: 'var(--space-8) 0' }}>
+    <main style={{ minHeight: '100vh', background: 'var(--bg-primary)', padding: 'var(--space-8) 0' }}>
       <div className="container" style={{ maxWidth: '800px' }}>
         
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-8)' }}>
           <div>
-            <h1 style={{ fontSize: 'var(--text-3xl)', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <h1 style={{ fontSize: 'var(--text-3xl)', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <LayoutTemplate size={32} style={{ color: 'var(--color-accent)' }} />
               AI Portfolio Studio
             </h1>
@@ -167,66 +167,62 @@ export default function AiPortfolio() {
         )}
 
         {/* Input Form */}
-        <div style={{ background: 'white', padding: 'var(--space-8)', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-md)' }}>
+        <div style={{ background: 'var(--surface-card)', padding: 'var(--space-8)', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border-subtle)' }}>
           
           <form onSubmit={handleGenerate} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
             
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-5)' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>Full Name</label>
-                <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} />
+                <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-strong)', background: 'var(--surface-base)', color: 'var(--text-primary)' }} />
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>Profession / Title</label>
-                <input required type="text" value={formData.profession} onChange={e => setFormData({...formData, profession: e.target.value})} placeholder="e.g. Chartered Accountant" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} />
+                <input required type="text" value={formData.profession} onChange={e => setFormData({...formData, profession: e.target.value})} placeholder="e.g. Chartered Accountant" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-strong)', background: 'var(--surface-base)', color: 'var(--text-primary)' }} />
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>Experience (Years)</label>
-                <input required type="number" value={formData.experience} onChange={e => setFormData({...formData, experience: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} />
+                <input required type="number" value={formData.experience} onChange={e => setFormData({...formData, experience: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-strong)', background: 'var(--surface-base)', color: 'var(--text-primary)' }} />
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>Primary City</label>
-                <input required type="text" value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} />
+                <input required type="text" value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-strong)', background: 'var(--surface-base)', color: 'var(--text-primary)' }} />
               </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-5)' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>Services Offered (Comma separated)</label>
-                <textarea required rows="2" value={formData.services} onChange={e => setFormData({...formData, services: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)', resize: 'vertical' }} />
+                <textarea required rows="2" value={formData.services} onChange={e => setFormData({...formData, services: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-strong)', background: 'var(--surface-base)', color: 'var(--text-primary)', resize: 'vertical' }} />
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: 'var(--color-primary)' }}><Zap size={14} style={{ display: 'inline', color: 'var(--color-accent)' }}/> Target Clients</label>
-                <textarea required rows="2" value={formData.targetClients} onChange={e => setFormData({...formData, targetClients: e.target.value})} placeholder="e.g. Startups, E-commerce, HNI" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-accent)', resize: 'vertical' }} />
+                <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: 'var(--text-primary)' }}><Zap size={14} style={{ display: 'inline', color: 'var(--accent-primary)' }}/> Target Clients</label>
+                <textarea required rows="2" value={formData.targetClients} onChange={e => setFormData({...formData, targetClients: e.target.value})} placeholder="e.g. Startups, E-commerce, HNI" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--accent-primary)', background: 'var(--surface-base)', color: 'var(--text-primary)', resize: 'vertical' }} />
               </div>
             </div>
 
             <div>
               <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>Short Bio</label>
-              <textarea rows="3" value={formData.bio} onChange={e => setFormData({...formData, bio: e.target.value})} placeholder="Leave blank for AI to generate based on your profession and city." style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)', resize: 'vertical' }} />
+              <textarea rows="3" value={formData.bio} onChange={e => setFormData({...formData, bio: e.target.value})} placeholder="Leave blank for AI to generate based on your profession and city." style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-strong)', background: 'var(--surface-base)', color: 'var(--text-primary)', resize: 'vertical' }} />
             </div>
 
             <div>
               <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>Key Achievements (Comma separated)</label>
-              <textarea rows="2" value={formData.achievements} onChange={e => setFormData({...formData, achievements: e.target.value})} placeholder="e.g. Saved 10Cr in taxes, Fast-tracked 50 startups" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)', resize: 'vertical' }} />
+              <textarea rows="2" value={formData.achievements} onChange={e => setFormData({...formData, achievements: e.target.value})} placeholder="e.g. Saved 10Cr in taxes, Fast-tracked 50 startups" style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-strong)', background: 'var(--surface-base)', color: 'var(--text-primary)', resize: 'vertical' }} />
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-5)' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>Contact Email</label>
-                <input required type="email" value={formData.contactEmail} onChange={e => setFormData({...formData, contactEmail: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} />
-              </div>
-              <div>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>Phone / WhatsApp (Optional)</label>
-                <input type="tel" value={formData.contactPhone} onChange={e => setFormData({...formData, contactPhone: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} />
+                <input type="tel" value={formData.contactPhone} onChange={e => setFormData({...formData, contactPhone: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-strong)', background: 'var(--surface-base)', color: 'var(--text-primary)' }} />
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>LinkedIn URL</label>
-                <input type="text" value={formData.linkedin} onChange={e => setFormData({...formData, linkedin: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} />
+                <input type="text" value={formData.linkedin} onChange={e => setFormData({...formData, linkedin: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-strong)', background: 'var(--surface-base)', color: 'var(--text-primary)' }} />
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>Twitter URL</label>
-                <input type="text" value={formData.twitter} onChange={e => setFormData({...formData, twitter: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-gray-200)' }} />
+                <input type="text" value={formData.twitter} onChange={e => setFormData({...formData, twitter: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-strong)', background: 'var(--surface-base)', color: 'var(--text-primary)' }} />
               </div>
             </div>
 

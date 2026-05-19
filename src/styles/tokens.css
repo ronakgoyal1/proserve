@@ -1,31 +1,63 @@
 :root {
-  /* D · Ink (Charcoal + Sage) */
-  --color-primary: #1A1A1A;
-  --color-primary-dark: #111111;
-  --color-primary-light: #2A2A2A;
-  --color-primary-bg: #F2F4F0;
-  --color-primary-bg-hover: #E8EBE5;
-  --color-accent: #7A9A6E;
-  --color-accent-light: #92B284;
-  --color-accent-dark: #5E7D52;
-  --color-white: #ffffff;
-  --color-gray-50: #FAFAF8;
-  --color-gray-100: #F3F3F0;
-  --color-gray-200: #E8E8E5;
-  --color-gray-300: #D1D1CE;
-  --color-gray-400: #9CA3AF;
-  --color-gray-500: #6B7280;
-  --color-gray-600: #4B5563;
-  --color-gray-700: #374151;
-  --color-gray-800: #1F2937;
-  --color-gray-900: #111827;
+  /* Semantic Theme Tokens - Light Mode (Default) */
+  --bg-primary: #F8F8F5;       /* Warm ivory / bone */
+  --bg-secondary: #FAFAF8;
+  --surface-base: #FFFFFF;
+  --surface-card: #FFFFFF;
+  --surface-elevated: #FFFFFF;
+  --surface-overlay: rgba(255, 255, 255, 0.95);
+  
+  --text-primary: #1A1A1A;     /* Charcoal */
+  --text-secondary: #4B5563;
+  --text-muted: #6B7280;
+  
+  --border-subtle: #E8E8E5;    /* Soft elegant borders */
+  --border-strong: #D1D1CE;
+  
+  --accent-primary: #7A9A6E;   /* Subtle sage */
+  --accent-muted: #92B284;
+  
+  --card-bg: #FFFFFF;
+  --card-border: #E8E8E5;
+
+  /* Utility Colors */
   --color-success: #059669;
   --color-success-bg: #ecfdf5;
   --color-warning: #d97706;
   --color-warning-bg: #fffbeb;
   --color-danger: #dc2626;
   --color-star: #f59e0b;
+}
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Semantic Theme Tokens - Dark Mode */
+    --bg-primary: #161616;       /* Warm charcoal */
+    --bg-secondary: #1C1C1C;
+    --surface-base: #222222;
+    --surface-card: rgba(255, 255, 255, 0.03);
+    --surface-elevated: rgba(255, 255, 255, 0.06);
+    --surface-overlay: rgba(22, 22, 22, 0.95);
+    
+    --text-primary: #F3F3F0;     /* Soft off-white */
+    --text-secondary: #D1D1CE;
+    --text-muted: #9CA3AF;
+    
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.15);
+    
+    --accent-primary: #92B284;   /* Muted sage */
+    --accent-muted: #7A9A6E;
+    
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --card-border: rgba(255, 255, 255, 0.08);
+
+    --color-success-bg: rgba(5, 150, 105, 0.1);
+    --color-warning-bg: rgba(217, 119, 6, 0.1);
+  }
+}
+
+:root {
   /* Typography */
   --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Playfair Display', serif;

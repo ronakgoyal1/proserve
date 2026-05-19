@@ -61,8 +61,7 @@ class DbService {
       category: row.category || 'CA',
       city: row.city || 'Digital',
       experience: Number(row.experience) || 0,
-      rating: Number(row.rating) || 5.0,
-      reviews: Number(row.reviews) || 0,
+
       featured: row.featured || false,
       availability: row.availability || 'Available Today',
       bio: row.bio || '',
@@ -101,8 +100,6 @@ class DbService {
       experience: Number(app.experience) || 0,
       bio: app.bio || 'Verified Professional on Wisor.',
       languages: app.languages ? String(app.languages).split(',').map(s => s.trim()) : ['English'],
-      rating: 5.0,
-      reviews: 0,
       startingPrice: 1500,
       hourlyRate: 1500,
       featured: false,
@@ -365,8 +362,6 @@ class DbService {
         experience: Number(appData.experience) || 0,
         bio: appData.bio || 'Verified Professional',
         languages: appData.languages ? String(appData.languages).split(',').map(s=>s.trim()) : ['English'],
-        rating: 5.0,
-        reviews: 0,
         startingPrice: 1500,
         hourlyRate: 1500,
         featured: false,
@@ -429,8 +424,6 @@ class DbService {
         experience: Number(appData.experience) || 0,
         bio: appData.bio || 'Verified Professional',
         languages: appData.languages ? String(appData.languages).split(',').map(s=>s.trim()) : ['English', 'Hindi'],
-        rating: 5.0,
-        reviews: 0,
         startingPrice: 1500,
         hourlyRate: 1500,
         featured: false,
@@ -552,7 +545,6 @@ class DbService {
     const newReview = {
       id: `REV-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
       professional_id: reviewData.professional_id,
-      rating: Number(reviewData.rating),
       text: reviewData.text || '',
       author_name: reviewData.author_name || 'Anonymous',
       service_used: reviewData.service_used || '',
@@ -564,14 +556,10 @@ class DbService {
     return newReview;
   }
 
-  getAverageRating(proId) {
-    const reviews = this.getReviewsForProfessional(proId);
-    if (reviews.length === 0) return { average: 0, count: 0 };
-    const sum = reviews.reduce((acc, r) => acc + Number(r.rating), 0);
-    return {
-      average: Math.round((sum / reviews.length) * 10) / 10,
-      count: reviews.length,
-    };
+  // Rating system removed — trust is now expressed through
+  // verification badges and written testimonials.
+  getTestimonialCount(proId) {
+    return this.getReviewsForProfessional(proId).length;
   }
 
   // --- Portfolios (Phase 3) ---

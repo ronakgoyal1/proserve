@@ -5,8 +5,7 @@ export const professionals = [
     category: "CA",
     photo: null,
     initials: "RS",
-    rating: 4.9,
-    reviews: 127,
+
     experience: 12,
     city: "Mumbai",
     languages: ["Hindi", "English", "Marathi"],
@@ -32,8 +31,7 @@ export const professionals = [
     category: "CA",
     photo: null,
     initials: "PM",
-    rating: 4.8,
-    reviews: 98,
+
     experience: 8,
     city: "Mumbai",
     languages: ["Hindi", "English", "Gujarati"],
@@ -59,8 +57,7 @@ export const professionals = [
     category: "CMA",
     photo: null,
     initials: "AK",
-    rating: 4.7,
-    reviews: 74,
+
     experience: 15,
     city: "Mumbai",
     languages: ["Hindi", "English", "Marathi"],
@@ -86,8 +83,7 @@ export const professionals = [
     category: "CA",
     photo: null,
     initials: "ND",
-    rating: 4.9,
-    reviews: 156,
+
     experience: 10,
     city: "Mumbai",
     languages: ["Hindi", "English", "Gujarati"],
@@ -113,8 +109,7 @@ export const professionals = [
     category: "CMA",
     photo: null,
     initials: "VJ",
-    rating: 4.6,
-    reviews: 52,
+
     experience: 7,
     city: "Mumbai",
     languages: ["Hindi", "English"],
@@ -140,8 +135,7 @@ export const professionals = [
     category: "CA",
     photo: null,
     initials: "AI",
-    rating: 4.8,
-    reviews: 89,
+
     experience: 9,
     city: "Mumbai",
     languages: ["Hindi", "English", "Tamil"],
@@ -167,8 +161,7 @@ export const professionals = [
     category: "CMA",
     photo: null,
     initials: "SP",
-    rating: 4.5,
-    reviews: 41,
+
     experience: 20,
     city: "Mumbai",
     languages: ["Hindi", "English", "Marathi"],
@@ -194,8 +187,7 @@ export const professionals = [
     category: "CA",
     photo: null,
     initials: "KR",
-    rating: 4.7,
-    reviews: 63,
+
     experience: 6,
     city: "Mumbai",
     languages: ["Hindi", "English", "Telugu"],
@@ -223,28 +215,24 @@ export const testimonials = [
     name: "Arjun Patel",
     role: "Startup Founder",
     text: "Wisor made it incredibly easy to find a reliable CA for my startup. The entire process from discovery to booking was seamless. Highly recommended!",
-    rating: 5
   },
   {
     id: 2,
     name: "Meera Gupta",
     role: "Freelance Designer",
     text: "I was always confused about tax filing. Wisor connected me with an amazing CA who explained everything clearly. Filed my ITR in just 2 days!",
-    rating: 5
   },
   {
     id: 3,
     name: "Rohan Nair",
     role: "Manufacturing Business Owner",
     text: "The CMA I found through Wisor helped us reduce our production costs by 18%. The platform's verification process gave me confidence in my choice.",
-    rating: 5
   },
   {
     id: 4,
     name: "Sneha Kapoor",
     role: "HR Manager",
     text: "We needed help with GST compliance urgently. Found a verified expert within hours through Wisor. The booking system is super convenient.",
-    rating: 4
   }
 ];
 
